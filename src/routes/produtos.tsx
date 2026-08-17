@@ -11,6 +11,10 @@ export const Route = createFileRoute("/produtos")({
     meta: [
       { title: "Produtos | Catálogo Pizzatto Materiais Elétricos" },
       { name: "description", content: "Catálogo completo de materiais elétricos da Pizzatto. Encontre cabos, iluminação, proteção e muito mais." },
+      { property: "og:title", content: "Produtos | Catálogo Pizzatto Materiais Elétricos" },
+      { property: "og:description", content: "Catálogo completo de materiais elétricos da Pizzatto. Encontre cabos, iluminação, proteção e muito mais." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
 });
