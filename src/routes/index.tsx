@@ -279,7 +279,7 @@ function Index() {
                 <Phone size={20} className="text-[#F5C400] mt-1"/>
                 <div>
                   <div className="text-[16px] font-black">(65) 3052-4200</div>
-                  <div className="text-[12px] text-white/40 uppercase font-bold">Vendas & Suporte</div>
+                  <div className="text-[12px] text-white/40 uppercase font-bold">Atendimento</div>
                 </div>
               </div>
               <div className="flex items-start gap-4">
