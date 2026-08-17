@@ -43,15 +43,6 @@ function ImageWithFallback({ src, alt, className, type = 'product' }: { src: str
 function Index() {
   return (
     <div className="min-h-screen bg-white text-[#252A2E]">
-      <div className="bg-[#252A2E] text-white text-[11px] py-2 px-4 border-b border-white/5">
-        <div className="max-w-7xl mx-auto flex justify-between items-center uppercase tracking-widest font-bold">
-          <p className="opacity-70">Mais de 40 anos de experiência em materiais elétricos</p>
-          <div className="flex gap-8 items-center">
-            <span className="flex items-center gap-2 text-white/90 hover:text-[#F5C400] transition cursor-pointer"><MapPin size={12} className="text-[#F5C400]"/> Cuiabá - MT</span>
-            <span className="flex items-center gap-2 text-white/90 hover:text-[#F5C400] transition cursor-pointer"><Phone size={12} className="text-[#F5C400]"/> (65) 3052-4200</span>
-          </div>
-        </div>
-      </div>
 
       <header className="sticky top-0 z-50 bg-[#174F8C] backdrop-blur-sm border-b border-white/10 py-3 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.2)]">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
