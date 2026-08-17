@@ -53,7 +53,7 @@ function Index() {
         </div>
       </div>
 
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-[#E5E7EB] py-3 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.1)]">
+      <header className="sticky top-0 z-50 bg-[#174F8C] backdrop-blur-sm border-b border-white/10 py-3 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.2)]">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
           <div className="flex items-center gap-6 py-1">
             <img src={logoAsset.url} alt="Pizzatto Materiais Elétricos" className="h-16 w-auto object-contain py-1" />
