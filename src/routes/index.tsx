@@ -1,9 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Phone, MapPin, Search, ChevronRight, MessageSquare, Building2, User, HardHat, FileText, Zap } from "lucide-react";
-import logoAsset from "@/assets/logo.asset.json";
-import logoIconAsset from "@/assets/logo-pizzatto-icon-new.png.asset.json";
-import bobininhaAsset from "@/assets/bobininha.asset.json";
-import fachadaAsset from "@/assets/fachada.asset.json";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { ImageWithFallback } from "@/components/ImageWithFallback";
 
 
 export const Route = createFileRoute("/")({
