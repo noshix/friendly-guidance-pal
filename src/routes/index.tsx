@@ -25,39 +25,49 @@ function Index() {
         </div>
       </div>
 
-      <header className="sticky top-0 z-50 bg-white border-b border-[#F4F5F6] py-3 shadow-[0_2px_4px_-1px_rgba(0,0,0,0.05)]">
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-[#E5E7EB] py-3 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.1)]">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
-          <img src={logoAsset.url} alt="Pizzatto Materiais Elétricos" className="h-10 w-auto" />
-          <nav className="flex gap-6 text-[13px] font-medium text-[#252A2E]">
-            {['Departamentos', 'Produtos', 'Marcas', 'Empresa', 'Contato'].map(item => (
-              <a href="#" key={item} className="hover:text-[#174F8C] transition">{item}</a>
+          <div className="flex items-center gap-4">
+            <img src={logoAsset.url} alt="Pizzatto Materiais Elétricos" className="h-12 w-auto object-contain" />
+          </div>
+          <nav className="flex gap-8 text-[14px] font-semibold text-[#252A2E]">
+            {['Produtos', 'Categorias', 'Marcas', 'Empresa', 'Contato'].map(item => (
+              <a href="#" key={item} className="hover:text-[#174F8C] transition uppercase tracking-wider text-[12px]">{item}</a>
             ))}
           </nav>
-          <button className="bg-[#2E8B57] text-white px-4 py-2 rounded-[4px] font-semibold text-[13px] hover:bg-[#257548] flex items-center gap-2">
-            <MessageSquare size={14}/> Falar com especialista
+          <button className="bg-[#2E8B57] text-white px-5 py-2.5 rounded-[2px] font-bold text-[13px] hover:bg-[#257548] flex items-center gap-2 shadow-sm">
+            <MessageSquare size={16}/> WhatsApp
           </button>
         </div>
       </header>
 
       <section className="max-w-7xl mx-auto px-4 py-12 flex items-center gap-12">
-        <div className="flex-1 space-y-5">
-          <div className="inline-flex items-center bg-[#F4F5F6] text-[#174F8C] px-3 py-1 rounded-[4px] text-[10px] font-bold uppercase tracking-widest border border-[#E5E7EB]">
-            Distribuidora Técnica
+        <div className="flex-1 space-y-6">
+          <div className="inline-flex items-center bg-[#174F8C]/10 text-[#174F8C] px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest">
+            Distribuidora Técnica Premium
           </div>
-          <h1 className="text-[44px] font-bold text-[#252A2E] leading-[1.05] tracking-tight">
+          <h1 className="text-[52px] font-extrabold text-[#252A2E] leading-[1] tracking-tighter">
             Materiais elétricos para <br />
-            <span className="text-[#174F8C]">sua obra, empresa e projeto.</span>
+            sua obra, empresa e projeto.
           </h1>
-          <p className="text-[16px] text-[#252A2E]/70 leading-relaxed max-w-[500px]">
-            Mais de 40 anos de credibilidade oferecendo o mais completo mix de componentes elétricos em Cuiabá e Mato Grosso.
+          <p className="text-[18px] text-[#252A2E]/70 leading-relaxed max-w-[550px]">
+            Tradição e excelência técnica em Cuiabá. Mais de 40 anos entregando as melhores soluções para profissionais e empresas.
           </p>
-          <div className="flex gap-3 pt-2">
-            <button className="bg-[#174F8C] text-white px-8 py-3 rounded-[4px] font-semibold hover:bg-[#123E70]">Explorar catálogo</button>
-            <button className="border-2 border-[#F5C400] text-[#174F8C] px-8 py-3 rounded-[4px] font-semibold hover:bg-[#F5C400]/10">Solicitar orçamento</button>
+          <div className="flex gap-4 pt-4">
+            <button className="bg-[#174F8C] text-white px-8 py-4 rounded-[2px] font-bold uppercase text-[14px] hover:bg-[#123E70] transition shadow-md">Explorar catálogo</button>
+            <button className="bg-[#F5C400] text-[#252A2E] px-8 py-4 rounded-[2px] font-bold uppercase text-[14px] hover:bg-[#E0B200] transition shadow-md">Solicitar orçamento</button>
+          </div>
+          <div className="relative pt-6">
+            <Search className="absolute left-4 top-10 text-[#252A2E]/30" size={20}/>
+            <input type="text" placeholder="Buscar materiais (ex: disjuntores, cabos...)" className="w-full bg-white border border-[#E5E7EB] py-4 pl-12 pr-4 rounded-[2px] shadow-sm focus:ring-2 focus:ring-[#174F8C] outline-none"/>
           </div>
         </div>
-        <div className="flex-1 bg-[#F4F5F6] rounded-[4px] h-[400px] overflow-hidden border border-[#E5E7EB]">
-          <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1596734509421-419b67484462?auto=format&fit=crop&q=80&w=1000')] bg-cover bg-center"></div>
+        <div className="flex-1 relative">
+           <img src="https://images.unsplash.com/photo-1596734509421-419b67484462?auto=format&fit=crop&q=80&w=800" className="rounded-[4px] shadow-2xl"/>
+           <div className="absolute -bottom-6 -left-6 bg-[#174F8C] text-white p-6 rounded-[2px] shadow-xl">
+             <div className="text-[40px] font-black italic">40+</div>
+             <div className="text-[14px] font-bold tracking-widest uppercase">Anos de Pizzatto</div>
+           </div>
         </div>
       </section>
 
