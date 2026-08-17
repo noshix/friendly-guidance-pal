@@ -17,8 +17,7 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <div className="min-h-screen bg-white text-[#252A2E]">
-      {/* Topbar */}
-      <div className="bg-[#174F8C] text-white text-[11px] py-1.5 px-4 flex justify-between items-center transition-all duration-300">
+      <div className="bg-[#174F8C] text-white text-[11px] py-1.5 px-4 flex justify-between items-center">
         <p className="tracking-wide uppercase font-medium opacity-90">Mais de 40 anos de experiência em soluções elétricas</p>
         <div className="flex gap-4">
           <span className="flex items-center gap-1"><MapPin size={12}/> Cuiabá - MT</span>
@@ -26,8 +25,7 @@ function Index() {
         </div>
       </div>
 
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-white border-b border-[#F4F5F6] py-3 shadow-[0_2px_4px_-1px_rgba(0,0,0,0.05)] transition-all duration-300">
+      <header className="sticky top-0 z-50 bg-white border-b border-[#F4F5F6] py-3 shadow-[0_2px_4px_-1px_rgba(0,0,0,0.05)]">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
           <img src={logoAsset.url} alt="Pizzatto Materiais Elétricos" className="h-10 w-auto" />
           <nav className="flex gap-6 text-[13px] font-medium text-[#252A2E]">
@@ -41,7 +39,6 @@ function Index() {
         </div>
       </header>
 
-      {/* Hero */}
       <section className="max-w-7xl mx-auto px-4 py-12 flex items-center gap-12">
         <div className="flex-1 space-y-5">
           <div className="inline-flex items-center bg-[#F4F5F6] text-[#174F8C] px-3 py-1 rounded-[4px] text-[10px] font-bold uppercase tracking-widest border border-[#E5E7EB]">
@@ -64,7 +61,6 @@ function Index() {
         </div>
       </section>
 
-      {/* Categorias */}
       <section className="max-w-7xl mx-auto px-4 py-12">
         <h2 className="text-2xl font-bold text-[#174F8C] mb-8">Encontre o que precisa</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -88,7 +84,6 @@ function Index() {
         </div>
       </section>
 
-      {/* Produtos em Destaque */}
       <section className="bg-[#F4F5F6]/30 py-12">
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-2xl font-bold text-[#174F8C] mb-8">Produtos em destaque</h2>
@@ -115,7 +110,6 @@ function Index() {
         </div>
       </section>
 
-      {/* História */}
       <section className="max-w-7xl mx-auto px-4 py-16 flex items-center gap-12">
         <div className="flex-1 h-[400px] rounded-[4px] border border-[#E5E7EB] overflow-hidden">
           <img src={fachadaAsset.url} alt="Fachada Pizzatto" className="w-full h-full object-cover"/>
@@ -129,7 +123,19 @@ function Index() {
         </div>
       </section>
 
-      {/* Footer */}
+      <section className="bg-[#F4F5F6]/50 py-12 border-y border-[#F4F5F6]">
+        <div className="max-w-4xl mx-auto px-4 flex items-center gap-12">
+          <img src={bobininhaAsset.url} alt="Bobininha" className="w-24 h-24 object-contain" />
+          <div className="flex-1">
+            <h2 className="text-xl font-bold text-[#174F8C] mb-1">Precisa de ajuda com seu material?</h2>
+            <p className="text-[#252A2E]/70 mb-4 text-sm">Nossa equipe especializada está pronta para atender.</p>
+            <button className="bg-[#2E8B57] text-white px-6 py-2 rounded-[4px] font-bold flex items-center gap-2 text-sm">
+              <MessageSquare size={16}/> Falar no WhatsApp
+            </button>
+          </div>
+        </div>
+      </section>
+
       <footer className="bg-[#174F8C] text-white pt-12 pb-6">
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-4 gap-8">
           <div>
