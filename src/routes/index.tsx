@@ -14,6 +14,10 @@ export const Route = createFileRoute("/")({
     meta: [
       { title: "Pizzatto Materiais Elétricos | Loja Especializada em Cuiabá - MT" },
       { name: "description", content: "Mais de 40 anos de experiência em materiais elétricos. Loja especializada em Cuiabá, Mato Grosso." },
+      { property: "og:title", content: "Pizzatto Materiais Elétricos | Loja Especializada em Cuiabá - MT" },
+      { property: "og:description", content: "Mais de 40 anos de experiência em materiais elétricos. Loja especializada em Cuiabá, Mato Grosso." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
 });
