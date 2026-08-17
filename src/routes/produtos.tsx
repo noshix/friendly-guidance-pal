@@ -189,7 +189,7 @@ function Products() {
               {MOCK_PRODUCTS.map((prod) => (
                 <div key={prod.id} className={`bg-white border border-[#E5E7EB] rounded-[2px] p-5 hover:border-[#174F8C] hover:shadow-lg transition duration-300 group flex relative ${viewMode === 'grid' ? 'flex-col h-full' : 'flex-row gap-8 items-center'}`}>
                   
-                  <div className={`relative ${viewMode === 'grid' ? 'w-full aspect-square mb-6' : 'w-48 aspect-square'} rounded-[2px] overflow-hidden bg-[#F4F5F6]/50 p-4`}>
+                  <div className={`relative ${viewMode === 'grid' ? 'w-full aspect-square mb-6' : 'w-48 aspect-square flex-shrink-0'} rounded-[2px] overflow-hidden bg-[#F4F5F6]/50 p-4`}>
                     <ImageWithFallback 
                       src={prod.img} 
                       alt={prod.name} 
