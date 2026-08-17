@@ -100,6 +100,39 @@ function Index() {
           ))}
         </div>
       </section>
+      {/* Footer */}
+      <footer className="bg-[#174F8C] text-white pt-16 pb-8 mt-16 border-t-4 border-[#F5C400]">
+        <div className="max-w-7xl mx-auto px-4 grid grid-cols-4 gap-8">
+          <div>
+            <div className="text-2xl font-black mb-4">PIZZATTO</div>
+            <p className="text-[13px] opacity-80">Mais de 40 anos de tradição em materiais elétricos em Cuiabá.</p>
+          </div>
+          <div>
+            <h4 className="font-bold mb-4">CATÁLOGO</h4>
+            <ul className="text-[13px] space-y-2 opacity-80">
+              <li>Produtos</li>
+              <li>Categorias</li>
+              <li>Marcas</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-bold mb-4">EMPRESA</h4>
+            <ul className="text-[13px] space-y-2 opacity-80">
+              <li>Nossa história</li>
+              <li>Contato</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-bold mb-4">ATENDIMENTO</h4>
+            <p className="text-[13px] opacity-80">(65) 3052-4200</p>
+            <p className="text-[13px] opacity-80">vendas@pizzatto.com.br</p>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 mt-12 pt-8 border-t border-white/10 text-[11px] text-center opacity-60">
+          © 2026 Pizzatto Materiais Elétricos. Todos os direitos reservados.
+        </div>
+      </footer>
     </div>
   );
 }
+
