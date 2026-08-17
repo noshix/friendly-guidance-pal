@@ -55,8 +55,8 @@ function Index() {
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
           <div className="flex items-center gap-6 py-1">
             <img src={logoAsset.url} alt="Pizzatto Materiais Elétricos" className="h-16 w-auto object-contain py-1" />
-
           </div>
+
           <nav className="flex gap-8 text-[14px] font-semibold text-[#252A2E]">
             {['Produtos', 'Categorias', 'Marcas', 'Empresa', 'Contato'].map(item => (
               <a href="#" key={item} className="hover:text-[#174F8C] transition uppercase tracking-wider text-[12px]">{item}</a>
