@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Phone, MapPin, Search, ChevronRight, MessageSquare, Building2, User, HardHat, FileText } from "lucide-react";
+import { Phone, MapPin, Search, ChevronRight, MessageSquare, Building2, User, HardHat, FileText, Zap } from "lucide-react";
 import logoAsset from "@/assets/logo.asset.json";
 import bobininhaAsset from "@/assets/bobininha.asset.json";
 import fachadaAsset from "@/assets/fachada.asset.json";
@@ -13,6 +13,30 @@ export const Route = createFileRoute("/")({
     ],
   }),
 });
+
+function ImageWithFallback({ src, alt, className, type = 'product' }: { src: string, alt: string, className?: string, type?: 'product' | 'category' }) {
+  return (
+    <img 
+      src={src} 
+      alt={alt} 
+      className={className}
+      onError={(e) => {
+        const target = e.target as HTMLImageElement;
+        target.onerror = null;
+        target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23A3A3A3' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13 2L3 14h9l-1 8 10-12h-9l1-8z'/%3E%3C/svg%3E";
+        target.className = `${className} bg-[#F4F5F6] p-12 opacity-40`;
+        const parent = target.parentElement;
+        if (parent && !parent.querySelector('.fallback-text')) {
+          const text = document.createElement('div');
+          text.className = 'fallback-text absolute inset-0 flex items-end justify-center pb-4 text-[10px] font-bold text-[#252A2E]/40 uppercase tracking-widest';
+          text.innerText = 'Imagem em breve';
+          parent.style.position = 'relative';
+          parent.appendChild(text);
+        }
+      }}
+    />
+  );
+}
 
 function Index() {
   return (
@@ -30,8 +54,9 @@ function Index() {
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-[#E5E7EB] py-3 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.1)]">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
           <div className="flex items-center gap-6 py-1">
-            <img src={logoAsset.url} alt="Pizzatto Materiais Elétricos" className="h-16 w-auto object-contain" />
+            <img src={logoAsset.url} alt="Pizzatto Materiais Elétricos" className="h-16 w-auto object-contain py-1" />
           </div>
+
           <nav className="flex gap-8 text-[14px] font-semibold text-[#252A2E]">
             {['Produtos', 'Categorias', 'Marcas', 'Empresa', 'Contato'].map(item => (
               <a href="#" key={item} className="hover:text-[#174F8C] transition uppercase tracking-wider text-[12px]">{item}</a>
@@ -61,12 +86,19 @@ function Index() {
           </div>
           <div className="relative pt-6">
             <Search className="absolute left-4 top-10 text-[#252A2E]/30" size={20}/>
-            <input type="text" placeholder="Busque por produto, código, referência ou fabricante..." className="w-full bg-white border border-[#E5E7EB] py-4 pl-12 pr-4 rounded-[2px] shadow-sm focus:ring-2 focus:ring-[#174F8C] outline-none"/>
+            <input type="text" placeholder="Busque por produto, código, referência ou fabricante..." className="w-full bg-white border border-[#252A2E]/20 py-4 pl-12 pr-4 rounded-[2px] shadow-sm focus:ring-2 focus:ring-[#174F8C] outline-none text-[#252A2E] placeholder:text-[#252A2E]/40 font-medium"/>
           </div>
         </div>
-        <div className="flex-1 relative">
-           <img src="https://images.unsplash.com/photo-1596734509421-419b67484462?auto=format&fit=crop&q=80&w=800" className="rounded-[4px] shadow-2xl"/>
-           <div className="absolute -bottom-6 -left-6 bg-[#174F8C] text-white p-6 rounded-[2px] shadow-xl">
+        <div className="flex-1 relative h-[500px]">
+           <div className="absolute inset-0 bg-[#F4F5F6] rounded-[4px] overflow-hidden shadow-2xl">
+             <ImageWithFallback 
+               src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=800" 
+               alt="Materiais Elétricos Pizzatto" 
+               className="w-full h-full object-cover"
+             />
+             <div className="absolute inset-0 bg-gradient-to-t from-[#252A2E]/20 to-transparent"></div>
+           </div>
+           <div className="absolute -bottom-6 -right-6 bg-[#174F8C] text-white p-6 rounded-[2px] shadow-xl z-10">
              <div className="text-[40px] font-black italic leading-none">40+</div>
              <div className="text-[10px] font-bold tracking-widest uppercase mt-1">Anos de Experiência</div>
            </div>
@@ -85,27 +117,25 @@ function Index() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
             { name: 'Cabos e Condutores', img: 'https://images.unsplash.com/photo-1558346490-a72e53ae2d4e?auto=format&fit=crop&q=80&w=400' },
-            { name: 'Iluminação', img: 'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&q=80&w=400' },
-            { name: 'Proteção Elétrica', img: 'https://images.unsplash.com/photo-1617333565862-246e4c274218?auto=format&fit=crop&q=80&w=400' },
-            { name: 'Conectores', img: 'https://images.unsplash.com/photo-1596734509421-419b67484462?auto=format&fit=crop&q=80&w=400' },
-            { name: 'Ferramentas', img: 'https://images.unsplash.com/photo-1581244276891-83393a899fb2?auto=format&fit=crop&q=80&w=400' },
-            { name: 'Aterramento', img: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=400' },
+            { name: 'Iluminação', img: 'https://images.unsplash.com/photo-1558002038-1055907df8d7?auto=format&fit=crop&q=80&w=400' },
+            { name: 'Proteção Elétrica', img: 'https://images.unsplash.com/photo-1558002038-1055907df8d7?auto=format&fit=crop&q=80&w=400' },
+            { name: 'Conectores', img: 'https://images.unsplash.com/photo-1563770660941-20978e870e93?auto=format&fit=crop&q=80&w=400' },
+            { name: 'Ferramentas', img: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&q=80&w=400' },
+            { name: 'Aterramento', img: 'https://images.unsplash.com/photo-1558484660-5bb49b897435?auto=format&fit=crop&q=80&w=400' },
             { name: 'Transformadores', img: 'https://images.unsplash.com/photo-1618576512915-f5589e47087f?auto=format&fit=crop&q=80&w=400' },
-            { name: 'Tubos e Conduítes', img: 'https://images.unsplash.com/photo-1542013936693-884638332954?auto=format&fit=crop&q=80&w=400' },
+            { name: 'Tubos e Conduítes', img: 'https://images.unsplash.com/photo-1596734509421-419b67484462?auto=format&fit=crop&q=80&w=400' },
+
           ].map((cat) => (
             <div key={cat.name} className="group relative bg-white border border-[#E5E7EB] rounded-[2px] overflow-hidden hover:border-[#174F8C] transition duration-300 shadow-sm cursor-pointer">
-              <div className="aspect-[4/3] overflow-hidden bg-[#F4F5F6]">
-                <img 
+              <div className="aspect-[4/3] overflow-hidden bg-[#F4F5F6] relative">
+                <ImageWithFallback 
                   src={cat.img} 
                   alt={cat.name} 
                   className="w-full h-full object-cover group-hover:scale-110 transition duration-700 brightness-95"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = "https://placehold.co/400x300/F4F5F6/A3A3A3?text=Imagem+em+breve";
-                    target.className = "w-full h-full object-contain p-8";
-                  }}
+                  type="category"
                 />
               </div>
+
               <div className="p-4 bg-white border-t border-[#F4F5F6]">
                 <h3 className="font-bold text-[15px] text-[#252A2E] group-hover:text-[#174F8C] transition">{cat.name}</h3>
               </div>
@@ -128,25 +158,22 @@ function Index() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {[
-              { brand: 'SIEMENS', name: 'Disjuntor Tripolar 32A', ref: '5SX2332-7', price: '189,90', img: 'https://images.unsplash.com/photo-1617333565862-246e4c274218?auto=format&fit=crop&q=80&w=400' },
+              { brand: 'SIEMENS', name: 'Disjuntor Tripolar 32A', ref: '5SX2332-7', price: '189,90', img: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=400' },
               { brand: 'SIL', name: 'Cabo Flexível 2,5 mm² Azul 750V', ref: 'Rolo 100m', price: '349,00', img: 'https://images.unsplash.com/photo-1558346490-a72e53ae2d4e?auto=format&fit=crop&q=80&w=400' },
-              { brand: 'ALUMBRA', name: 'Lâmpada LED High Power 40W', ref: '6500K Bivolt', price: '49,90', img: 'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&q=80&w=400' },
-              { brand: 'STECK', name: 'Quadro de Distribuição 24 DIN', ref: 'Sobrepor', price: '124,50', img: 'https://images.unsplash.com/photo-1558346490-a72e53ae2d4e?auto=format&fit=crop&q=80&w=400' },
+              { brand: 'ALUMBRA', name: 'Lâmpada LED High Power 40W', ref: '6500K Bivolt', price: '49,90', img: 'https://images.unsplash.com/photo-1558002038-1055907df8d7?auto=format&fit=crop&q=80&w=400' },
+              { brand: 'STECK', name: 'Quadro de Distribuição 24 DIN', ref: 'Sobrepor', price: '124,50', img: 'https://images.unsplash.com/photo-1596734509421-419b67484462?auto=format&fit=crop&q=80&w=400' },
+
             ].map((prod) => (
               <div key={prod.name} className="bg-white border border-[#E5E7EB] rounded-[2px] p-5 hover:border-[#174F8C] hover:shadow-lg transition duration-300 group flex flex-col h-full relative">
                 <div className="text-[9px] font-black text-[#174F8C]/40 tracking-[0.2em] mb-2 uppercase">{prod.brand}</div>
-                <div className="w-full aspect-square mb-6 rounded-[2px] overflow-hidden bg-[#F4F5F6]/50 p-4">
-                  <img 
+                <div className="w-full aspect-square mb-6 rounded-[2px] overflow-hidden bg-[#F4F5F6]/50 p-4 relative">
+                  <ImageWithFallback 
                     src={prod.img} 
                     alt={prod.name} 
                     className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition duration-500"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = "https://placehold.co/400x400/F4F5F6/A3A3A3?text=Imagem+em+breve";
-                      target.className = "w-full h-full object-contain p-8 opacity-50";
-                    }}
                   />
                 </div>
+
                 <h3 className="font-bold text-[15px] mb-1 leading-tight text-[#252A2E] group-hover:text-[#174F8C] transition">{prod.name}</h3>
                 <div className="text-[11px] text-[#252A2E]/50 mb-auto">Ref: {prod.ref}</div>
                 
@@ -248,13 +275,13 @@ function Index() {
             </ul>
           </div>
           <div>
-            <h4 className="text-[12px] font-black tracking-[0.2em] text-[#F5C400] mb-8 uppercase">Canais de Atendimento</h4>
+            <h4 className="text-[12px] font-black tracking-[0.2em] text-[#F5C400] mb-8 uppercase">Atendimento</h4>
             <div className="space-y-6">
               <div className="flex items-start gap-4">
                 <Phone size={20} className="text-[#F5C400] mt-1"/>
                 <div>
                   <div className="text-[16px] font-black">(65) 3052-4200</div>
-                  <div className="text-[12px] text-white/40 uppercase font-bold">Vendas & Suporte</div>
+                  <div className="text-[12px] text-white/40 uppercase font-bold">Atendimento</div>
                 </div>
               </div>
               <div className="flex items-start gap-4">
