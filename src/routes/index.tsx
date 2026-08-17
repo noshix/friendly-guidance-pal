@@ -72,23 +72,35 @@ function Index() {
       </section>
 
       <section className="max-w-7xl mx-auto px-4 py-12">
-        <h2 className="text-2xl font-bold text-[#174F8C] mb-8">Encontre o que precisa</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="flex justify-between items-end mb-10">
+          <div>
+            <div className="w-16 h-1 bg-[#F5C400] mb-4"></div>
+            <h2 className="text-3xl font-bold text-[#252A2E]">Encontre o que precisa</h2>
+            <p className="text-[#252A2E]/60 text-sm mt-2">Navegue pelas nossas categorias especializadas.</p>
+          </div>
+          <a href="#" className="text-[#174F8C] font-bold text-sm flex items-center gap-1 hover:underline">Ver todas <ChevronRight size={16}/></a>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
-            { name: 'Cabos e Condutores', img: 'https://images.unsplash.com/photo-1544627880-97593c6b245e?auto=format&fit=crop&q=80&w=300' },
-            { name: 'Iluminação', img: 'https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?auto=format&fit=crop&q=80&w=300' },
-            { name: 'Proteção Elétrica', img: 'https://images.unsplash.com/photo-1558346490-a72e53ae2d4e?auto=format&fit=crop&q=80&w=300' },
-            { name: 'Conectores', img: 'https://images.unsplash.com/photo-1596734509421-419b67484462?auto=format&fit=crop&q=80&w=300' },
-            { name: 'Ferramentas', img: 'https://images.unsplash.com/photo-1504148455338-348509c647b0?auto=format&fit=crop&q=80&w=300' },
-            { name: 'Aterramento', img: 'https://images.unsplash.com/photo-1581092334672-005118c7c250?auto=format&fit=crop&q=80&w=300' },
-            { name: 'Transformadores', img: 'https://images.unsplash.com/photo-1587399839919-3d1b82455856?auto=format&fit=crop&q=80&w=300' },
-            { name: 'Tubos e Conduítes', img: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=300' },
+            { name: 'Cabos e Condutores', img: 'https://images.unsplash.com/photo-1544627880-97593c6b245e?auto=format&fit=crop&q=80&w=400' },
+            { name: 'Iluminação', img: 'https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?auto=format&fit=crop&q=80&w=400' },
+            { name: 'Proteção Elétrica', img: 'https://images.unsplash.com/photo-1558346490-a72e53ae2d4e?auto=format&fit=crop&q=80&w=400' },
+            { name: 'Conectores', img: 'https://images.unsplash.com/photo-1596734509421-419b67484462?auto=format&fit=crop&q=80&w=400' },
+            { name: 'Ferramentas', img: 'https://images.unsplash.com/photo-1504148455338-348509c647b0?auto=format&fit=crop&q=80&w=400' },
+            { name: 'Aterramento', img: 'https://images.unsplash.com/photo-1581092334672-005118c7c250?auto=format&fit=crop&q=80&w=400' },
+            { name: 'Transformadores', img: 'https://images.unsplash.com/photo-1587399839919-3d1b82455856?auto=format&fit=crop&q=80&w=400' },
+            { name: 'Tubos e Conduítes', img: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=400' },
           ].map((cat) => (
-            <div key={cat.name} className="group border border-[#E5E7EB] rounded-[4px] p-2 hover:border-[#174F8C] transition flex flex-col cursor-pointer">
-              <div className="w-full h-32 mb-2 rounded-[2px] overflow-hidden">
-                <img src={cat.img} alt={cat.name} className="w-full h-full object-cover group-hover:scale-105 transition duration-500"/>
+            <div key={cat.name} className="group relative bg-white border border-[#E5E7EB] rounded-[2px] overflow-hidden hover:border-[#174F8C] transition duration-300 shadow-sm cursor-pointer">
+              <div className="aspect-[4/3] overflow-hidden">
+                <img src={cat.img} alt={cat.name} className="w-full h-full object-cover group-hover:scale-110 transition duration-700 brightness-95"/>
               </div>
-              <h3 className="font-semibold text-[14px] text-[#174F8C] px-2 pb-2">{cat.name}</h3>
+              <div className="p-4 bg-white border-t border-[#F4F5F6]">
+                <h3 className="font-bold text-[15px] text-[#252A2E] group-hover:text-[#174F8C] transition">{cat.name}</h3>
+              </div>
+              <div className="absolute top-3 right-3 bg-white/90 p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition shadow-sm text-[#174F8C]">
+                <ChevronRight size={14}/>
+              </div>
             </div>
           ))}
         </div>
@@ -96,23 +108,43 @@ function Index() {
 
       <section className="bg-[#F4F5F6]/30 py-12">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-2xl font-bold text-[#174F8C] mb-8">Produtos em destaque</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-end mb-10">
+            <div>
+              <div className="w-16 h-1 bg-[#F5C400] mb-4"></div>
+              <h2 className="text-3xl font-bold text-[#252A2E]">Destaques da Semana</h2>
+              <p className="text-[#252A2E]/60 text-sm mt-2">Produtos com estoque garantido e preços competitivos.</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {[
               { brand: 'SIEMENS', name: 'Disjuntor Tripolar 32A', ref: '5SX2332-7', price: '189,90', img: 'https://images.unsplash.com/photo-1581092334672-005118c7c250?auto=format&fit=crop&q=80&w=400' },
-              { brand: 'SIL', name: 'Cabo Flexível 2,5 mm² - 100m', ref: 'Azul 750V', price: '349,00', img: 'https://images.unsplash.com/photo-1544627880-97593c6b245e?auto=format&fit=crop&q=80&w=400' },
-              { brand: 'ALUMBRA', name: 'Lâmpada LED High Power 40W', ref: 'Bivolt 6500K', price: '49,90', img: 'https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?auto=format&fit=crop&q=80&w=400' },
+              { brand: 'SIL', name: 'Cabo Flexível 2,5 mm² Azul 750V', ref: 'Rolo 100m', price: '349,00', img: 'https://images.unsplash.com/photo-1544627880-97593c6b245e?auto=format&fit=crop&q=80&w=400' },
+              { brand: 'ALUMBRA', name: 'Lâmpada LED High Power 40W', ref: '6500K Bivolt', price: '49,90', img: 'https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?auto=format&fit=crop&q=80&w=400' },
+              { brand: 'STECK', name: 'Quadro de Distribuição 24 DIN', ref: 'Sobrepor', price: '124,50', img: 'https://images.unsplash.com/photo-1558346490-a72e53ae2d4e?auto=format&fit=crop&q=80&w=400' },
             ].map((prod) => (
-              <div key={prod.name} className="bg-white border border-[#E5E7EB] rounded-[4px] p-5 hover:shadow-sm transition group">
-                <div className="w-full h-40 mb-4 rounded-[2px] overflow-hidden bg-[#F4F5F6]">
-                  <img src={prod.img} alt={prod.name} className="w-full h-full object-cover"/>
+              <div key={prod.name} className="bg-white border border-[#E5E7EB] rounded-[2px] p-5 hover:border-[#174F8C] hover:shadow-lg transition duration-300 group flex flex-col h-full relative">
+                <div className="text-[9px] font-black text-[#174F8C]/40 tracking-[0.2em] mb-2 uppercase">{prod.brand}</div>
+                <div className="w-full aspect-square mb-6 rounded-[2px] overflow-hidden bg-[#F4F5F6]/50 p-4">
+                  <img src={prod.img} alt={prod.name} className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition duration-500"/>
                 </div>
-                <div className="text-[10px] font-bold text-[#174F8C]/60 tracking-wider mb-1">{prod.brand}</div>
-                <h3 className="font-bold text-[15px] mb-1 leading-tight">{prod.name}</h3>
-                <div className="text-[11px] text-[#252A2E]/50 mb-4">Ref: {prod.ref}</div>
-                <div className="flex justify-between items-center pt-3 border-t border-[#F4F5F6]">
-                  <div className="text-[11px] text-[#2E8B57] font-bold mb-1">● Em estoque</div>
-                  <div className="text-xl font-black text-[#252A2E]">R$ {prod.price}</div>
+                <h3 className="font-bold text-[15px] mb-1 leading-tight text-[#252A2E] group-hover:text-[#174F8C] transition">{prod.name}</h3>
+                <div className="text-[11px] text-[#252A2E]/50 mb-auto">Ref: {prod.ref}</div>
+                
+                <div className="mt-6 pt-4 border-t border-[#F4F5F6]">
+                  <div className="flex items-center gap-1.5 text-[10px] text-[#2E8B57] font-bold mb-2 uppercase tracking-tighter">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#2E8B57] animate-pulse"></div>
+                    Disponível em estoque
+                  </div>
+                  <div className="flex justify-between items-end">
+                    <div>
+                      <span className="text-[10px] text-[#252A2E]/40 block leading-none mb-1">Por apenas</span>
+                      <div className="text-xl font-black text-[#252A2E]">R$ {prod.price}</div>
+                    </div>
+                    <button className="bg-[#174F8C] text-white p-2 rounded-[2px] hover:bg-[#123E70] transition">
+                      <ChevronRight size={18}/>
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
