@@ -84,14 +84,14 @@ function Index() {
           </div>
         </div>
         <div className="flex-1 relative h-[500px]">
-           <div className="absolute inset-0 bg-[#F4F5F6] rounded-[4px] overflow-hidden shadow-2xl">
+           <div className="absolute inset-0 bg-transparent rounded-[4px] overflow-hidden">
              <ImageWithFallback 
                src={logoIconAsset.url} 
                alt="Pizzatto Materiais Elétricos" 
                className="w-full h-full object-contain p-12"
              />
 
-             <div className="absolute inset-0 bg-gradient-to-t from-[#252A2E]/20 to-transparent"></div>
+             
            </div>
            <div className="absolute -bottom-6 -right-6 bg-[#2E8B57] text-white p-6 rounded-[2px] shadow-xl z-10">
              <div className="text-[40px] font-black italic leading-none">40+</div>
