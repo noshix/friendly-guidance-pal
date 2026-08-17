@@ -275,7 +275,7 @@ function Index() {
             </ul>
           </div>
           <div>
-            <h4 className="text-[12px] font-black tracking-[0.2em] text-[#F5C400] mb-8 uppercase">Canais de Atendimento</h4>
+            <h4 className="text-[12px] font-black tracking-[0.2em] text-[#F5C400] mb-8 uppercase">Atendimento</h4>
             <div className="space-y-6">
               <div className="flex items-start gap-4">
                 <Phone size={20} className="text-[#F5C400] mt-1"/>
