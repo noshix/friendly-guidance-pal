@@ -190,7 +190,7 @@ function Index() {
                       <span className="text-[10px] text-[#252A2E]/40 block leading-none mb-1">Por apenas</span>
                       <div className="text-xl font-black text-[#252A2E]">R$ {prod.price}</div>
                     </div>
-                    <button className="bg-[#174F8C] text-white p-2 rounded-[2px] hover:bg-[#123E70] transition">
+                    <button className="bg-[#2E8B57] text-white p-2 rounded-[2px] hover:bg-[#257046] transition">
                       <ChevronRight size={18}/>
                     </button>
                   </div>
