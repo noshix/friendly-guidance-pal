@@ -54,7 +54,8 @@ function Index() {
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-[#E5E7EB] py-3 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.1)]">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
           <div className="flex items-center gap-6 py-1">
-            <img src={logoAsset.url} alt="Pizzatto Materiais Elétricos" className="h-16 w-auto object-contain" />
+            <img src={logoAsset.url} alt="Pizzatto Materiais Elétricos" className="h-16 w-auto object-contain py-1" />
+
           </div>
           <nav className="flex gap-8 text-[14px] font-semibold text-[#252A2E]">
             {['Produtos', 'Categorias', 'Marcas', 'Empresa', 'Contato'].map(item => (
