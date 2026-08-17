@@ -164,18 +164,14 @@ function Index() {
             ].map((prod) => (
               <div key={prod.name} className="bg-white border border-[#E5E7EB] rounded-[2px] p-5 hover:border-[#174F8C] hover:shadow-lg transition duration-300 group flex flex-col h-full relative">
                 <div className="text-[9px] font-black text-[#174F8C]/40 tracking-[0.2em] mb-2 uppercase">{prod.brand}</div>
-                <div className="w-full aspect-square mb-6 rounded-[2px] overflow-hidden bg-[#F4F5F6]/50 p-4">
-                  <img 
+                <div className="w-full aspect-square mb-6 rounded-[2px] overflow-hidden bg-[#F4F5F6]/50 p-4 relative">
+                  <ImageWithFallback 
                     src={prod.img} 
                     alt={prod.name} 
                     className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition duration-500"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = "https://placehold.co/400x400/F4F5F6/A3A3A3?text=Imagem+em+breve";
-                      target.className = "w-full h-full object-contain p-8 opacity-50";
-                    }}
                   />
                 </div>
+
                 <h3 className="font-bold text-[15px] mb-1 leading-tight text-[#252A2E] group-hover:text-[#174F8C] transition">{prod.name}</h3>
                 <div className="text-[11px] text-[#252A2E]/50 mb-auto">Ref: {prod.ref}</div>
                 
