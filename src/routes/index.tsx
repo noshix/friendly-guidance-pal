@@ -29,8 +29,12 @@ function Index() {
 
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-[#E5E7EB] py-3 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.1)]">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <img src={logoAsset.url} alt="Pizzatto Materiais Elétricos" className="h-12 w-auto object-contain" />
+          <div className="flex items-center gap-6">
+            <img src={logoAsset.url} alt="Pizzatto Materiais Elétricos" className="h-14 w-auto object-contain" />
+            <div className="hidden lg:block w-px h-8 bg-[#E5E7EB]"></div>
+            <div className="hidden lg:block text-[10px] font-black text-[#174F8C] uppercase tracking-[0.2em] leading-tight">
+              Desde<br/>1984
+            </div>
           </div>
           <nav className="flex gap-8 text-[14px] font-semibold text-[#252A2E]">
             {['Produtos', 'Categorias', 'Marcas', 'Empresa', 'Contato'].map(item => (
