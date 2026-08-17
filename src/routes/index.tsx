@@ -89,9 +89,16 @@ function Index() {
             <input type="text" placeholder="Busque por produto, código, referência ou fabricante..." className="w-full bg-white border border-[#E5E7EB] py-4 pl-12 pr-4 rounded-[2px] shadow-sm focus:ring-2 focus:ring-[#174F8C] outline-none"/>
           </div>
         </div>
-        <div className="flex-1 relative">
-           <img src="https://images.unsplash.com/photo-1596734509421-419b67484462?auto=format&fit=crop&q=80&w=800" className="rounded-[4px] shadow-2xl"/>
-           <div className="absolute -bottom-6 -left-6 bg-[#174F8C] text-white p-6 rounded-[2px] shadow-xl">
+        <div className="flex-1 relative h-[500px]">
+           <div className="absolute inset-0 bg-[#F4F5F6] rounded-[4px] overflow-hidden shadow-2xl">
+             <ImageWithFallback 
+               src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=800" 
+               alt="Materiais Elétricos Pizzatto" 
+               className="w-full h-full object-cover"
+             />
+             <div className="absolute inset-0 bg-gradient-to-t from-[#252A2E]/20 to-transparent"></div>
+           </div>
+           <div className="absolute -bottom-6 -right-6 bg-[#174F8C] text-white p-6 rounded-[2px] shadow-xl z-10">
              <div className="text-[40px] font-black italic leading-none">40+</div>
              <div className="text-[10px] font-bold tracking-widest uppercase mt-1">Anos de Experiência</div>
            </div>
@@ -110,27 +117,24 @@ function Index() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
             { name: 'Cabos e Condutores', img: 'https://images.unsplash.com/photo-1558346490-a72e53ae2d4e?auto=format&fit=crop&q=80&w=400' },
-            { name: 'Iluminação', img: 'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&q=80&w=400' },
+            { name: 'Iluminação', img: 'https://images.unsplash.com/photo-1558002038-1055907df8d7?auto=format&fit=crop&q=80&w=400' },
             { name: 'Proteção Elétrica', img: 'https://images.unsplash.com/photo-1617333565862-246e4c274218?auto=format&fit=crop&q=80&w=400' },
             { name: 'Conectores', img: 'https://images.unsplash.com/photo-1596734509421-419b67484462?auto=format&fit=crop&q=80&w=400' },
             { name: 'Ferramentas', img: 'https://images.unsplash.com/photo-1581244276891-83393a899fb2?auto=format&fit=crop&q=80&w=400' },
-            { name: 'Aterramento', img: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=400' },
+            { name: 'Aterramento', img: 'https://images.unsplash.com/photo-1558346490-a72e53ae2d4e?auto=format&fit=crop&q=80&w=400' },
             { name: 'Transformadores', img: 'https://images.unsplash.com/photo-1618576512915-f5589e47087f?auto=format&fit=crop&q=80&w=400' },
             { name: 'Tubos e Conduítes', img: 'https://images.unsplash.com/photo-1542013936693-884638332954?auto=format&fit=crop&q=80&w=400' },
           ].map((cat) => (
             <div key={cat.name} className="group relative bg-white border border-[#E5E7EB] rounded-[2px] overflow-hidden hover:border-[#174F8C] transition duration-300 shadow-sm cursor-pointer">
-              <div className="aspect-[4/3] overflow-hidden bg-[#F4F5F6]">
-                <img 
+              <div className="aspect-[4/3] overflow-hidden bg-[#F4F5F6] relative">
+                <ImageWithFallback 
                   src={cat.img} 
                   alt={cat.name} 
                   className="w-full h-full object-cover group-hover:scale-110 transition duration-700 brightness-95"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = "https://placehold.co/400x300/F4F5F6/A3A3A3?text=Imagem+em+breve";
-                    target.className = "w-full h-full object-contain p-8";
-                  }}
+                  type="category"
                 />
               </div>
+
               <div className="p-4 bg-white border-t border-[#F4F5F6]">
                 <h3 className="font-bold text-[15px] text-[#252A2E] group-hover:text-[#174F8C] transition">{cat.name}</h3>
               </div>
