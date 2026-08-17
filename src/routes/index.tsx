@@ -118,12 +118,13 @@ function Index() {
           {[
             { name: 'Cabos e Condutores', img: 'https://images.unsplash.com/photo-1558346490-a72e53ae2d4e?auto=format&fit=crop&q=80&w=400' },
             { name: 'Iluminação', img: 'https://images.unsplash.com/photo-1558002038-1055907df8d7?auto=format&fit=crop&q=80&w=400' },
-            { name: 'Proteção Elétrica', img: 'https://images.unsplash.com/photo-1617333565862-246e4c274218?auto=format&fit=crop&q=80&w=400' },
-            { name: 'Conectores', img: 'https://images.unsplash.com/photo-1596734509421-419b67484462?auto=format&fit=crop&q=80&w=400' },
-            { name: 'Ferramentas', img: 'https://images.unsplash.com/photo-1581244276891-83393a899fb2?auto=format&fit=crop&q=80&w=400' },
-            { name: 'Aterramento', img: 'https://images.unsplash.com/photo-1558346490-a72e53ae2d4e?auto=format&fit=crop&q=80&w=400' },
+            { name: 'Proteção Elétrica', img: 'https://images.unsplash.com/photo-1558002038-1055907df8d7?auto=format&fit=crop&q=80&w=400' },
+            { name: 'Conectores', img: 'https://images.unsplash.com/photo-1563770660941-20978e870e93?auto=format&fit=crop&q=80&w=400' },
+            { name: 'Ferramentas', img: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&q=80&w=400' },
+            { name: 'Aterramento', img: 'https://images.unsplash.com/photo-1558484660-5bb49b897435?auto=format&fit=crop&q=80&w=400' },
             { name: 'Transformadores', img: 'https://images.unsplash.com/photo-1618576512915-f5589e47087f?auto=format&fit=crop&q=80&w=400' },
-            { name: 'Tubos e Conduítes', img: 'https://images.unsplash.com/photo-1542013936693-884638332954?auto=format&fit=crop&q=80&w=400' },
+            { name: 'Tubos e Conduítes', img: 'https://images.unsplash.com/photo-1596734509421-419b67484462?auto=format&fit=crop&q=80&w=400' },
+
           ].map((cat) => (
             <div key={cat.name} className="group relative bg-white border border-[#E5E7EB] rounded-[2px] overflow-hidden hover:border-[#174F8C] transition duration-300 shadow-sm cursor-pointer">
               <div className="aspect-[4/3] overflow-hidden bg-[#F4F5F6] relative">
