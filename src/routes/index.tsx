@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Phone, MapPin, Search, ChevronRight, MessageSquare, Building2, User, HardHat, FileText, Zap } from "lucide-react";
+import { Search, ChevronRight, MessageSquare } from "lucide-react";
 import logoAsset from "@/assets/logo.asset.json";
 import logoIconAsset from "@/assets/logo-pizzatto-icon-new.png.asset.json";
 import bobininhaAsset from "@/assets/bobininha.asset.json";
 import fachadaAsset from "@/assets/fachada.asset.json";
-
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { ImageWithFallback } from "@/components/ImageWithFallback";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -12,55 +14,18 @@ export const Route = createFileRoute("/")({
     meta: [
       { title: "Pizzatto Materiais Elétricos | Loja Especializada em Cuiabá - MT" },
       { name: "description", content: "Mais de 40 anos de experiência em materiais elétricos. Loja especializada em Cuiabá, Mato Grosso." },
+      { property: "og:title", content: "Pizzatto Materiais Elétricos | Loja Especializada em Cuiabá - MT" },
+      { property: "og:description", content: "Mais de 40 anos de experiência em materiais elétricos. Loja especializada em Cuiabá, Mato Grosso." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
 });
 
-function ImageWithFallback({ src, alt, className, type = 'product' }: { src: string, alt: string, className?: string, type?: 'product' | 'category' }) {
-  return (
-    <img 
-      src={src} 
-      alt={alt} 
-      className={className}
-      onError={(e) => {
-        const target = e.target as HTMLImageElement;
-        target.onerror = null;
-        target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='none' stroke='%23A3A3A3' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13 2L3 14h9l-1 8 10-12h-9l1-8z'/%3E%3C/svg%3E";
-        target.className = `${className} bg-[#F4F5F6] p-12 opacity-40`;
-        const parent = target.parentElement;
-        if (parent && !parent.querySelector('.fallback-text')) {
-          const text = document.createElement('div');
-          text.className = 'fallback-text absolute inset-0 flex items-end justify-center pb-4 text-[10px] font-bold text-[#252A2E]/40 uppercase tracking-widest';
-          text.innerText = 'Imagem em breve';
-          parent.style.position = 'relative';
-          parent.appendChild(text);
-        }
-      }}
-    />
-  );
-}
-
 function Index() {
   return (
     <div className="min-h-screen bg-white text-[#252A2E]">
-
-      <header className="sticky top-0 z-50 bg-[#174F8C] backdrop-blur-sm border-b border-white/10 py-3 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.2)]">
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
-          <div className="flex items-center gap-6 py-1">
-            <img src={logoAsset.url} alt="Pizzatto Materiais Elétricos" className="h-16 w-auto object-contain py-1" />
-          </div>
-
-          <nav className="flex gap-8 text-[14px] font-semibold text-white">
-            {['Produtos', 'Categorias', 'Marcas', 'Empresa', 'Contato'].map(item => (
-              <a href="#" key={item} className="hover:text-[#F5C400] transition uppercase tracking-wider text-[12px]">{item}</a>
-
-            ))}
-          </nav>
-          <button className="bg-[#2E8B57] text-white px-5 py-2.5 rounded-[2px] font-bold text-[13px] hover:bg-[#257548] flex items-center gap-2 shadow-sm">
-            <MessageSquare size={16}/> WhatsApp
-          </button>
-        </div>
-      </header>
+      <Header />
 
       <section className="max-w-7xl mx-auto px-4 py-12 flex items-center gap-12">
         <div className="flex-1 space-y-6">
@@ -90,8 +55,6 @@ function Index() {
                alt="Pizzatto Materiais Elétricos" 
                className="w-full h-full object-contain p-12"
              />
-
-             
            </div>
            <div className="absolute -bottom-6 -right-6 bg-[#2E8B57] text-white p-6 rounded-[2px] shadow-xl z-10">
              <div className="text-[40px] font-black italic leading-none">40+</div>
@@ -119,7 +82,6 @@ function Index() {
             { name: 'Aterramento', img: 'https://images.unsplash.com/photo-1558484660-5bb49b897435?auto=format&fit=crop&q=80&w=400' },
             { name: 'Transformadores', img: 'https://images.unsplash.com/photo-1618576512915-f5589e47087f?auto=format&fit=crop&q=80&w=400' },
             { name: 'Tubos e Conduítes', img: 'https://images.unsplash.com/photo-1596734509421-419b67484462?auto=format&fit=crop&q=80&w=400' },
-
           ].map((cat) => (
             <div key={cat.name} className="group relative bg-white border border-[#E5E7EB] rounded-[2px] overflow-hidden hover:border-[#174F8C] transition duration-300 shadow-sm cursor-pointer">
               <div className="aspect-[4/3] overflow-hidden bg-[#F4F5F6] relative">
@@ -130,7 +92,6 @@ function Index() {
                   type="category"
                 />
               </div>
-
               <div className="p-4 bg-white border-t border-[#F4F5F6]">
                 <h3 className="font-bold text-[15px] text-[#252A2E] group-hover:text-[#174F8C] transition">{cat.name}</h3>
               </div>
@@ -157,7 +118,6 @@ function Index() {
               { brand: 'SIL', name: 'Cabo Flexível 2,5 mm² Azul 750V', ref: 'Rolo 100m', price: '349,00', img: 'https://images.unsplash.com/photo-1558346490-a72e53ae2d4e?auto=format&fit=crop&q=80&w=400' },
               { brand: 'ALUMBRA', name: 'Lâmpada LED High Power 40W', ref: '6500K Bivolt', price: '49,90', img: 'https://images.unsplash.com/photo-1558002038-1055907df8d7?auto=format&fit=crop&q=80&w=400' },
               { brand: 'STECK', name: 'Quadro de Distribuição 24 DIN', ref: 'Sobrepor', price: '124,50', img: 'https://images.unsplash.com/photo-1596734509421-419b67484462?auto=format&fit=crop&q=80&w=400' },
-
             ].map((prod) => (
               <div key={prod.name} className="bg-white border border-[#E5E7EB] rounded-[2px] p-5 hover:border-[#174F8C] hover:shadow-lg transition duration-300 group flex flex-col h-full relative">
                 <div className="text-[9px] font-black text-[#174F8C]/40 tracking-[0.2em] mb-2 uppercase">{prod.brand}</div>
@@ -168,10 +128,8 @@ function Index() {
                     className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition duration-500"
                   />
                 </div>
-
                 <h3 className="font-bold text-[15px] mb-1 leading-tight text-[#252A2E] group-hover:text-[#174F8C] transition">{prod.name}</h3>
                 <div className="text-[11px] text-[#252A2E]/50 mb-auto">Ref: {prod.ref}</div>
-                
                 <div className="mt-6 pt-4 border-t border-[#F4F5F6]">
                   <div className="flex items-center gap-1.5 text-[10px] text-[#2E8B57] font-bold mb-2 uppercase tracking-tighter">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#2E8B57] animate-pulse"></div>
@@ -240,64 +198,7 @@ function Index() {
         </div>
       </section>
 
-      <footer className="bg-[#252A2E] text-white pt-24 pb-12">
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12">
-          <div className="space-y-6">
-            <img src={logoAsset.url} alt="Pizzatto" className="h-12 w-auto brightness-0 invert" />
-            <p className="text-[14px] text-white/60 leading-relaxed">
-              Loja especializada em materiais elétricos em Cuiabá. Mais de 40 anos de tradição, qualidade e confiança para sua casa, obra ou empresa.
-            </p>
-            <div className="flex gap-4">
-              {/* Redes sociais removidas conforme solicitado para evitar links fictícios */}
-            </div>
-          </div>
-          <div>
-            <h4 className="text-[12px] font-black tracking-[0.2em] text-[#F5C400] mb-8 uppercase">Catálogo</h4>
-            <ul className="space-y-4 text-[14px] text-white/70">
-              {['Produtos', 'Categorias', 'Marcas'].map(item => (
-                <li key={item} className="hover:text-white cursor-pointer transition flex items-center gap-2">
-                  <ChevronRight size={12} className="text-[#F5C400]"/> {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-[12px] font-black tracking-[0.2em] text-[#F5C400] mb-8 uppercase">A Pizzatto</h4>
-            <ul className="space-y-4 text-[14px] text-white/70">
-              {['Empresa', 'Localização', 'Contato'].map(item => (
-                <li key={item} className="hover:text-white cursor-pointer transition">{item}</li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-[12px] font-black tracking-[0.2em] text-[#F5C400] mb-8 uppercase">Atendimento</h4>
-            <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <Phone size={20} className="text-[#F5C400] mt-1"/>
-                <div>
-                  <div className="text-[16px] font-black">(65) 3052-4200</div>
-                  <div className="text-[12px] text-white/40 uppercase font-bold">Atendimento</div>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <MapPin size={20} className="text-[#F5C400] mt-1"/>
-                <div className="text-[14px] text-white/70 leading-relaxed">
-                  Av. Manoel José de Arruda, 664<br />
-                  Jardim Shangri-lá<br />
-                  Cuiabá - MT | CEP 78070-305
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="max-w-7xl mx-auto px-4 mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[12px] text-white/40">
-          <div>© {new Date().getFullYear()} Pizzatto Materiais Elétricos. Mais de 40 anos de experiência.</div>
-          <div className="flex gap-8">
-            <span className="hover:text-white cursor-pointer transition">Privacidade</span>
-            <span className="hover:text-white cursor-pointer transition">Termos de Uso</span>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
