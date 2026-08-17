@@ -84,7 +84,7 @@ function Index() {
           </div>
         </div>
         <div className="flex-1 relative h-[500px]">
-           <div className="absolute inset-0 bg-[#F4F5F6] rounded-[4px] overflow-hidden shadow-2xl">
+           <div className="absolute inset-0 bg-white rounded-[4px] overflow-hidden shadow-2xl">
              <ImageWithFallback 
                src={logoIconAsset.url} 
                alt="Pizzatto Materiais Elétricos" 
