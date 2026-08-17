@@ -101,7 +101,7 @@ function Index() {
 
              <div className="absolute inset-0 bg-gradient-to-t from-[#252A2E]/20 to-transparent"></div>
            </div>
-           <div className="absolute -bottom-6 -right-6 bg-[#2E8B57] text-white p-6 rounded-[2px] shadow-xl z-10">
+           <div className="absolute -bottom-6 -right-6 bg-[#174F8C] text-white p-6 rounded-[2px] shadow-xl z-10">
              <div className="text-[40px] font-black italic leading-none">40+</div>
              <div className="text-[10px] font-bold tracking-widest uppercase mt-1">Anos de Experiência</div>
            </div>
