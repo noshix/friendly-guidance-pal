@@ -17,11 +17,13 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <div className="min-h-screen bg-white text-[#252A2E]">
-      <div className="bg-[#174F8C] text-white text-[11px] py-1.5 px-4 flex justify-between items-center">
-        <p className="tracking-wide uppercase font-medium opacity-90">Mais de 40 anos de experiência em soluções elétricas</p>
-        <div className="flex gap-4">
-          <span className="flex items-center gap-1"><MapPin size={12}/> Cuiabá - MT</span>
-          <span className="font-bold flex items-center gap-1"><Phone size={12}/> (65) 3052-4200</span>
+      <div className="bg-[#252A2E] text-white text-[11px] py-2 px-4 border-b border-white/5">
+        <div className="max-w-7xl mx-auto flex justify-between items-center uppercase tracking-widest font-bold">
+          <p className="opacity-70">Distribuidora Técnica de Materiais Elétricos em Cuiabá - MT</p>
+          <div className="flex gap-8 items-center">
+            <span className="flex items-center gap-2 text-white/90 hover:text-[#F5C400] transition cursor-pointer"><MapPin size={12} className="text-[#F5C400]"/> Nossa Loja</span>
+            <span className="flex items-center gap-2 text-white/90 hover:text-[#F5C400] transition cursor-pointer"><Phone size={12} className="text-[#F5C400]"/> (65) 3052-4200</span>
+          </div>
         </div>
       </div>
 
