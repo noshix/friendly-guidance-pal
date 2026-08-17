@@ -53,15 +53,16 @@ function Index() {
         </div>
       </div>
 
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-[#E5E7EB] py-3 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.1)]">
+      <header className="sticky top-0 z-50 bg-[#174F8C] backdrop-blur-sm border-b border-white/10 py-3 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.2)]">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
           <div className="flex items-center gap-6 py-1">
             <img src={logoAsset.url} alt="Pizzatto Materiais Elétricos" className="h-16 w-auto object-contain py-1" />
           </div>
 
-          <nav className="flex gap-8 text-[14px] font-semibold text-[#252A2E]">
+          <nav className="flex gap-8 text-[14px] font-semibold text-white">
             {['Produtos', 'Categorias', 'Marcas', 'Empresa', 'Contato'].map(item => (
-              <a href="#" key={item} className="hover:text-[#174F8C] transition uppercase tracking-wider text-[12px]">{item}</a>
+              <a href="#" key={item} className="hover:text-[#F5C400] transition uppercase tracking-wider text-[12px]">{item}</a>
+
             ))}
           </nav>
           <button className="bg-[#2E8B57] text-white px-5 py-2.5 rounded-[2px] font-bold text-[13px] hover:bg-[#257548] flex items-center gap-2 shadow-sm">
