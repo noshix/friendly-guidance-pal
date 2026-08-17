@@ -151,41 +151,119 @@ function Index() {
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 py-16 flex items-center gap-12">
-        <div className="flex-1 h-[400px] rounded-[4px] border border-[#E5E7EB] overflow-hidden">
-          <img src={fachadaAsset.url} alt="Fachada Pizzatto" className="w-full h-full object-cover"/>
+      <section className="max-w-7xl mx-auto px-4 py-24 flex items-center gap-16">
+        <div className="flex-1 relative">
+          <div className="absolute -top-4 -left-4 w-full h-full border-2 border-[#174F8C]/10 -z-10 rounded-[4px]"></div>
+          <img src={fachadaAsset.url} alt="Fachada Pizzatto" className="w-full h-auto rounded-[4px] shadow-xl border border-[#E5E7EB]"/>
+          <div className="absolute top-8 left-8 bg-[#F5C400] text-[#174F8C] px-4 py-2 font-black italic shadow-lg rounded-[2px] transform -rotate-2">
+            UNIDADE CUIABÁ
+          </div>
         </div>
-        <div className="flex-1 space-y-4">
-          <h2 className="text-3xl font-bold text-[#174F8C]">Há mais de 40 anos ao lado de quem constrói.</h2>
-          <p className="text-[#252A2E]/80 leading-relaxed">
-            A Pizzatto reúne tradição e conhecimento técnico no segmento de materiais elétricos em Cuiabá. 
-            Nosso compromisso é com a qualidade de cada peça e com a agilidade que sua obra exige.
+        <div className="flex-1 space-y-6">
+          <div className="w-16 h-1 bg-[#174F8C] mb-2"></div>
+          <h2 className="text-[40px] font-extrabold text-[#252A2E] leading-tight">Tradição que ilumina o futuro de Mato Grosso.</h2>
+          <p className="text-[18px] text-[#252A2E]/70 leading-relaxed">
+            Fundada há mais de 40 anos, a Pizzatto Materiais Elétricos consolidou-se como referência técnica e comercial em Cuiabá. 
+            Nossa trajetória é marcada pela parceria com as maiores marcas mundiais e pelo compromisso inegociável com a segurança da sua instalação.
           </p>
-        </div>
-      </section>
-
-      <section className="bg-[#F4F5F6]/50 py-12 border-y border-[#F4F5F6]">
-        <div className="max-w-4xl mx-auto px-4 flex items-center gap-12">
-          <img src={bobininhaAsset.url} alt="Bobininha" className="w-24 h-24 object-contain" />
-          <div className="flex-1">
-            <h2 className="text-xl font-bold text-[#174F8C] mb-1">Precisa de ajuda com seu material?</h2>
-            <p className="text-[#252A2E]/70 mb-4 text-sm">Nossa equipe especializada está pronta para atender.</p>
-            <button className="bg-[#2E8B57] text-white px-6 py-2 rounded-[4px] font-bold flex items-center gap-2 text-sm">
-              <MessageSquare size={16}/> Falar no WhatsApp
-            </button>
+          <div className="grid grid-cols-2 gap-6 pt-4">
+            <div className="border-l-4 border-[#F5C400] pl-4">
+              <div className="text-2xl font-black text-[#174F8C]">40.000+</div>
+              <div className="text-[12px] font-bold text-[#252A2E]/50 uppercase tracking-widest">Itens em Catálogo</div>
+            </div>
+            <div className="border-l-4 border-[#F5C400] pl-4">
+              <div className="text-2xl font-black text-[#174F8C]">100%</div>
+              <div className="text-[12px] font-bold text-[#252A2E]/50 uppercase tracking-widest">Suporte Técnico</div>
+            </div>
           </div>
         </div>
       </section>
 
-      <footer className="bg-[#174F8C] text-white pt-12 pb-6">
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-4 gap-8">
+      <section className="bg-[#174F8C] py-20 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-[#123E70]/50 skew-x-12 transform translate-x-20"></div>
+        <div className="max-w-5xl mx-auto px-4 flex flex-col md:flex-row items-center gap-12 relative z-10">
+          <div className="relative group">
+            <div className="absolute inset-0 bg-white/20 rounded-full blur-2xl group-hover:bg-white/30 transition duration-500"></div>
+            <img src={bobininhaAsset.url} alt="Bobininha" className="w-48 h-48 object-contain relative z-10" />
+          </div>
+          <div className="flex-1 text-center md:text-left text-white">
+            <h2 className="text-[32px] font-black mb-4 leading-tight">Dúvidas técnicas ou orçamentos rápidos?</h2>
+            <p className="text-white/80 mb-8 text-[18px] max-w-[600px]">
+              Envie sua lista de materiais agora e receba um orçamento personalizado de nossa equipe de especialistas.
+            </p>
+            <div className="flex flex-wrap justify-center md:justify-start gap-4">
+              <button className="bg-[#2E8B57] text-white px-10 py-4 rounded-[2px] font-black uppercase tracking-widest flex items-center gap-3 hover:bg-[#257548] transition shadow-2xl">
+                <MessageSquare size={20}/> Falar no WhatsApp
+              </button>
+              <button className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-10 py-4 rounded-[2px] font-black uppercase tracking-widest hover:bg-white/20 transition">
+                Enviar E-mail
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer className="bg-[#252A2E] text-white pt-24 pb-12">
+        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12">
+          <div className="space-y-6">
+            <img src={logoAsset.url} alt="Pizzatto" className="h-12 w-auto brightness-0 invert" />
+            <p className="text-[14px] text-white/60 leading-relaxed">
+              Distribuidora de materiais elétricos em Cuiabá. Tradição, qualidade técnica e confiança para sua obra ou indústria desde 1984.
+            </p>
+            <div className="flex gap-4">
+              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#174F8C] transition cursor-pointer">
+                <span className="font-black">f</span>
+              </div>
+              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#174F8C] transition cursor-pointer">
+                <span className="font-black">in</span>
+              </div>
+            </div>
+          </div>
           <div>
-            <img src={logoAsset.url} alt="Pizzatto" className="h-8 mb-4 brightness-0 invert" />
-            <p className="text-[12px] opacity-80">Tradição em Cuiabá.</p>
+            <h4 className="text-[12px] font-black tracking-[0.2em] text-[#F5C400] mb-8 uppercase">Catálogo Técnico</h4>
+            <ul className="space-y-4 text-[14px] text-white/70">
+              {['Cabos e Fios', 'Iluminação LED', 'Quadros e Proteção', 'Transformadores', 'Eletrodutos'].map(item => (
+                <li key={item} className="hover:text-white cursor-pointer transition flex items-center gap-2">
+                  <ChevronRight size={12} className="text-[#F5C400]"/> {item}
+                </li>
+              ))}
+            </ul>
           </div>
-          <div><h4 className="font-bold mb-4 text-xs tracking-widest">CATÁLOGO</h4></div>
-          <div><h4 className="font-bold mb-4 text-xs tracking-widest">EMPRESA</h4></div>
-          <div><h4 className="font-bold mb-4 text-xs tracking-widest">CONTATO</h4></div>
+          <div>
+            <h4 className="text-[12px] font-black tracking-[0.2em] text-[#F5C400] mb-8 uppercase">A Pizzatto</h4>
+            <ul className="space-y-4 text-[14px] text-white/70">
+              {['Nossa História', 'Trabalhe Conosco', 'Política de Qualidade', 'Blog Técnico', 'Contato'].map(item => (
+                <li key={item} className="hover:text-white cursor-pointer transition">{item}</li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-[12px] font-black tracking-[0.2em] text-[#F5C400] mb-8 uppercase">Canais de Atendimento</h4>
+            <div className="space-y-6">
+              <div className="flex items-start gap-4">
+                <Phone size={20} className="text-[#F5C400] mt-1"/>
+                <div>
+                  <div className="text-[16px] font-black">(65) 3052-4200</div>
+                  <div className="text-[12px] text-white/40 uppercase font-bold">Vendas & Suporte</div>
+                </div>
+              </div>
+              <div className="flex items-start gap-4">
+                <MapPin size={20} className="text-[#F5C400] mt-1"/>
+                <div className="text-[14px] text-white/70 leading-relaxed">
+                  Av. Fernando Correa da Costa, 1234<br />
+                  Cuiabá - Mato Grosso<br />
+                  CEP: 78000-000
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[12px] text-white/40">
+          <div>© {new Date().getFullYear()} Pizzatto Materiais Elétricos. Todos os direitos reservados.</div>
+          <div className="flex gap-8">
+            <span className="hover:text-white cursor-pointer transition">Privacidade</span>
+            <span className="hover:text-white cursor-pointer transition">Termos de Uso</span>
+          </div>
         </div>
       </footer>
     </div>
