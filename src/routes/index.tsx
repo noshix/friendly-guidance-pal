@@ -260,9 +260,9 @@ function Index() {
               <div className="flex items-start gap-4">
                 <MapPin size={20} className="text-[#F5C400] mt-1"/>
                 <div className="text-[14px] text-white/70 leading-relaxed">
-                  Av. Fernando Correa da Costa, 1234<br />
-                  Cuiabá - Mato Grosso<br />
-                  CEP: 78000-000
+                  Av. Manoel José de Arruda, 664<br />
+                  Jardim Shangri-lá<br />
+                  Cuiabá - MT | CEP 78070-305
                 </div>
               </div>
             </div>
