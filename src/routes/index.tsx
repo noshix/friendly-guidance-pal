@@ -90,15 +90,26 @@ function Index() {
           <h2 className="text-3xl font-extrabold text-[#174F8C] mb-2">Encontre o que precisa</h2>
           <p className="text-[#252A2E]/70">Materiais para instalações prediais, industriais e infraestrutura.</p>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {['Cabos e Condutores', 'Iluminação', 'Proteção Elétrica', 'Ferramentas', 'Infraestrutura'].map((cat) => (
-            <div key={cat} className="group border border-[#E5E7EB] p-4 rounded-[4px] hover:border-[#174F8C] transition flex flex-col items-center text-center cursor-pointer">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {[
+            { name: 'Cabos e Condutores', desc: 'Fios, cabos flexíveis e blindados.' },
+            { name: 'Iluminação', desc: 'LED, painéis e soluções decorativas.' },
+            { name: 'Proteção Elétrica', desc: 'Disjuntores, IDs e DPS.' },
+            { name: 'Conectores', desc: 'Terminais e barramentos.' },
+            { name: 'Ferramentas', desc: 'Equipamentos para eletricistas.' },
+            { name: 'Aterramento', desc: 'Hastes e malhas de proteção.' },
+            { name: 'Transformadores', desc: 'Soluções para alta e baixa tensão.' },
+            { name: 'Tubos e Conduítes', desc: 'Eletrodutos e canaletas.' },
+          ].map((cat) => (
+            <div key={cat.name} className="group border border-[#E5E7EB] p-5 rounded-[4px] hover:border-[#174F8C] hover:shadow-sm transition flex flex-col items-start text-left cursor-pointer relative overflow-hidden">
               <div className="bg-[#F4F5F6] w-full h-32 mb-4 rounded-[2px]" />
-              <h3 className="font-bold text-[14px] text-[#252A2E]">{cat}</h3>
-              <div className="text-[#2E8B57] mt-2 group-hover:translate-x-1 transition"><ChevronRight size={18}/></div>
+              <h3 className="font-bold text-[15px] text-[#174F8C] mb-1">{cat.name}</h3>
+              <p className="text-[12px] text-[#252A2E]/60 leading-tight mb-2">{cat.desc}</p>
+              <div className="text-[#2E8B57] mt-auto self-end opacity-0 group-hover:opacity-100 transition"><ChevronRight size={18}/></div>
             </div>
           ))}
         </div>
+
       </section>
       {/* Produtos em Destaque */}
       <section className="bg-[#F4F5F6]/30 py-16">
