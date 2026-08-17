@@ -85,8 +85,9 @@
 
 @layer base {
   body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-    font-family: sans-serif;
+    background-color: #FFFFFF;
+    color: #252A2E;
+    font-family: 'Outfit', sans-serif;
   }
 }
+
