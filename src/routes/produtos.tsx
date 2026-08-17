@@ -185,7 +185,7 @@ function Products() {
             </div>
 
             {/* Grid */}
-            <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-3' : 'grid-cols-1'}`}>
+            <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3' : 'grid-cols-1'}`}>
               {MOCK_PRODUCTS.map((prod) => (
                 <div key={prod.id} className={`bg-white border border-[#E5E7EB] rounded-[2px] p-5 hover:border-[#174F8C] hover:shadow-lg transition duration-300 group flex relative ${viewMode === 'grid' ? 'flex-col h-full' : 'flex-row gap-8 items-center'}`}>
                   
