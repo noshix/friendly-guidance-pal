@@ -217,7 +217,7 @@ function Index() {
           </p>
           <div className="pt-4">
             <div className="inline-block border-l-4 border-[#F5C400] pl-4">
-              <div className="text-4xl font-black text-[#174F8C]">40+</div>
+              <div className="text-4xl font-black text-[#2E8B57]">40+</div>
               <div className="text-[14px] font-bold text-[#252A2E]/50 uppercase tracking-widest mt-1">Anos de Experiência</div>
             </div>
           </div>
