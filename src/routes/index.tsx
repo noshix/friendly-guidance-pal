@@ -88,7 +88,7 @@ function Index() {
              <ImageWithFallback 
                src={logoIconAsset.url} 
                alt="Pizzatto Materiais Elétricos" 
-               className="w-full h-full object-contain p-20"
+               className="w-full h-full object-contain p-12"
              />
 
              <div className="absolute inset-0 bg-gradient-to-t from-[#252A2E]/20 to-transparent"></div>
