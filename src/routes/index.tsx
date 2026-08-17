@@ -81,7 +81,7 @@ function Index() {
             Encontre materiais elétricos para sua casa, obra, empresa ou projeto com a experiência de quem atua há mais de 40 anos no segmento.
           </p>
           <div className="flex gap-4 pt-4">
-            <button className="bg-[#174F8C] text-white px-8 py-4 rounded-[2px] font-bold uppercase text-[14px] hover:bg-[#123E70] transition shadow-md">Explorar catálogo</button>
+            <button className="bg-[#2E8B57] text-white px-8 py-4 rounded-[2px] font-bold uppercase text-[14px] hover:bg-[#257046] transition shadow-md">Explorar catálogo</button>
             <button className="bg-[#F5C400] text-[#252A2E] px-8 py-4 rounded-[2px] font-bold uppercase text-[14px] hover:bg-[#E0B200] transition shadow-md">Solicitar orçamento</button>
           </div>
           <div className="relative pt-6">
