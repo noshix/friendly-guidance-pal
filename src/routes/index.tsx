@@ -86,7 +86,7 @@ function Index() {
           </div>
           <div className="relative pt-6">
             <Search className="absolute left-4 top-10 text-[#252A2E]/30" size={20}/>
-            <input type="text" placeholder="Busque por produto, código, referência ou fabricante..." className="w-full bg-white border border-[#E5E7EB] py-4 pl-12 pr-4 rounded-[2px] shadow-sm focus:ring-2 focus:ring-[#174F8C] outline-none"/>
+            <input type="text" placeholder="Busque por produto, código, referência ou fabricante..." className="w-full bg-white border border-[#252A2E]/20 py-4 pl-12 pr-4 rounded-[2px] shadow-sm focus:ring-2 focus:ring-[#174F8C] outline-none text-[#252A2E] placeholder:text-[#252A2E]/40 font-medium"/>
           </div>
         </div>
         <div className="flex-1 relative h-[500px]">
