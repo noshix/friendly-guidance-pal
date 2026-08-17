@@ -106,10 +106,9 @@ function Index() {
         </div>
       </section>
 
-      <section className="bg-[#F4F5F6]/30 py-12">
+      <section className="bg-[#F4F5F6]/30 py-20">
         <div className="max-w-7xl mx-auto px-4">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-between items-end mb-10">
+          <div className="flex justify-between items-end mb-12">
             <div>
               <div className="w-16 h-1 bg-[#F5C400] mb-4"></div>
               <h2 className="text-3xl font-bold text-[#252A2E]">Destaques da Semana</h2>
