@@ -14,30 +14,35 @@ export const Route = createFileRoute("/produtos/$id")({
   }),
 });
 
-// Mock Data for the single product
-const PRODUCT = {
-  id: "3481",
-  name: "Disjuntor Tripolar 32A",
-  brand: "SIEMENS",
-  ref: "5SX2332-7",
-  category: "Proteção Elétrica",
-  price: "189,90",
-  inStock: true,
-  img: "", // Empty to demonstrate placeholder as requested
-  unit: "UN",
-  ncm: "8536.20.00",
-  barcode: "7891234567890",
-  description: "", // Removed mock technical description as requested
-};
-
-// Mock Related Products
-const RELATED_PRODUCTS = [
-  { id: "2", brand: 'SIL', name: 'Cabo Flexível 2,5 mm² Azul 750V', ref: 'Rolo 100m', price: '349,00', img: 'https://images.unsplash.com/photo-1558346490-a72e53ae2d4e?auto=format&fit=crop&q=80&w=400', inStock: true },
-  { id: "3", brand: 'ALUMBRA', name: 'Lâmpada LED High Power 40W', ref: '6500K Bivolt', price: '49,90', img: 'https://images.unsplash.com/photo-1558002038-1055907df8d7?auto=format&fit=crop&q=80&w=400', inStock: true },
-  { id: "4", brand: 'STECK', name: 'Quadro de Distribuição 24 DIN', ref: 'Sobrepor', price: '124,50', img: 'https://images.unsplash.com/photo-1596734509421-419b67484462?auto=format&fit=crop&q=80&w=400', inStock: false },
+// Mock Products List (shared data source for detail and related)
+const MOCK_PRODUCTS = [
+  { id: "3481", brand: 'SIEMENS', name: 'Disjuntor Tripolar 32A', ref: '5SX2332-7', price: '189,90', img: '', inStock: true, unit: "UN", ncm: "8536.20.00", barcode: "7891234567890", category: "Proteção Elétrica", description: "" },
+  { id: "2", brand: 'SIL', name: 'Cabo Flexível 2,5 mm² Azul 750V', ref: 'Rolo 100m', price: '349,00', img: 'https://images.unsplash.com/photo-1558346490-a72e53ae2d4e?auto=format&fit=crop&q=80&w=400', inStock: true, unit: "UN", ncm: "8544.49.00", barcode: "7891234567891", category: "Cabos e Condutores", description: "" },
+  { id: "3", brand: 'ALUMBRA', name: 'Lâmpada LED High Power 40W', ref: '6500K Bivolt', price: '49,90', img: 'https://images.unsplash.com/photo-1558002038-1055907df8d7?auto=format&fit=crop&q=80&w=400', inStock: true, unit: "UN", ncm: "8539.50.00", barcode: "7891234567892", category: "Iluminação", description: "" },
+  { id: "4", brand: 'STECK', name: 'Quadro de Distribuição 24 DIN', ref: 'Sobrepor', price: '124,50', img: 'https://images.unsplash.com/photo-1596734509421-419b67484462?auto=format&fit=crop&q=80&w=400', inStock: false, unit: "UN", ncm: "8537.10.90", barcode: "7891234567893", category: "Proteção Elétrica", description: "" },
+  { id: "5", brand: 'WEG', name: 'Motor Trifásico 2CV', ref: 'W22 Premium', price: null, img: '', inStock: true, unit: "UN", ncm: "8501.52.10", barcode: "7891234567894", category: "Motores", description: "" },
+  { id: "6", brand: 'TRAMONTINA', name: 'Alicate Universal 8"', ref: 'Isolado 1000V', price: '85,90', img: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&q=80&w=400', inStock: true, unit: "UN", ncm: "8203.20.10", barcode: "7891234567895", category: "Ferramentas", description: "" },
+  { id: "7", brand: 'CORFIO', name: 'Cabo PP 3x2,5mm²', ref: 'Metro', price: '12,50', img: '', inStock: false, unit: "MT", ncm: "8544.49.00", barcode: "7891234567896", category: "Cabos e Condutores", description: "" },
+  { id: "8", brand: 'PIAL', name: 'Interruptor Simples 4x2', ref: 'Pial Plus', price: '22,90', img: 'https://images.unsplash.com/photo-1563770660941-20978e870e93?auto=format&fit=crop&q=80&w=400', inStock: true, unit: "UN", ncm: "8536.50.90", barcode: "7891234567897", category: "Interruptores", description: "" },
+  { id: "9", brand: 'SIEMENS', name: 'Contator Trifásico 25A', ref: '3RT2026-1AK60', price: '245,00', img: '', inStock: true, unit: "UN", ncm: "8536.49.00", barcode: "7891234567898", category: "Proteção Elétrica", description: "" },
+  { id: "10", brand: 'SIL', name: 'Cabo Flexível 6,0 mm² Preto', ref: 'Metro', price: '8,90', img: '', inStock: true, unit: "MT", ncm: "8544.49.00", barcode: "7891234567899", category: "Cabos e Condutores", description: "" },
+  { id: "11", brand: 'ALUMBRA', name: 'Plafon LED 18W Quadrado', ref: 'Embutir', price: '32,90', img: '', inStock: true, unit: "UN", ncm: "9405.10.99", barcode: "7891234567900", category: "Iluminação", description: "" },
+  { id: "12", brand: 'STECK', name: 'Tomada Industrial 2P+T 16A', ref: 'Azul', price: '45,00', img: '', inStock: true, unit: "UN", ncm: "8536.69.10", barcode: "7891234567901", category: "Conectores", description: "" },
 ];
 
 function ProductDetail() {
+  const { id } = Route.useParams();
+  
+  // Find product by ID or fallback to first one if not found (mock behavior)
+  const PRODUCT = MOCK_PRODUCTS.find(p => p.id === id) || MOCK_PRODUCTS[0];
+
+  // Related products (different from current one)
+  const RELATED_PRODUCTS = MOCK_PRODUCTS
+    .filter(p => p.id !== PRODUCT?.id)
+    .slice(0, 3);
+
+  if (!PRODUCT) return null;
+
   return (
     <div className="min-h-screen bg-white text-[#252A2E]">
       <Header activePage="Produtos" />
@@ -192,7 +197,7 @@ function ProductDetail() {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {RELATED_PRODUCTS.map((prod) => (
-              <div key={prod.id} className="bg-white border border-[#E5E7EB] rounded-[2px] p-5 hover:border-[#174F8C] hover:shadow-lg transition duration-300 group flex flex-col h-full relative">
+              <a key={prod.id} href={`/produtos/${prod.id}`} className="bg-white border border-[#E5E7EB] rounded-[2px] p-5 hover:border-[#174F8C] hover:shadow-lg transition duration-300 group flex flex-col h-full relative">
                 <div className="relative w-full aspect-square mb-6 rounded-[2px] overflow-hidden bg-[#F4F5F6]/50">
                   <ImageWithFallback 
                     src={prod.img} 
@@ -217,14 +222,14 @@ function ProductDetail() {
                           <div className="text-[14px] font-black text-[#252A2E]/30 uppercase tracking-[0.1em]">Consulte</div>
                         )}
                       </div>
-                      <button className="w-full bg-[#174F8C] text-white py-2.5 rounded-[2px] hover:bg-[#123E70] transition flex items-center justify-center gap-2 group/btn shadow-sm">
+                      <span className="w-full bg-[#174F8C] text-white py-2.5 rounded-[2px] hover:bg-[#123E70] transition flex items-center justify-center gap-2 group/btn shadow-sm">
                         <span className="text-[11px] font-bold uppercase tracking-wider">Ver produto</span>
                         <ChevronRight size={14} className="group-hover/btn:translate-x-1 transition"/>
-                      </button>
+                      </span>
                     </div>
                   </div>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
         </div>
