@@ -16,6 +16,7 @@ import { Route as ProdutosRouteRouteImport } from './routes/produtos/route'
 import { Route as CategoriasIndexRouteImport } from './routes/categorias/index'
 import { Route as CategoriasSlugRouteImport } from './routes/categorias/$slug'
 import { Route as MarcasIndexRouteImport } from './routes/marcas/index'
+import { Route as MarcasSlugRouteImport } from './routes/marcas/$slug'
 import { Route as ProdutosIndexRouteImport } from './routes/produtos/index'
 import { Route as ProdutosIdRouteImport } from './routes/produtos/$id'
 
@@ -54,6 +55,11 @@ const MarcasIndexRoute = MarcasIndexRouteImport.update({
   path: '/',
   getParentRoute: () => MarcasRouteRoute,
 } as any)
+const MarcasSlugRoute = MarcasSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => MarcasRouteRoute,
+} as any)
 const ProdutosIndexRoute = ProdutosIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/marcas': typeof MarcasRouteRouteWithChildren
   '/produtos': typeof ProdutosRouteRouteWithChildren
   '/categorias/$slug': typeof CategoriasSlugRoute
+  '/marcas/$slug': typeof MarcasSlugRoute
   '/produtos/$id': typeof ProdutosIdRoute
   '/categorias/': typeof CategoriasIndexRoute
   '/marcas/': typeof MarcasIndexRoute
@@ -79,6 +86,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/categorias/$slug': typeof CategoriasSlugRoute
+  '/marcas/$slug': typeof MarcasSlugRoute
   '/produtos/$id': typeof ProdutosIdRoute
   '/categorias': typeof CategoriasIndexRoute
   '/marcas': typeof MarcasIndexRoute
@@ -91,6 +99,7 @@ export interface FileRoutesById {
   '/marcas': typeof MarcasRouteRouteWithChildren
   '/produtos': typeof ProdutosRouteRouteWithChildren
   '/categorias/$slug': typeof CategoriasSlugRoute
+  '/marcas/$slug': typeof MarcasSlugRoute
   '/produtos/$id': typeof ProdutosIdRoute
   '/categorias/': typeof CategoriasIndexRoute
   '/marcas/': typeof MarcasIndexRoute
@@ -104,6 +113,7 @@ export interface FileRouteTypes {
     | '/marcas'
     | '/produtos'
     | '/categorias/$slug'
+    | '/marcas/$slug'
     | '/produtos/$id'
     | '/categorias/'
     | '/marcas/'
@@ -112,6 +122,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/categorias/$slug'
+    | '/marcas/$slug'
     | '/produtos/$id'
     | '/categorias'
     | '/marcas'
@@ -123,6 +134,7 @@ export interface FileRouteTypes {
     | '/marcas'
     | '/produtos'
     | '/categorias/$slug'
+    | '/marcas/$slug'
     | '/produtos/$id'
     | '/categorias/'
     | '/marcas/'
@@ -187,6 +199,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarcasIndexRouteImport
       parentRoute: typeof MarcasRouteRoute
     }
+    '/marcas/$slug': {
+      id: '/marcas/$slug'
+      path: '/$slug'
+      fullPath: '/marcas/$slug'
+      preLoaderRoute: typeof MarcasSlugRouteImport
+      parentRoute: typeof MarcasRouteRoute
+    }
     '/produtos/': {
       id: '/produtos/'
       path: '/'
@@ -219,10 +238,12 @@ const CategoriasRouteRouteWithChildren = CategoriasRouteRoute._addFileChildren(
 )
 
 interface MarcasRouteRouteChildren {
+  MarcasSlugRoute: typeof MarcasSlugRoute
   MarcasIndexRoute: typeof MarcasIndexRoute
 }
 
 const MarcasRouteRouteChildren: MarcasRouteRouteChildren = {
+  MarcasSlugRoute: MarcasSlugRoute,
   MarcasIndexRoute: MarcasIndexRoute,
 }
 
