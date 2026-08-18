@@ -52,9 +52,12 @@ export function Footer() {
       </div>
       <div className="max-w-7xl mx-auto px-4 mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[12px] text-white/40">
         <div>© {new Date().getFullYear()} Pizzatto Materiais Elétricos. Mais de 40 anos de experiência.</div>
-        <div className="flex gap-8">
+        <div className="flex gap-8 items-center">
           <span className="hover:text-white cursor-pointer transition">Privacidade</span>
           <span className="hover:text-white cursor-pointer transition">Termos de Uso</span>
+          <Link to="/admin" className="px-3 py-1 bg-white/5 hover:bg-white/10 text-white/40 hover:text-white rounded transition text-[10px] uppercase font-bold tracking-wider">
+            Área Restrita
+          </Link>
         </div>
       </div>
     </footer>
