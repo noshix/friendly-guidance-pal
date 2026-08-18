@@ -38,7 +38,7 @@ function ProductDetail() {
 
   // Related products (different from current one)
   const RELATED_PRODUCTS = MOCK_PRODUCTS
-    .filter(p => p.id !== PRODUCT.id)
+    .filter(p => p.id !== PRODUCT?.id)
     .slice(0, 3);
 
   if (!PRODUCT) return null;
