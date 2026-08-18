@@ -11,9 +11,12 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CategoriasRouteRouteImport } from './routes/categorias/route'
+import { Route as MarcasRouteRouteImport } from './routes/marcas/route'
 import { Route as ProdutosRouteRouteImport } from './routes/produtos/route'
 import { Route as CategoriasIndexRouteImport } from './routes/categorias/index'
 import { Route as CategoriasSlugRouteImport } from './routes/categorias/$slug'
+import { Route as MarcasIndexRouteImport } from './routes/marcas/index'
+import { Route as MarcasSlugRouteImport } from './routes/marcas/$slug'
 import { Route as ProdutosIndexRouteImport } from './routes/produtos/index'
 import { Route as ProdutosIdRouteImport } from './routes/produtos/$id'
 
@@ -25,6 +28,11 @@ const IndexRoute = IndexRouteImport.update({
 const CategoriasRouteRoute = CategoriasRouteRouteImport.update({
   id: '/categorias',
   path: '/categorias',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarcasRouteRoute = MarcasRouteRouteImport.update({
+  id: '/marcas',
+  path: '/marcas',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProdutosRouteRoute = ProdutosRouteRouteImport.update({
@@ -42,6 +50,16 @@ const CategoriasSlugRoute = CategoriasSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => CategoriasRouteRoute,
 } as any)
+const MarcasIndexRoute = MarcasIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MarcasRouteRoute,
+} as any)
+const MarcasSlugRoute = MarcasSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => MarcasRouteRoute,
+} as any)
 const ProdutosIndexRoute = ProdutosIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -56,27 +74,35 @@ const ProdutosIdRoute = ProdutosIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/categorias': typeof CategoriasRouteRouteWithChildren
+  '/marcas': typeof MarcasRouteRouteWithChildren
   '/produtos': typeof ProdutosRouteRouteWithChildren
   '/categorias/$slug': typeof CategoriasSlugRoute
+  '/marcas/$slug': typeof MarcasSlugRoute
   '/produtos/$id': typeof ProdutosIdRoute
   '/categorias/': typeof CategoriasIndexRoute
+  '/marcas/': typeof MarcasIndexRoute
   '/produtos/': typeof ProdutosIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/categorias/$slug': typeof CategoriasSlugRoute
+  '/marcas/$slug': typeof MarcasSlugRoute
   '/produtos/$id': typeof ProdutosIdRoute
   '/categorias': typeof CategoriasIndexRoute
+  '/marcas': typeof MarcasIndexRoute
   '/produtos': typeof ProdutosIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/categorias': typeof CategoriasRouteRouteWithChildren
+  '/marcas': typeof MarcasRouteRouteWithChildren
   '/produtos': typeof ProdutosRouteRouteWithChildren
   '/categorias/$slug': typeof CategoriasSlugRoute
+  '/marcas/$slug': typeof MarcasSlugRoute
   '/produtos/$id': typeof ProdutosIdRoute
   '/categorias/': typeof CategoriasIndexRoute
+  '/marcas/': typeof MarcasIndexRoute
   '/produtos/': typeof ProdutosIndexRoute
 }
 export interface FileRouteTypes {
@@ -84,27 +110,41 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/categorias'
+    | '/marcas'
     | '/produtos'
     | '/categorias/$slug'
+    | '/marcas/$slug'
     | '/produtos/$id'
     | '/categorias/'
+    | '/marcas/'
     | '/produtos/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/categorias/$slug' | '/produtos/$id' | '/categorias' | '/produtos'
+  to:
+    | '/'
+    | '/categorias/$slug'
+    | '/marcas/$slug'
+    | '/produtos/$id'
+    | '/categorias'
+    | '/marcas'
+    | '/produtos'
   id:
     | '__root__'
     | '/'
     | '/categorias'
+    | '/marcas'
     | '/produtos'
     | '/categorias/$slug'
+    | '/marcas/$slug'
     | '/produtos/$id'
     | '/categorias/'
+    | '/marcas/'
     | '/produtos/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CategoriasRouteRoute: typeof CategoriasRouteRouteWithChildren
+  MarcasRouteRoute: typeof MarcasRouteRouteWithChildren
   ProdutosRouteRoute: typeof ProdutosRouteRouteWithChildren
 }
 
@@ -122,6 +162,13 @@ declare module '@tanstack/react-router' {
       path: '/categorias'
       fullPath: '/categorias'
       preLoaderRoute: typeof CategoriasRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/marcas': {
+      id: '/marcas'
+      path: '/marcas'
+      fullPath: '/marcas'
+      preLoaderRoute: typeof MarcasRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/produtos': {
@@ -144,6 +191,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/categorias/$slug'
       preLoaderRoute: typeof CategoriasSlugRouteImport
       parentRoute: typeof CategoriasRouteRoute
+    }
+    '/marcas/': {
+      id: '/marcas/'
+      path: '/'
+      fullPath: '/marcas/'
+      preLoaderRoute: typeof MarcasIndexRouteImport
+      parentRoute: typeof MarcasRouteRoute
+    }
+    '/marcas/$slug': {
+      id: '/marcas/$slug'
+      path: '/$slug'
+      fullPath: '/marcas/$slug'
+      preLoaderRoute: typeof MarcasSlugRouteImport
+      parentRoute: typeof MarcasRouteRoute
     }
     '/produtos/': {
       id: '/produtos/'
@@ -176,6 +237,20 @@ const CategoriasRouteRouteWithChildren = CategoriasRouteRoute._addFileChildren(
   CategoriasRouteRouteChildren,
 )
 
+interface MarcasRouteRouteChildren {
+  MarcasSlugRoute: typeof MarcasSlugRoute
+  MarcasIndexRoute: typeof MarcasIndexRoute
+}
+
+const MarcasRouteRouteChildren: MarcasRouteRouteChildren = {
+  MarcasSlugRoute: MarcasSlugRoute,
+  MarcasIndexRoute: MarcasIndexRoute,
+}
+
+const MarcasRouteRouteWithChildren = MarcasRouteRoute._addFileChildren(
+  MarcasRouteRouteChildren,
+)
+
 interface ProdutosRouteRouteChildren {
   ProdutosIdRoute: typeof ProdutosIdRoute
   ProdutosIndexRoute: typeof ProdutosIndexRoute
@@ -193,6 +268,7 @@ const ProdutosRouteRouteWithChildren = ProdutosRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CategoriasRouteRoute: CategoriasRouteRouteWithChildren,
+  MarcasRouteRoute: MarcasRouteRouteWithChildren,
   ProdutosRouteRoute: ProdutosRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport

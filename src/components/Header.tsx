@@ -16,7 +16,7 @@ export function Header({ activePage }: { activePage?: string }) {
           {[
             { label: 'Produtos', to: '/produtos' },
             { label: 'Categorias', to: '/categorias' },
-            { label: 'Marcas', to: '#' },
+            { label: 'Marcas', to: '/marcas' },
             { label: 'Empresa', to: '#' },
             { label: 'Contato', to: '#' }
           ].map(item => (
