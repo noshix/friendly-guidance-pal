@@ -134,7 +134,7 @@ function ProductDetail() {
               <div className="mt-auto space-y-4 pt-8 border-t border-[#F4F5F6]">
                 <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-[#252A2E]/60">
                   <span>Ver mais produtos de:</span>
-                  <button className="text-[#174F8C] hover:underline">{PRODUCT.brand}</button>
+                  <Link to="/marcas/$slug" params={{ slug: PRODUCT.brand.toLowerCase() }} className="text-[#174F8C] hover:underline">{PRODUCT.brand}</Link>
                 </div>
                 <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-[#252A2E]/60">
                   <span>Ver produtos em:</span>
