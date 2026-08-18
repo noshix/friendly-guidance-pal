@@ -10,7 +10,8 @@ import {
   ChevronRight,
   Menu,
   User,
-  Search
+  Search,
+  Plus
 } from "lucide-react";
 import { useState } from "react";
 
