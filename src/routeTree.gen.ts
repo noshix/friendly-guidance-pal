@@ -28,6 +28,7 @@ import { Route as AdminImportacoesIndexRouteImport } from './routes/admin/import
 import { Route as AdminImportacoesNovaRouteImport } from './routes/admin/importacoes/nova'
 import { Route as AdminImportacoesPreviewRouteImport } from './routes/admin/importacoes/preview'
 import { Route as AdminProdutosIndexRouteImport } from './routes/admin/produtos/index'
+import { Route as AdminProdutosIdRouteImport } from './routes/admin/produtos/$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -124,6 +125,11 @@ const AdminProdutosIndexRoute = AdminProdutosIndexRouteImport.update({
   path: '/produtos/',
   getParentRoute: () => AdminRouteRoute,
 } as any)
+const AdminProdutosIdRoute = AdminProdutosIdRouteImport.update({
+  id: '/produtos/$id',
+  path: '/produtos/$id',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -143,6 +149,7 @@ export interface FileRoutesByFullPath {
   '/produtos/': typeof ProdutosIndexRoute
   '/admin/importacoes/nova': typeof AdminImportacoesNovaRoute
   '/admin/importacoes/preview': typeof AdminImportacoesPreviewRoute
+  '/admin/produtos/$id': typeof AdminProdutosIdRoute
   '/admin/importacoes/': typeof AdminImportacoesIndexRoute
   '/admin/produtos/': typeof AdminProdutosIndexRoute
 }
@@ -160,6 +167,7 @@ export interface FileRoutesByTo {
   '/produtos': typeof ProdutosIndexRoute
   '/admin/importacoes/nova': typeof AdminImportacoesNovaRoute
   '/admin/importacoes/preview': typeof AdminImportacoesPreviewRoute
+  '/admin/produtos/$id': typeof AdminProdutosIdRoute
   '/admin/importacoes': typeof AdminImportacoesIndexRoute
   '/admin/produtos': typeof AdminProdutosIndexRoute
 }
@@ -182,6 +190,7 @@ export interface FileRoutesById {
   '/produtos/': typeof ProdutosIndexRoute
   '/admin/importacoes/nova': typeof AdminImportacoesNovaRoute
   '/admin/importacoes/preview': typeof AdminImportacoesPreviewRoute
+  '/admin/produtos/$id': typeof AdminProdutosIdRoute
   '/admin/importacoes/': typeof AdminImportacoesIndexRoute
   '/admin/produtos/': typeof AdminProdutosIndexRoute
 }
@@ -205,6 +214,7 @@ export interface FileRouteTypes {
     | '/produtos/'
     | '/admin/importacoes/nova'
     | '/admin/importacoes/preview'
+    | '/admin/produtos/$id'
     | '/admin/importacoes/'
     | '/admin/produtos/'
   fileRoutesByTo: FileRoutesByTo
@@ -222,6 +232,7 @@ export interface FileRouteTypes {
     | '/produtos'
     | '/admin/importacoes/nova'
     | '/admin/importacoes/preview'
+    | '/admin/produtos/$id'
     | '/admin/importacoes'
     | '/admin/produtos'
   id:
@@ -243,6 +254,7 @@ export interface FileRouteTypes {
     | '/produtos/'
     | '/admin/importacoes/nova'
     | '/admin/importacoes/preview'
+    | '/admin/produtos/$id'
     | '/admin/importacoes/'
     | '/admin/produtos/'
   fileRoutesById: FileRoutesById
@@ -392,6 +404,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminProdutosIndexRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/admin/produtos/$id': {
+      id: '/admin/produtos/$id'
+      path: '/produtos/$id'
+      fullPath: '/admin/produtos/$id'
+      preLoaderRoute: typeof AdminProdutosIdRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
   }
 }
 
@@ -400,6 +419,7 @@ interface AdminRouteRouteChildren {
   AdminIndexRoute: typeof AdminIndexRoute
   AdminImportacoesNovaRoute: typeof AdminImportacoesNovaRoute
   AdminImportacoesPreviewRoute: typeof AdminImportacoesPreviewRoute
+  AdminProdutosIdRoute: typeof AdminProdutosIdRoute
   AdminImportacoesIndexRoute: typeof AdminImportacoesIndexRoute
   AdminProdutosIndexRoute: typeof AdminProdutosIndexRoute
 }
@@ -409,6 +429,7 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminIndexRoute: AdminIndexRoute,
   AdminImportacoesNovaRoute: AdminImportacoesNovaRoute,
   AdminImportacoesPreviewRoute: AdminImportacoesPreviewRoute,
+  AdminProdutosIdRoute: AdminProdutosIdRoute,
   AdminImportacoesIndexRoute: AdminImportacoesIndexRoute,
   AdminProdutosIndexRoute: AdminProdutosIndexRoute,
 }
