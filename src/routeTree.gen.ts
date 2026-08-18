@@ -16,6 +16,7 @@ import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as EmpresaRouteImport } from './routes/empresa'
 import { Route as MarcasRouteRouteImport } from './routes/marcas/route'
 import { Route as ProdutosRouteRouteImport } from './routes/produtos/route'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as CategoriasIndexRouteImport } from './routes/categorias/index'
 import { Route as CategoriasSlugRouteImport } from './routes/categorias/$slug'
@@ -58,6 +59,11 @@ const ProdutosRouteRoute = ProdutosRouteRouteImport.update({
   id: '/produtos',
   path: '/produtos',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/login',
@@ -107,19 +113,20 @@ export interface FileRoutesByFullPath {
   '/categorias/$slug': typeof CategoriasSlugRoute
   '/marcas/$slug': typeof MarcasSlugRoute
   '/produtos/$id': typeof ProdutosIdRoute
+  '/admin/': typeof AdminIndexRoute
   '/categorias/': typeof CategoriasIndexRoute
   '/marcas/': typeof MarcasIndexRoute
   '/produtos/': typeof ProdutosIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteRouteWithChildren
   '/contato': typeof ContatoRoute
   '/empresa': typeof EmpresaRoute
   '/admin/login': typeof AdminLoginRoute
   '/categorias/$slug': typeof CategoriasSlugRoute
   '/marcas/$slug': typeof MarcasSlugRoute
   '/produtos/$id': typeof ProdutosIdRoute
+  '/admin': typeof AdminIndexRoute
   '/categorias': typeof CategoriasIndexRoute
   '/marcas': typeof MarcasIndexRoute
   '/produtos': typeof ProdutosIndexRoute
@@ -137,6 +144,7 @@ export interface FileRoutesById {
   '/categorias/$slug': typeof CategoriasSlugRoute
   '/marcas/$slug': typeof MarcasSlugRoute
   '/produtos/$id': typeof ProdutosIdRoute
+  '/admin/': typeof AdminIndexRoute
   '/categorias/': typeof CategoriasIndexRoute
   '/marcas/': typeof MarcasIndexRoute
   '/produtos/': typeof ProdutosIndexRoute
@@ -155,19 +163,20 @@ export interface FileRouteTypes {
     | '/categorias/$slug'
     | '/marcas/$slug'
     | '/produtos/$id'
+    | '/admin/'
     | '/categorias/'
     | '/marcas/'
     | '/produtos/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/admin'
     | '/contato'
     | '/empresa'
     | '/admin/login'
     | '/categorias/$slug'
     | '/marcas/$slug'
     | '/produtos/$id'
+    | '/admin'
     | '/categorias'
     | '/marcas'
     | '/produtos'
@@ -184,6 +193,7 @@ export interface FileRouteTypes {
     | '/categorias/$slug'
     | '/marcas/$slug'
     | '/produtos/$id'
+    | '/admin/'
     | '/categorias/'
     | '/marcas/'
     | '/produtos/'
@@ -250,6 +260,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProdutosRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/admin/login': {
       id: '/admin/login'
       path: '/login'
@@ -304,10 +321,12 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteRouteChildren {
   AdminLoginRoute: typeof AdminLoginRoute
+  AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminLoginRoute: AdminLoginRoute,
+  AdminIndexRoute: AdminIndexRoute,
 }
 
 const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
