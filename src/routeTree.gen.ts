@@ -15,6 +15,7 @@ import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as EmpresaRouteImport } from './routes/empresa'
 import { Route as MarcasRouteRouteImport } from './routes/marcas/route'
 import { Route as ProdutosRouteRouteImport } from './routes/produtos/route'
+import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as CategoriasIndexRouteImport } from './routes/categorias/index'
 import { Route as CategoriasSlugRouteImport } from './routes/categorias/$slug'
 import { Route as MarcasIndexRouteImport } from './routes/marcas/index'
@@ -50,6 +51,11 @@ const MarcasRouteRoute = MarcasRouteRouteImport.update({
 const ProdutosRouteRoute = ProdutosRouteRouteImport.update({
   id: '/produtos',
   path: '/produtos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin/login',
+  path: '/admin/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CategoriasIndexRoute = CategoriasIndexRouteImport.update({
@@ -90,6 +96,7 @@ export interface FileRoutesByFullPath {
   '/produtos': typeof ProdutosRouteRouteWithChildren
   '/contato': typeof ContatoRoute
   '/empresa': typeof EmpresaRoute
+  '/admin/login': typeof AdminLoginRoute
   '/categorias/$slug': typeof CategoriasSlugRoute
   '/marcas/$slug': typeof MarcasSlugRoute
   '/produtos/$id': typeof ProdutosIdRoute
@@ -101,6 +108,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/contato': typeof ContatoRoute
   '/empresa': typeof EmpresaRoute
+  '/admin/login': typeof AdminLoginRoute
   '/categorias/$slug': typeof CategoriasSlugRoute
   '/marcas/$slug': typeof MarcasSlugRoute
   '/produtos/$id': typeof ProdutosIdRoute
@@ -116,6 +124,7 @@ export interface FileRoutesById {
   '/produtos': typeof ProdutosRouteRouteWithChildren
   '/contato': typeof ContatoRoute
   '/empresa': typeof EmpresaRoute
+  '/admin/login': typeof AdminLoginRoute
   '/categorias/$slug': typeof CategoriasSlugRoute
   '/marcas/$slug': typeof MarcasSlugRoute
   '/produtos/$id': typeof ProdutosIdRoute
@@ -132,6 +141,7 @@ export interface FileRouteTypes {
     | '/produtos'
     | '/contato'
     | '/empresa'
+    | '/admin/login'
     | '/categorias/$slug'
     | '/marcas/$slug'
     | '/produtos/$id'
@@ -143,6 +153,7 @@ export interface FileRouteTypes {
     | '/'
     | '/contato'
     | '/empresa'
+    | '/admin/login'
     | '/categorias/$slug'
     | '/marcas/$slug'
     | '/produtos/$id'
@@ -157,6 +168,7 @@ export interface FileRouteTypes {
     | '/produtos'
     | '/contato'
     | '/empresa'
+    | '/admin/login'
     | '/categorias/$slug'
     | '/marcas/$slug'
     | '/produtos/$id'
@@ -172,6 +184,7 @@ export interface RootRouteChildren {
   ProdutosRouteRoute: typeof ProdutosRouteRouteWithChildren
   ContatoRoute: typeof ContatoRoute
   EmpresaRoute: typeof EmpresaRoute
+  AdminLoginRoute: typeof AdminLoginRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -216,6 +229,13 @@ declare module '@tanstack/react-router' {
       path: '/produtos'
       fullPath: '/produtos'
       preLoaderRoute: typeof ProdutosRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/categorias/': {
@@ -312,6 +332,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProdutosRouteRoute: ProdutosRouteRouteWithChildren,
   ContatoRoute: ContatoRoute,
   EmpresaRoute: EmpresaRoute,
+  AdminLoginRoute: AdminLoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
