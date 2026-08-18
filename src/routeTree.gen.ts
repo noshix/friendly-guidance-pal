@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CategoriasRouteRouteImport } from './routes/categorias/route'
+import { Route as ContatoRouteImport } from './routes/contato'
+import { Route as EmpresaRouteImport } from './routes/empresa'
 import { Route as MarcasRouteRouteImport } from './routes/marcas/route'
 import { Route as ProdutosRouteRouteImport } from './routes/produtos/route'
 import { Route as CategoriasIndexRouteImport } from './routes/categorias/index'
@@ -28,6 +30,16 @@ const IndexRoute = IndexRouteImport.update({
 const CategoriasRouteRoute = CategoriasRouteRouteImport.update({
   id: '/categorias',
   path: '/categorias',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContatoRoute = ContatoRouteImport.update({
+  id: '/contato',
+  path: '/contato',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmpresaRoute = EmpresaRouteImport.update({
+  id: '/empresa',
+  path: '/empresa',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MarcasRouteRoute = MarcasRouteRouteImport.update({
@@ -76,6 +88,8 @@ export interface FileRoutesByFullPath {
   '/categorias': typeof CategoriasRouteRouteWithChildren
   '/marcas': typeof MarcasRouteRouteWithChildren
   '/produtos': typeof ProdutosRouteRouteWithChildren
+  '/contato': typeof ContatoRoute
+  '/empresa': typeof EmpresaRoute
   '/categorias/$slug': typeof CategoriasSlugRoute
   '/marcas/$slug': typeof MarcasSlugRoute
   '/produtos/$id': typeof ProdutosIdRoute
@@ -85,6 +99,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/contato': typeof ContatoRoute
+  '/empresa': typeof EmpresaRoute
   '/categorias/$slug': typeof CategoriasSlugRoute
   '/marcas/$slug': typeof MarcasSlugRoute
   '/produtos/$id': typeof ProdutosIdRoute
@@ -98,6 +114,8 @@ export interface FileRoutesById {
   '/categorias': typeof CategoriasRouteRouteWithChildren
   '/marcas': typeof MarcasRouteRouteWithChildren
   '/produtos': typeof ProdutosRouteRouteWithChildren
+  '/contato': typeof ContatoRoute
+  '/empresa': typeof EmpresaRoute
   '/categorias/$slug': typeof CategoriasSlugRoute
   '/marcas/$slug': typeof MarcasSlugRoute
   '/produtos/$id': typeof ProdutosIdRoute
@@ -112,6 +130,8 @@ export interface FileRouteTypes {
     | '/categorias'
     | '/marcas'
     | '/produtos'
+    | '/contato'
+    | '/empresa'
     | '/categorias/$slug'
     | '/marcas/$slug'
     | '/produtos/$id'
@@ -121,6 +141,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/contato'
+    | '/empresa'
     | '/categorias/$slug'
     | '/marcas/$slug'
     | '/produtos/$id'
@@ -133,6 +155,8 @@ export interface FileRouteTypes {
     | '/categorias'
     | '/marcas'
     | '/produtos'
+    | '/contato'
+    | '/empresa'
     | '/categorias/$slug'
     | '/marcas/$slug'
     | '/produtos/$id'
@@ -146,6 +170,8 @@ export interface RootRouteChildren {
   CategoriasRouteRoute: typeof CategoriasRouteRouteWithChildren
   MarcasRouteRoute: typeof MarcasRouteRouteWithChildren
   ProdutosRouteRoute: typeof ProdutosRouteRouteWithChildren
+  ContatoRoute: typeof ContatoRoute
+  EmpresaRoute: typeof EmpresaRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -162,6 +188,20 @@ declare module '@tanstack/react-router' {
       path: '/categorias'
       fullPath: '/categorias'
       preLoaderRoute: typeof CategoriasRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contato': {
+      id: '/contato'
+      path: '/contato'
+      fullPath: '/contato'
+      preLoaderRoute: typeof ContatoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/empresa': {
+      id: '/empresa'
+      path: '/empresa'
+      fullPath: '/empresa'
+      preLoaderRoute: typeof EmpresaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/marcas': {
@@ -270,6 +310,8 @@ const rootRouteChildren: RootRouteChildren = {
   CategoriasRouteRoute: CategoriasRouteRouteWithChildren,
   MarcasRouteRoute: MarcasRouteRouteWithChildren,
   ProdutosRouteRoute: ProdutosRouteRouteWithChildren,
+  ContatoRoute: ContatoRoute,
+  EmpresaRoute: EmpresaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
