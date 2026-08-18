@@ -69,6 +69,38 @@ function EmpresaPage() {
         </div>
       </section>
 
+      <section className="bg-white py-24 border-t border-[#F4F5F6]">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 items-start">
+            <div className="max-w-md">
+              <div className="w-16 h-1 bg-[#F5C400] mb-8"></div>
+              <h2 className="text-[36px] md:text-[48px] font-black text-[#252A2E] leading-[1.1] tracking-tighter">
+                Economia vai muito <br className="hidden md:block" /> além do preço.
+              </h2>
+              <div className="mt-8 text-[#174F8C] font-bold text-[18px] italic border-l-4 border-[#174F8C] pl-6 py-1">
+                “Encontrar o material certo também é economia.”
+              </div>
+            </div>
+            <div className="space-y-6">
+              <p className="text-[20px] text-[#252A2E]/80 leading-relaxed font-medium">
+                Para a Pizzatto, economizar também é ajudar cada cliente a encontrar o material que realmente precisa.
+              </p>
+              <div className="space-y-4 text-[18px] text-[#252A2E]/70 leading-relaxed">
+                <p>
+                  É escolher soluções adequadas, evitar compras desnecessárias e planejar cada etapa para reduzir desperdícios, gastos e dores de cabeça.
+                </p>
+                <p>
+                  Também significa valorizar materiais e escolhas que contribuam para reduzir impactos no meio ambiente.
+                </p>
+                <p className="font-bold text-[#252A2E]">
+                  Porque uma boa compra não é apenas aquela que cabe no bolso — é aquela que faz sentido para o projeto.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="bg-[#F4F5F6]/50 py-20">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <h2 className="text-[28px] font-bold text-[#252A2E] mb-12">Materiais para diferentes necessidades</h2>
