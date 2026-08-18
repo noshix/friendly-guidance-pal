@@ -20,11 +20,11 @@ function Login() {
         <div className="space-y-4">
           <div>
             <label className="block text-[11px] font-bold text-[#252A2E]/70 uppercase tracking-wider mb-1">Usuário</label>
-            <input type="text" placeholder="Digite seu usuário" className="w-full border border-[#E5E7EB] p-3 rounded-[2px] focus:border-[#174F8C] outline-none text-[14px]" />
+            <input type="text" className="w-full border border-[#E5E7EB] p-3 rounded-[2px] focus:border-[#174F8C] outline-none text-[14px]" />
           </div>
           <div>
             <label className="block text-[11px] font-bold text-[#252A2E]/70 uppercase tracking-wider mb-1">Senha</label>
-            <input type="password" placeholder="••••••••" className="w-full border border-[#E5E7EB] p-3 rounded-[2px] focus:border-[#174F8C] outline-none text-[14px]" />
+            <input type="password" className="w-full border border-[#E5E7EB] p-3 rounded-[2px] focus:border-[#174F8C] outline-none text-[14px]" />
           </div>
           <button 
             onClick={() => navigate({ to: "/admin" })}
