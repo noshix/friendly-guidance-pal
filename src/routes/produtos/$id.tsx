@@ -27,7 +27,7 @@ const PRODUCT = {
   unit: "UN",
   ncm: "8536.20.00",
   barcode: "7891234567890",
-  description: "Os disjuntores 5SX2 são destinados a instalações residenciais e prediais, além de instalações industriais. Proporcionam total proteção contra curto-circuito e sobrecarga, sendo fabricados em conformidade com as normas NBR NM 60898 e NBR IEC 60947-2.",
+  description: "", // Removed mock technical description as requested
 };
 
 // Mock Related Products
@@ -121,7 +121,7 @@ function ProductDetail() {
                 </div>
                 
                 <p className="mt-4 text-[12px] text-[#252A2E]/50 font-medium">
-                  Precisa de ajuda? Fale com nossa equipe.
+                  Precisa de informações ou orçamento? Fale com nossa equipe pelo WhatsApp.
                 </p>
               </div>
 
@@ -159,7 +159,7 @@ function ProductDetail() {
                     { label: 'Unidade', value: PRODUCT.unit },
                     { label: 'NCM', value: PRODUCT.ncm },
                     { label: 'Código de Barras', value: PRODUCT.barcode },
-                  ].map((item, idx) => (
+                  ].filter(item => item.value).map((item, idx) => (
                     <div key={idx} className="flex flex-col md:flex-row md:items-center justify-between py-4 border-b border-[#E5E7EB]/50">
                       <span className="text-[12px] font-bold text-[#252A2E]/40 uppercase tracking-widest mb-1 md:mb-0">{item.label}</span>
                       <span className="text-[13px] font-bold text-[#252A2E] uppercase">{item.value}</span>
@@ -168,15 +168,17 @@ function ProductDetail() {
                 </div>
               </div>
 
-              <div>
-                <h2 className="text-[14px] font-black uppercase tracking-[0.3em] text-[#252A2E] mb-8 flex items-center gap-3">
-                  <div className="w-8 h-[2px] bg-[#174F8C]"></div>
-                  Sobre este produto
-                </h2>
-                <div className="prose prose-sm max-w-none text-[#252A2E]/70 font-medium leading-relaxed">
-                  <p>{PRODUCT.description}</p>
+              {PRODUCT.description && (
+                <div>
+                  <h2 className="text-[14px] font-black uppercase tracking-[0.3em] text-[#252A2E] mb-8 flex items-center gap-3">
+                    <div className="w-8 h-[2px] bg-[#174F8C]"></div>
+                    Sobre este produto
+                  </h2>
+                  <div className="prose prose-sm max-w-none text-[#252A2E]/70 font-medium leading-relaxed">
+                    <p>{PRODUCT.description}</p>
+                  </div>
                 </div>
-              </div>
+              )}
 
             </div>
           </div>
@@ -239,15 +241,15 @@ function ProductDetail() {
           <div className="max-w-7xl mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="text-center md:text-left">
               <h3 className="text-2xl font-black text-white uppercase tracking-tight mb-2">
-                Precisa de ajuda com este material?
+                Precisa de informações ou orçamento?
               </h3>
               <p className="text-white/70 font-medium">
-                Fale com nossa equipe pelo WhatsApp para tirar dúvidas técnicas ou solicitar grandes volumes.
+                Fale com nossa equipe pelo WhatsApp.
               </p>
             </div>
             <button className="bg-[#2E8B57] text-white px-10 py-4 rounded-[2px] font-black uppercase tracking-[0.1em] text-[14px] hover:bg-[#256F46] transition shadow-xl flex items-center gap-3 whitespace-nowrap">
               <MessageCircle size={20} />
-              Falar no WhatsApp
+              FALAR NO WHATSAPP
             </button>
           </div>
         </div>
