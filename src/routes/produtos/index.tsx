@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Search, ChevronRight, Filter, Grid, List, ChevronDown, Check, X } from "lucide-react";
@@ -52,7 +52,7 @@ function Products() {
       <div className="bg-white border-b border-[#E5E7EB]">
         <div className="max-w-7xl mx-auto px-4 py-8">
           <nav className="flex items-center gap-2 text-[12px] text-[#252A2E]/50 mb-4 font-medium uppercase tracking-wider">
-            <a href="/" className="hover:text-[#174F8C]">Início</a>
+            <Link to="/" className="hover:text-[#174F8C]">Início</Link>
             <ChevronRight size={12} />
             <span className="text-[#252A2E]">Produtos</span>
           </nav>
@@ -177,7 +177,7 @@ function Products() {
             {/* Grid */}
             <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
               {MOCK_PRODUCTS.map((prod) => (
-                <a key={prod.id} href={`/produtos/${prod.id}`} className="bg-white border border-[#E5E7EB] rounded-[2px] p-5 hover:border-[#174F8C] hover:shadow-lg transition duration-300 group flex flex-col h-full relative">
+                <Link key={prod.id} to="/produtos/$id" params={{ id: prod.id.toString() }} className="bg-white border border-[#E5E7EB] rounded-[2px] p-5 hover:border-[#174F8C] hover:shadow-lg transition duration-300 group flex flex-col h-full relative">
                   
                   <div className="relative w-full aspect-square mb-6 rounded-[2px] overflow-hidden bg-[#F4F5F6]/50">
                     <ImageWithFallback 
@@ -213,7 +213,7 @@ function Products() {
                       </div>
                     </div>
                   </div>
-                </a>
+                </Link>
               ))}
             </div>
 
