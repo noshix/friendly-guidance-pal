@@ -70,7 +70,7 @@ function Index() {
             <h2 className="text-3xl font-bold text-[#252A2E]">Encontre o que precisa</h2>
             <p className="text-[#252A2E]/60 text-sm mt-2">Variedade e atendimento especializado em materiais elétricos.</p>
           </div>
-          <Link to="/categorias" className="text-[#174F8C] font-bold text-sm flex items-center gap-1 hover:underline">Ver todas <ChevronRight size={16}/></Link>
+          <RouterLink to="/categorias" className="text-[#174F8C] font-bold text-sm flex items-center gap-1 hover:underline">Ver todas <ChevronRight size={16}/></RouterLink>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
@@ -83,7 +83,7 @@ function Index() {
             { name: 'Transformadores', img: 'https://images.unsplash.com/photo-1618576512915-f5589e47087f?auto=format&fit=crop&q=80&w=400' },
             { name: 'Tubos e Conduítes', img: 'https://images.unsplash.com/photo-1596734509421-419b67484462?auto=format&fit=crop&q=80&w=400' },
           ].map((cat) => (
-            <Link 
+            <RouterLink 
               key={cat.name} 
               to="/categorias/$slug"
               params={{ slug: cat.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-') }}
@@ -103,7 +103,7 @@ function Index() {
               <div className="absolute top-3 right-3 bg-white/90 p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition shadow-sm text-[#174F8C]">
                 <ChevronRight size={14}/>
               </div>
-            </Link>
+            </RouterLink>
           ))}
         </div>
       </section>
