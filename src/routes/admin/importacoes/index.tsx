@@ -40,16 +40,17 @@ function ImportacoesHistory() {
                 <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-[#252A2E]/50 text-center">Analisados</th>
                 <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-[#252A2E]/50 text-center">Novos</th>
                 <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-[#252A2E]/50 text-center">Alterados</th>
+                <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-[#252A2E]/50 text-center">Sem alteração</th>
                 <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-[#252A2E]/50 text-center">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#F4F5F6]">
               {[
-                { date: '18/08/2026 14:10', file: 'produtos_pizzatto_v5.xlsx', total: '11.170', new: '11.162', alt: '2', status: 'CONCLUÍDA' },
-                { date: '17/08/2026 09:30', file: 'produtos_pizzatto_v4.xlsx', total: '11.168', new: '11.160', alt: '8', status: 'CONCLUÍDA' },
-                { date: '15/08/2026 16:45', file: 'produtos_pizzatto_v3.xlsx', total: '11.165', new: '-', alt: '-', status: 'FALHOU' },
-                { date: '12/08/2026 10:15', file: 'produtos_pizzatto_v2.xlsx', total: '11.160', new: '11.160', alt: '0', status: 'CONCLUÍDA' },
-                { date: '10/08/2026 08:00', file: 'produtos_pizzatto_v1.xlsx', total: '11.155', new: '11.155', alt: '0', status: 'CONCLUÍDA' },
+                { date: '18/08/2026 14:10', file: 'produtos_pizzatto_v5.xlsx', total: '11.170', new: '11.162', alt: '2', unchanged: '6', status: 'CONCLUÍDA' },
+                { date: '17/08/2026 09:30', file: 'produtos_pizzatto_v4.xlsx', total: '11.168', new: '11.160', alt: '8', unchanged: '0', status: 'CONCLUÍDA' },
+                { date: '15/08/2026 16:45', file: 'produtos_pizzatto_v3.xlsx', total: '11.165', new: '-', alt: '-', unchanged: '-', status: 'FALHOU' },
+                { date: '12/08/2026 10:15', file: 'produtos_pizzatto_v2.xlsx', total: '11.160', new: '11.160', alt: '0', unchanged: '0', status: 'CONCLUÍDA' },
+                { date: '10/08/2026 08:00', file: 'produtos_pizzatto_v1.xlsx', total: '11.155', new: '11.155', alt: '0', unchanged: '0', status: 'CONCLUÍDA' },
               ].map((row, i) => (
                 <tr key={i} className="hover:bg-[#F9FAFB] transition group">
                   <td className="px-6 py-4">
@@ -64,6 +65,7 @@ function ImportacoesHistory() {
                   <td className="px-6 py-4 text-center text-[12px] font-medium text-[#252A2E]">{row.total}</td>
                   <td className="px-6 py-4 text-center text-[12px] font-medium text-[#174F8C]">{row.new}</td>
                   <td className="px-6 py-4 text-center text-[12px] font-medium text-[#F5C400]">{row.alt}</td>
+                  <td className="px-6 py-4 text-center text-[12px] font-medium text-[#252A2E]/40">{row.unchanged}</td>
                   <td className="px-6 py-4 text-center">
                     <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-[2px] text-[9px] font-black uppercase tracking-widest ${
                       row.status === 'CONCLUÍDA' ? 'bg-[#2E8B57]/10 text-[#2E8B57]' : 'bg-[#D9272E]/10 text-[#D9272E]'
