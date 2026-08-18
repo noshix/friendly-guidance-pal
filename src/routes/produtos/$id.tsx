@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { Link } from "@tanstack/react-router";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { ChevronRight, MessageCircle, FileText, Package, Tag, Hash, Building2, CheckCircle2 } from "lucide-react";
 
@@ -137,7 +138,13 @@ function ProductDetail() {
                 </div>
                 <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-[#252A2E]/60">
                   <span>Ver produtos em:</span>
-                  <button className="text-[#174F8C] hover:underline">{PRODUCT.category}</button>
+                  <Link 
+                    to="/categorias/$slug" 
+                    params={{ slug: PRODUCT.category.toLowerCase().replace(/\s+/g, '-') }}
+                    className="text-[#174F8C] hover:underline"
+                  >
+                    {PRODUCT.category}
+                  </Link>
                 </div>
               </div>
             </div>

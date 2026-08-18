@@ -15,7 +15,7 @@ export function Header({ activePage }: { activePage?: string }) {
         <nav className="flex gap-8 text-[14px] font-semibold text-white">
           {[
             { label: 'Produtos', to: '/produtos' },
-            { label: 'Categorias', to: '#' },
+            { label: 'Categorias', to: '/categorias' },
             { label: 'Marcas', to: '#' },
             { label: 'Empresa', to: '#' },
             { label: 'Contato', to: '#' }
