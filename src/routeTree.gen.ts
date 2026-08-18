@@ -26,6 +26,7 @@ import { Route as ProdutosIndexRouteImport } from './routes/produtos/index'
 import { Route as ProdutosIdRouteImport } from './routes/produtos/$id'
 import { Route as AdminImportacoesIndexRouteImport } from './routes/admin/importacoes/index'
 import { Route as AdminImportacoesNovaRouteImport } from './routes/admin/importacoes/nova'
+import { Route as AdminImportacoesPreviewRouteImport } from './routes/admin/importacoes/preview'
 import { Route as AdminProdutosIndexRouteImport } from './routes/admin/produtos/index'
 import { Route as AdminProdutosIdRouteImport } from './routes/admin/produtos/$id'
 
@@ -114,6 +115,11 @@ const AdminImportacoesNovaRoute = AdminImportacoesNovaRouteImport.update({
   path: '/importacoes/nova',
   getParentRoute: () => AdminRouteRoute,
 } as any)
+const AdminImportacoesPreviewRoute = AdminImportacoesPreviewRouteImport.update({
+  id: '/importacoes/preview',
+  path: '/importacoes/preview',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 const AdminProdutosIndexRoute = AdminProdutosIndexRouteImport.update({
   id: '/produtos/',
   path: '/produtos/',
@@ -142,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/marcas/': typeof MarcasIndexRoute
   '/produtos/': typeof ProdutosIndexRoute
   '/admin/importacoes/nova': typeof AdminImportacoesNovaRoute
+  '/admin/importacoes/preview': typeof AdminImportacoesPreviewRoute
   '/admin/produtos/$id': typeof AdminProdutosIdRoute
   '/admin/importacoes/': typeof AdminImportacoesIndexRoute
   '/admin/produtos/': typeof AdminProdutosIndexRoute
@@ -159,6 +166,7 @@ export interface FileRoutesByTo {
   '/marcas': typeof MarcasIndexRoute
   '/produtos': typeof ProdutosIndexRoute
   '/admin/importacoes/nova': typeof AdminImportacoesNovaRoute
+  '/admin/importacoes/preview': typeof AdminImportacoesPreviewRoute
   '/admin/produtos/$id': typeof AdminProdutosIdRoute
   '/admin/importacoes': typeof AdminImportacoesIndexRoute
   '/admin/produtos': typeof AdminProdutosIndexRoute
@@ -181,6 +189,7 @@ export interface FileRoutesById {
   '/marcas/': typeof MarcasIndexRoute
   '/produtos/': typeof ProdutosIndexRoute
   '/admin/importacoes/nova': typeof AdminImportacoesNovaRoute
+  '/admin/importacoes/preview': typeof AdminImportacoesPreviewRoute
   '/admin/produtos/$id': typeof AdminProdutosIdRoute
   '/admin/importacoes/': typeof AdminImportacoesIndexRoute
   '/admin/produtos/': typeof AdminProdutosIndexRoute
@@ -204,6 +213,7 @@ export interface FileRouteTypes {
     | '/marcas/'
     | '/produtos/'
     | '/admin/importacoes/nova'
+    | '/admin/importacoes/preview'
     | '/admin/produtos/$id'
     | '/admin/importacoes/'
     | '/admin/produtos/'
@@ -221,6 +231,7 @@ export interface FileRouteTypes {
     | '/marcas'
     | '/produtos'
     | '/admin/importacoes/nova'
+    | '/admin/importacoes/preview'
     | '/admin/produtos/$id'
     | '/admin/importacoes'
     | '/admin/produtos'
@@ -242,6 +253,7 @@ export interface FileRouteTypes {
     | '/marcas/'
     | '/produtos/'
     | '/admin/importacoes/nova'
+    | '/admin/importacoes/preview'
     | '/admin/produtos/$id'
     | '/admin/importacoes/'
     | '/admin/produtos/'
@@ -378,6 +390,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminImportacoesNovaRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/admin/importacoes/preview': {
+      id: '/admin/importacoes/preview'
+      path: '/importacoes/preview'
+      fullPath: '/admin/importacoes/preview'
+      preLoaderRoute: typeof AdminImportacoesPreviewRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/admin/produtos/': {
       id: '/admin/produtos/'
       path: '/produtos'
@@ -399,6 +418,7 @@ interface AdminRouteRouteChildren {
   AdminLoginRoute: typeof AdminLoginRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminImportacoesNovaRoute: typeof AdminImportacoesNovaRoute
+  AdminImportacoesPreviewRoute: typeof AdminImportacoesPreviewRoute
   AdminProdutosIdRoute: typeof AdminProdutosIdRoute
   AdminImportacoesIndexRoute: typeof AdminImportacoesIndexRoute
   AdminProdutosIndexRoute: typeof AdminProdutosIndexRoute
@@ -408,6 +428,7 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminLoginRoute: AdminLoginRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminImportacoesNovaRoute: AdminImportacoesNovaRoute,
+  AdminImportacoesPreviewRoute: AdminImportacoesPreviewRoute,
   AdminProdutosIdRoute: AdminProdutosIdRoute,
   AdminImportacoesIndexRoute: AdminImportacoesIndexRoute,
   AdminProdutosIndexRoute: AdminProdutosIndexRoute,
