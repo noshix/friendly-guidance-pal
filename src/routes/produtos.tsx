@@ -21,7 +21,7 @@ export const Route = createFileRoute("/produtos")({
 
 // Mock Data
 const MOCK_PRODUCTS = [
-  { id: 1, brand: 'SIEMENS', name: 'Disjuntor Tripolar 32A', ref: '5SX2332-7', price: '189,90', img: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=400', inStock: true },
+  { id: 1, brand: 'SIEMENS', name: 'Disjuntor Tripolar 32A', ref: '5SX2332-7', price: '189,90', img: '', inStock: true },
   { id: 2, brand: 'SIL', name: 'Cabo Flexível 2,5 mm² Azul 750V', ref: 'Rolo 100m', price: '349,00', img: 'https://images.unsplash.com/photo-1558346490-a72e53ae2d4e?auto=format&fit=crop&q=80&w=400', inStock: true },
   { id: 3, brand: 'ALUMBRA', name: 'Lâmpada LED High Power 40W', ref: '6500K Bivolt', price: '49,90', img: 'https://images.unsplash.com/photo-1558002038-1055907df8d7?auto=format&fit=crop&q=80&w=400', inStock: true },
   { id: 4, brand: 'STECK', name: 'Quadro de Distribuição 24 DIN', ref: 'Sobrepor', price: '124,50', img: 'https://images.unsplash.com/photo-1596734509421-419b67484462?auto=format&fit=crop&q=80&w=400', inStock: false },
@@ -159,7 +159,7 @@ function Products() {
                   <Filter size={14} /> Filtrar
                 </button>
                 <span className="text-[13px] font-bold text-[#252A2E]/60 uppercase tracking-wider">
-                  <span className="font-normal italic mr-1">Exibindo</span> Produtos encontrados
+                  <span className="font-normal italic mr-1">Exibindo</span> {MOCK_PRODUCTS.length} Produtos encontrados
                 </span>
               </div>
               <div className="flex items-center gap-6">
