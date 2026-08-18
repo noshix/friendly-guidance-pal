@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ChevronRight } from "lucide-react";
+import { ImageWithFallback } from "@/components/ImageWithFallback";
 
 export const Route = createFileRoute("/categorias/")({
   component: CategoriesPage,
@@ -17,56 +18,56 @@ const CATEGORIES = [
   {
     slug: 'cabos-e-condutores',
     name: 'Cabos e Condutores',
-    description: 'Fios, cabos flexíveis, cabos PP e acessórios para condução elétrica.',
+    description: 'Fios, cabos e materiais para instalações elétricas.',
     image: 'https://images.unsplash.com/photo-1558346490-a72e53ae2d4e?auto=format&fit=crop&q=80&w=600'
   },
   {
     slug: 'iluminacao',
     name: 'Iluminação',
-    description: 'Lâmpadas LED, luminárias, painéis e soluções completas em iluminação.',
+    description: 'Lâmpadas, luminárias e soluções em iluminação elétrica.',
     image: 'https://images.unsplash.com/photo-1558002038-1055907df8d7?auto=format&fit=crop&q=80&w=600'
   },
   {
     slug: 'protecao-eletrica',
     name: 'Proteção Elétrica',
-    description: 'Disjuntores, DR, DPS e componentes de proteção para sua instalação.',
-    image: 'https://images.unsplash.com/photo-1596734509421-419b67484462?auto=format&fit=crop&q=80&w=600'
+    description: 'Produtos para proteção de instalações elétricas.',
+    image: 'https://images.unsplash.com/photo-1626242300249-1730edcdfd76?auto=format&fit=crop&q=80&w=600' // Better breakers image
   },
   {
     slug: 'conectores',
     name: 'Conectores',
-    description: 'Terminais, conectores e acessórios para conexões elétricas seguras.',
+    description: 'Conectores, terminais e acessórios para conexões.',
     image: 'https://images.unsplash.com/photo-1563770660941-20978e870e93?auto=format&fit=crop&q=80&w=600'
   },
   {
     slug: 'ferramentas',
     name: 'Ferramentas',
-    description: 'Ferramentas profissionais para eletricistas e instaladores.',
+    description: 'Ferramentas profissionais para instalações elétricas.',
     image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&q=80&w=600'
   },
   {
     slug: 'aterramento',
     name: 'Aterramento',
-    description: 'Hastes, cabos e conectores para sistemas de aterramento.',
-    image: 'https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?auto=format&fit=crop&q=80&w=600'
+    description: 'Hastes, cabos e materiais para sistemas de aterramento.',
+    image: '' // Placeholder requested (removing disjuntor photo)
   },
   {
     slug: 'transformadores',
     name: 'Transformadores',
-    description: 'Transformadores de voltagem e componentes relacionados.',
-    image: 'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&q=80&w=600'
+    description: 'Transformadores e componentes relacionados.',
+    image: '' // Placeholder requested (removing worker with drill)
   },
   {
     slug: 'tubos-e-conduites',
     name: 'Tubos e Conduítes',
-    description: 'Eletrodutos, conduítes e acessórios para infraestrutura elétrica.',
-    image: 'https://images.unsplash.com/photo-1565538810643-b5bdb714032a?auto=format&fit=crop&q=80&w=600'
+    description: 'Eletrodutos, conduítes e acessórios para infraestrutura.',
+    image: 'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&q=80&w=600' // Industrial pipes/conduits
   },
   {
     slug: 'comandos',
     name: 'Comandos',
-    description: 'Botoeiras, sinalizadores e componentes para comandos elétricos.',
-    image: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80&w=600'
+    description: 'Componentes para comandos e painéis elétricos.',
+    image: '' // Placeholder requested (removing plant image)
   }
 ];
 
@@ -102,9 +103,10 @@ function CategoriesPage() {
                 className="bg-white border border-[#E5E7EB] rounded-[2px] overflow-hidden hover:border-[#174F8C] hover:shadow-xl transition-all duration-300 group flex flex-col h-full"
               >
                 <div className="aspect-[4/3] overflow-hidden bg-[#F4F5F6]">
-                  <img 
+                  <ImageWithFallback 
                     src={cat.image} 
                     alt={cat.name} 
+                    type="category"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100" 
                   />
                 </div>
