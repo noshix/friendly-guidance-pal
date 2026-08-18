@@ -1,7 +1,6 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import logoAsset from "@/assets/logo.asset.json";
 import { useState } from "react";
-import { LayoutDashboard, Package, FileUp, Settings, LogOut, ChevronRight, Search, Plus, Filter, Check, X, Bell } from "lucide-react";
 
 export const Route = createFileRoute("/admin/login")({
   component: Login,
@@ -11,7 +10,7 @@ function Login() {
   const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-[#F4F5F6] flex items-center justify-center p-4">
-      <div className="bg-white p-8 md:p-12 rounded-[2px] shadow-xl border border-[#E5E7EB] w-full max-w-md">
+      <div className="bg-white p-8 md:p-12 rounded-[2px] shadow-xl border border-[#E5E7EB] w-full max-w-md animate-in fade-in zoom-in-95 duration-500">
         <div className="flex justify-center mb-8">
           <img src={logoAsset.url} alt="Pizzatto" className="h-20" />
         </div>
@@ -21,15 +20,15 @@ function Login() {
         <div className="space-y-4">
           <div>
             <label className="block text-[11px] font-bold text-[#252A2E]/70 uppercase tracking-wider mb-1">Usuário</label>
-            <input type="text" className="w-full border border-[#E5E7EB] p-3 rounded-[2px] focus:border-[#174F8C] outline-none" />
+            <input type="text" placeholder="Digite seu usuário" className="w-full border border-[#E5E7EB] p-3 rounded-[2px] focus:border-[#174F8C] outline-none text-[14px]" />
           </div>
           <div>
             <label className="block text-[11px] font-bold text-[#252A2E]/70 uppercase tracking-wider mb-1">Senha</label>
-            <input type="password" className="w-full border border-[#E5E7EB] p-3 rounded-[2px] focus:border-[#174F8C] outline-none" />
+            <input type="password" placeholder="••••••••" className="w-full border border-[#E5E7EB] p-3 rounded-[2px] focus:border-[#174F8C] outline-none text-[14px]" />
           </div>
           <button 
             onClick={() => navigate({ to: "/admin" })}
-            className="w-full bg-[#174F8C] text-white py-3 rounded-[2px] font-bold uppercase tracking-widest hover:bg-[#123E70] transition"
+            className="w-full bg-[#174F8C] text-white py-4 rounded-[2px] font-bold uppercase tracking-widest hover:bg-[#123E70] transition shadow-md"
           >
             Entrar
           </button>
@@ -38,3 +37,4 @@ function Login() {
     </div>
   );
 }
+
