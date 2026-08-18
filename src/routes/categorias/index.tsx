@@ -31,7 +31,7 @@ const CATEGORIES = [
     slug: 'protecao-eletrica',
     name: 'Proteção Elétrica',
     description: 'Produtos para proteção de instalações elétricas.',
-    image: 'https://images.unsplash.com/photo-1596734509421-419b67484462?auto=format&fit=crop&q=80&w=600'
+    image: 'https://images.unsplash.com/photo-1626242300249-1730edcdfd76?auto=format&fit=crop&q=80&w=600' // Better breakers image
   },
   {
     slug: 'conectores',
@@ -61,7 +61,7 @@ const CATEGORIES = [
     slug: 'tubos-e-conduites',
     name: 'Tubos e Conduítes',
     description: 'Eletrodutos, conduítes e acessórios para infraestrutura.',
-    image: '' // REMOVED HYDRAULIC IMAGE
+    image: 'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&q=80&w=600' // Industrial pipes/conduits
   },
   {
     slug: 'comandos',
