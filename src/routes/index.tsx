@@ -189,7 +189,7 @@ function Index() {
             <div className="flex flex-wrap justify-center md:justify-start gap-4">
               <button className="bg-[#2E8B57] text-white px-10 py-4 rounded-[2px] font-black uppercase tracking-widest flex items-center gap-3 hover:bg-[#257548] transition shadow-2xl">
                 <MessageSquare size={20}/> Falar no WhatsApp
-              </button>
+                  </Link>
               <button className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-10 py-4 rounded-[2px] font-black uppercase tracking-widest hover:bg-white/20 transition">
                 Localização
               </button>

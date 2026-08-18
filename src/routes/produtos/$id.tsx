@@ -137,7 +137,13 @@ function ProductDetail() {
                 </div>
                 <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-[#252A2E]/60">
                   <span>Ver produtos em:</span>
-                  <button className="text-[#174F8C] hover:underline">{PRODUCT.category}</button>
+                  <Link 
+                    to="/categorias/$slug" 
+                    params={{ slug: PRODUCT.category.toLowerCase().replace(/\s+/g, '-') }}
+                    className="text-[#174F8C] hover:underline"
+                  >
+                    {PRODUCT.category}
+                  </Link>
                 </div>
               </div>
             </div>
