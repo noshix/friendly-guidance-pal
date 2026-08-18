@@ -5,7 +5,7 @@ import { Search, ChevronRight, Filter, Grid, List, ChevronDown, Check, X } from 
 import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { useState } from "react";
 
-export const Route = createFileRoute("/produtos")({
+export const Route = createFileRoute("/produtos/")({
   component: Products,
   head: () => ({
     meta: [
