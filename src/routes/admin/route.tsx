@@ -1,4 +1,4 @@
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
 import logoAsset from "@/assets/logo.asset.json";
 import { 
   LayoutDashboard, 
@@ -7,10 +7,8 @@ import {
   History, 
   ExternalLink, 
   LogOut, 
-  ChevronRight,
   Menu,
   User,
-  Search,
   Plus
 } from "lucide-react";
 import { useState } from "react";
@@ -21,25 +19,55 @@ export const Route = createFileRoute("/admin")({
 
 function AdminLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const location = useLocation();
+
+  // 1. LOGIN INDEPENDENTE - If we are on /admin/login, don't show the sidebar/topbar layout
+  if (location.pathname === "/admin/login") {
+    return <Outlet />;
+  }
+
+  // 2. TOPBAR CONTEXTUAL - Get Page Title based on route
+  const getPageTitle = () => {
+    const path = location.pathname;
+    if (path === "/admin" || path === "/admin/") return "VISÃO GERAL";
+    
+    // Check for products
+    if (path.startsWith("/admin/produtos")) {
+      if (path === "/admin/produtos" || path === "/admin/produtos/") return "PRODUTOS";
+      return "EDITAR PRODUTO";
+    }
+    
+    // Check for imports
+    if (path === "/admin/importacoes/nova") return "NOVA IMPORTAÇÃO ERP";
+    if (path === "/admin/importacoes/preview") return "PRÉVIA DA IMPORTAÇÃO";
+    if (path.startsWith("/admin/importacoes")) return "HISTÓRICO DE IMPORTAÇÕES";
+    
+    return "PAINEL ADMINISTRATIVO";
+  };
 
   return (
     <div className="min-h-screen bg-[#F4F5F6] flex">
       {/* Sidebar */}
       <aside className={`${isSidebarOpen ? 'w-[260px]' : 'w-[80px]'} bg-[#252A2E] text-white flex flex-col transition-all duration-300 z-50 shrink-0`}>
-        <div className="h-[70px] flex items-center px-6 border-b border-white/5">
+        {/* 5. SIDEBAR / LOGO - Improved padding and alignment */}
+        <div className={`h-[80px] flex items-center ${isSidebarOpen ? 'px-8' : 'justify-center'} border-b border-white/5`}>
           {isSidebarOpen ? (
-            <img src={logoAsset.url} alt="Pizzatto" className="h-10 invert brightness-0" />
+            <div className="py-2 flex items-center h-full w-full">
+              <img src={logoAsset.url} alt="Pizzatto" className="h-10 w-auto object-contain invert brightness-0" />
+            </div>
           ) : (
-            <div className="w-8 h-8 bg-[#174F8C] rounded-[2px]" />
+            <div className="w-8 h-8 bg-[#174F8C] rounded-[2px] flex items-center justify-center font-black text-[14px]">P</div>
           )}
         </div>
 
-        <nav className="flex-1 py-6">
+        <nav className="flex-1 py-6 overflow-y-auto">
+          {/* 3. ITEM ATIVO DA SIDEBAR - Using logic to highlight only one */}
           <SidebarItem 
             icon={<LayoutDashboard size={20} />} 
             label="Visão geral" 
             to="/admin" 
-            isOpen={isSidebarOpen} 
+            isOpen={isSidebarOpen}
+            isActive={location.pathname === "/admin" || location.pathname === "/admin/"}
           />
           
           <div className="mt-8 px-6 mb-2">
@@ -49,7 +77,8 @@ function AdminLayout() {
             icon={<Package size={20} />} 
             label="Produtos" 
             to="/admin/produtos" 
-            isOpen={isSidebarOpen} 
+            isOpen={isSidebarOpen}
+            isActive={location.pathname.startsWith("/admin/produtos")}
           />
 
           <div className="mt-8 px-6 mb-2">
@@ -59,29 +88,33 @@ function AdminLayout() {
             icon={<PlusSquare size={20} />} 
             label="Nova importação" 
             to="/admin/importacoes/nova" 
-            isOpen={isSidebarOpen} 
+            isOpen={isSidebarOpen}
+            isActive={location.pathname === "/admin/importacoes/nova"}
           />
           <SidebarItem 
             icon={<History size={20} />} 
             label="Histórico" 
             to="/admin/importacoes" 
-            isOpen={isSidebarOpen} 
+            isOpen={isSidebarOpen}
+            isActive={location.pathname === "/admin/importacoes" || location.pathname === "/admin/importacoes/"}
           />
 
-          <div className="mt-8 px-6 mb-2">
+          <div className="mt-8 px-6 mb-2 border-t border-white/5 pt-6">
             <span className={`text-[10px] font-black uppercase tracking-[0.2em] text-white/30 ${!isSidebarOpen && 'hidden'}`}>Sistema</span>
           </div>
           <SidebarItem 
             icon={<ExternalLink size={20} />} 
             label="Ver site público" 
             to="/" 
-            isOpen={isSidebarOpen} 
+            isOpen={isSidebarOpen}
+            isActive={false}
           />
           <SidebarItem 
             icon={<LogOut size={20} />} 
             label="Sair" 
             to="/admin/login" 
-            isOpen={isSidebarOpen} 
+            isOpen={isSidebarOpen}
+            isActive={false}
           />
         </nav>
       </aside>
@@ -98,7 +131,7 @@ function AdminLayout() {
               <Menu size={20} />
             </button>
             <div className="h-4 w-[1px] bg-[#E5E7EB]" />
-            <h1 className="text-[14px] font-bold text-[#252A2E] uppercase tracking-wider">Dashboard</h1>
+            <h1 className="text-[14px] font-bold text-[#252A2E] uppercase tracking-wider">{getPageTitle()}</h1>
           </div>
 
           <div className="flex items-center gap-6">
@@ -125,13 +158,15 @@ function AdminLayout() {
   );
 }
 
-function SidebarItem({ icon, label, to, isOpen }: { icon: any, label: string, to: string, isOpen: boolean }) {
+function SidebarItem({ icon, label, to, isOpen, isActive }: { icon: any, label: string, to: string, isOpen: boolean, isActive: boolean }) {
   return (
     <Link 
       to={to as any} 
-      activeProps={{ className: "bg-[#174F8C]/10 text-[#F5C400] border-l-4 border-[#F5C400]" }}
-      inactiveProps={{ className: "text-white/60 hover:text-white hover:bg-white/5 border-l-4 border-transparent" }}
-      className="flex items-center px-6 py-4 transition-all duration-200"
+      className={`flex items-center px-6 py-4 transition-all duration-200 border-l-4 ${
+        isActive 
+          ? "bg-[#174F8C]/10 text-[#F5C400] border-[#F5C400]" 
+          : "text-white/60 hover:text-white hover:bg-white/5 border-transparent"
+      }`}
     >
       <div className="shrink-0">{icon}</div>
       {isOpen && <span className="ml-4 text-[13px] font-bold uppercase tracking-wider">{label}</span>}
