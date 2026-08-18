@@ -41,6 +41,8 @@ function ProductDetail() {
     .filter(p => p.id !== PRODUCT.id)
     .slice(0, 3);
 
+  if (!PRODUCT) return null;
+
   return (
     <div className="min-h-screen bg-white text-[#252A2E]">
       <Header activePage="Produtos" />
@@ -195,7 +197,7 @@ function ProductDetail() {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {RELATED_PRODUCTS.map((prod) => (
-              <div key={prod.id} className="bg-white border border-[#E5E7EB] rounded-[2px] p-5 hover:border-[#174F8C] hover:shadow-lg transition duration-300 group flex flex-col h-full relative">
+              <a key={prod.id} href={`/produtos/${prod.id}`} className="bg-white border border-[#E5E7EB] rounded-[2px] p-5 hover:border-[#174F8C] hover:shadow-lg transition duration-300 group flex flex-col h-full relative">
                 <div className="relative w-full aspect-square mb-6 rounded-[2px] overflow-hidden bg-[#F4F5F6]/50">
                   <ImageWithFallback 
                     src={prod.img} 
@@ -220,14 +222,14 @@ function ProductDetail() {
                           <div className="text-[14px] font-black text-[#252A2E]/30 uppercase tracking-[0.1em]">Consulte</div>
                         )}
                       </div>
-                      <button className="w-full bg-[#174F8C] text-white py-2.5 rounded-[2px] hover:bg-[#123E70] transition flex items-center justify-center gap-2 group/btn shadow-sm">
+                      <span className="w-full bg-[#174F8C] text-white py-2.5 rounded-[2px] hover:bg-[#123E70] transition flex items-center justify-center gap-2 group/btn shadow-sm">
                         <span className="text-[11px] font-bold uppercase tracking-wider">Ver produto</span>
                         <ChevronRight size={14} className="group-hover/btn:translate-x-1 transition"/>
-                      </button>
+                      </span>
                     </div>
                   </div>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
         </div>
