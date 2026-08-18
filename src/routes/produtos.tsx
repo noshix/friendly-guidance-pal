@@ -42,7 +42,7 @@ const CATEGORIES = [
 
 function Products() {
   const [isFilterMobileOpen, setIsFilterMobileOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [viewMode] = useState<'grid' | 'list'>('grid');
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] text-[#252A2E]">
@@ -129,7 +129,7 @@ function Products() {
               <div>
                 <h3 className="text-[12px] font-black uppercase tracking-[0.2em] text-[#252A2E] mb-4 border-b border-[#F4F5F6] pb-2">Disponibilidade</h3>
                 <div className="space-y-3">
-                  {['Em estoque', 'Consulte'].map(status => (
+                  {['Em estoque', 'Consulte disponibilidade'].map(status => (
                     <label key={status} className="flex items-center gap-2 group cursor-pointer">
                       <div className="w-4 h-4 border border-[#E5E7EB] group-hover:border-[#174F8C] rounded-[2px] flex items-center justify-center transition">
                         <Check size={10} className="text-[#174F8C] opacity-0 group-hover:opacity-20" />
@@ -159,24 +159,10 @@ function Products() {
                   <Filter size={14} /> Filtrar
                 </button>
                 <span className="text-[13px] font-bold text-[#252A2E]/60 uppercase tracking-wider">
-                  1.248 <span className="font-normal">produtos encontrados</span>
+                  <span className="font-normal italic mr-1">Exibindo</span> Produtos encontrados
                 </span>
               </div>
               <div className="flex items-center gap-6">
-                <div className="hidden md:flex items-center gap-2 border-r border-[#E5E7EB] pr-6">
-                  <button 
-                    onClick={() => setViewMode('grid')}
-                    className={`p-1.5 rounded-[2px] ${viewMode === 'grid' ? 'bg-[#174F8C] text-white' : 'text-[#252A2E]/30 hover:text-[#174F8C]'}`}
-                  >
-                    <Grid size={18} />
-                  </button>
-                  <button 
-                    onClick={() => setViewMode('list')}
-                    className={`p-1.5 rounded-[2px] ${viewMode === 'list' ? 'bg-[#174F8C] text-white' : 'text-[#252A2E]/30 hover:text-[#174F8C]'}`}
-                  >
-                    <List size={18} />
-                  </button>
-                </div>
                 <div className="flex items-center gap-2">
                   <span className="hidden sm:inline text-[11px] font-bold text-[#252A2E]/40 uppercase tracking-widest">Ordenar por:</span>
                   <div className="relative group">
@@ -189,43 +175,40 @@ function Products() {
             </div>
 
             {/* Grid */}
-            <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3' : 'grid-cols-1'}`}>
+            <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
               {MOCK_PRODUCTS.map((prod) => (
-                <div key={prod.id} className={`bg-white border border-[#E5E7EB] rounded-[2px] p-5 hover:border-[#174F8C] hover:shadow-lg transition duration-300 group flex relative ${viewMode === 'grid' ? 'flex-col h-full' : 'flex-row gap-8 items-center'}`}>
+                <div key={prod.id} className="bg-white border border-[#E5E7EB] rounded-[2px] p-5 hover:border-[#174F8C] hover:shadow-lg transition duration-300 group flex flex-col h-full relative">
                   
-                  <div className={`relative ${viewMode === 'grid' ? 'w-full aspect-square mb-6' : 'w-48 aspect-square flex-shrink-0'} rounded-[2px] overflow-hidden bg-[#F4F5F6]/50 p-4`}>
+                  <div className="relative w-full aspect-square mb-6 rounded-[2px] overflow-hidden bg-[#F4F5F6]/50">
                     <ImageWithFallback 
                       src={prod.img} 
                       alt={prod.name} 
-                      className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition duration-500"
+                      className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition duration-500"
                     />
                   </div>
 
                   <div className="flex-1 flex flex-col">
                     <div className="text-[9px] font-black text-[#174F8C]/40 tracking-[0.2em] mb-2 uppercase">{prod.brand}</div>
-                    <h3 className="font-bold text-[16px] mb-1 leading-tight text-[#252A2E] group-hover:text-[#174F8C] transition uppercase">{prod.name}</h3>
-                    <div className="text-[11px] text-[#252A2E]/50 mb-4 font-medium italic">Ref: {prod.ref}</div>
+                    <h3 className="font-bold text-[14px] mb-1 leading-tight text-[#252A2E] group-hover:text-[#174F8C] transition uppercase min-h-[40px] line-clamp-2">{prod.name}</h3>
+                    <div className="text-[10px] text-[#252A2E]/40 mb-4 font-medium italic">Ref: {prod.ref}</div>
                     
                     <div className="mt-auto pt-4 border-t border-[#F4F5F6]">
-                      <div className={`flex items-center gap-1.5 text-[10px] font-bold mb-3 uppercase tracking-tighter ${prod.inStock ? 'text-[#2E8B57]' : 'text-[#252A2E]/40'}`}>
+                      <div className={`flex items-center gap-1.5 text-[10px] font-bold mb-4 uppercase tracking-tighter ${prod.inStock ? 'text-[#2E8B57]' : 'text-[#252A2E]/40'}`}>
                         <div className={`w-1.5 h-1.5 rounded-full ${prod.inStock ? 'bg-[#2E8B57] animate-pulse' : 'bg-[#E5E7EB]'}`}></div>
                         {prod.inStock ? 'Em estoque' : 'Consulte disponibilidade'}
                       </div>
                       
-                      <div className="flex justify-between items-end">
-                        <div>
+                      <div className="flex flex-col gap-4">
+                        <div className="min-h-[32px] flex flex-col justify-end">
                           {prod.price ? (
-                            <>
-                              <span className="text-[10px] text-[#252A2E]/40 block leading-none mb-1 uppercase font-bold tracking-widest">Preço Sugerido</span>
-                              <div className="text-xl font-black text-[#252A2E]">R$ {prod.price}</div>
-                            </>
+                            <div className="text-lg font-black text-[#252A2E]">R$ {prod.price}</div>
                           ) : (
-                            <div className="text-[18px] font-black text-[#252A2E]/30 uppercase tracking-widest py-1">Consulte</div>
+                            <div className="text-[14px] font-black text-[#252A2E]/30 uppercase tracking-[0.1em]">Consulte</div>
                           )}
                         </div>
-                        <button className="bg-[#2E8B57] text-white px-4 py-2 rounded-[2px] hover:bg-[#257046] transition flex items-center gap-2 group/btn shadow-sm">
-                          <span className="text-[11px] font-bold uppercase tracking-wider hidden sm:inline">Ver produto</span>
-                          <ChevronRight size={16} className="group-hover/btn:translate-x-1 transition"/>
+                        <button className="w-full bg-[#174F8C] text-white py-2.5 rounded-[2px] hover:bg-[#123E70] transition flex items-center justify-center gap-2 group/btn shadow-sm">
+                          <span className="text-[11px] font-bold uppercase tracking-wider">Ver produto</span>
+                          <ChevronRight size={14} className="group-hover/btn:translate-x-1 transition"/>
                         </button>
                       </div>
                     </div>
