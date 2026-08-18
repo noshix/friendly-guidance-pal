@@ -1,5 +1,6 @@
 import logoAsset from "@/assets/logo.asset.json";
 import { Phone, MapPin, ChevronRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 export function Footer() {
   return (
@@ -24,9 +25,8 @@ export function Footer() {
         <div>
           <h4 className="text-[12px] font-black tracking-[0.2em] text-[#F5C400] mb-8 uppercase">A Pizzatto</h4>
           <ul className="space-y-4 text-[14px] text-white/70">
-            {['Empresa', 'Localização', 'Contato'].map(item => (
-              <li key={item} className="hover:text-white cursor-pointer transition">{item}</li>
-            ))}
+            <li><Link to="/empresa" className="hover:text-white cursor-pointer transition">Empresa</Link></li>
+            <li><Link to="/contato" className="hover:text-white cursor-pointer transition">Localização / Contato</Link></li>
           </ul>
         </div>
         <div>

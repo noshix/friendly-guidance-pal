@@ -17,8 +17,8 @@ export function Header({ activePage }: { activePage?: string }) {
             { label: 'Produtos', to: '/produtos' },
             { label: 'Categorias', to: '/categorias' },
             { label: 'Marcas', to: '/marcas' },
-            { label: 'Empresa', to: '#' },
-            { label: 'Contato', to: '#' }
+            { label: 'Empresa', to: '/empresa' },
+            { label: 'Contato', to: '/contato' }
           ].map(item => (
             <Link 
               to={item.to as any} 
