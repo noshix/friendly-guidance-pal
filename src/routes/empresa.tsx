@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronRight, MessageSquare, CheckCircle2 } from "lucide-react";
 import fachadaAsset from "@/assets/fachada.asset.json";
 import bobininhaAsset from "@/assets/bobininha.asset.json";
+import videoAsset from "@/assets/pizzatto-video01.mp4.asset.json";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
@@ -65,6 +66,29 @@ function EmpresaPage() {
                 <div className="text-[10px] font-bold tracking-widest uppercase mt-2">Anos de Experiência</div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#F4F5F6]/30 py-24 border-t border-[#F4F5F6]">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <div className="w-16 h-1 bg-[#174F8C] mb-8 mx-auto"></div>
+          <h2 className="text-[32px] md:text-[40px] font-black text-[#252A2E] leading-tight tracking-tighter uppercase">
+            Conheça a Pizzatto em Vídeo
+          </h2>
+          <p className="mt-4 text-[18px] text-[#252A2E]/60 max-w-2xl mx-auto">
+            “Uma trajetória construída ao lado de clientes, profissionais e empresas que confiam na Pizzatto para seus projetos e instalações.”
+          </p>
+          
+          <div className="mt-12 max-w-[800px] mx-auto aspect-video bg-black rounded-[4px] shadow-2xl overflow-hidden border border-[#174F8C]/10 relative group">
+            <video 
+              src={videoAsset.url}
+              controls
+              preload="metadata"
+              className="w-full h-full object-cover"
+            >
+              Seu navegador não suporta a tag de vídeo.
+            </video>
           </div>
         </div>
       </section>
