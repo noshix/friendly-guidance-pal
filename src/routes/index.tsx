@@ -158,7 +158,7 @@ function Index() {
                       className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition duration-500"
                     />
                   </div>
-                  <h3 className="font-bold text-[15px] mb-1 leading-tight text-[#252A2E] group-hover:text-[#174F8C] transition uppercase">{prod.name}</h3>
+                  <h3 className="font-bold text-[15px] mb-1 leading-tight text-[#252A2E] group-hover:text-[#174F8C] transition uppercase min-h-[40px] line-clamp-2">{prod.name}</h3>
                   <div className="text-[11px] text-[#252A2E]/50 mb-auto">Ref: {prod.ref}</div>
                   <div className="mt-6 pt-4 border-t border-[#F4F5F6]">
                     <div className={`flex items-center gap-1.5 text-[10px] font-bold mb-2 uppercase tracking-tighter ${prod.inStock ? 'text-[#2E8B57]' : 'text-[#252A2E]/40'}`}>
@@ -170,8 +170,17 @@ function Index() {
                         <span className="text-[10px] text-[#252A2E]/40 block leading-none mb-1">Por apenas</span>
                         <div className="text-xl font-black text-[#252A2E]">R$ {prod.price}</div>
                       </div>
-                      <div className="bg-[#2E8B57] text-white p-2 rounded-[2px] group-hover:bg-[#257046] transition">
-                        <ChevronRight size={18}/>
+                      <div className="flex gap-2">
+                        <button 
+                          onClick={(e) => handleAddToCart(e, prod)}
+                          className="bg-[#F4F5F6] text-[#252A2E]/60 hover:text-[#174F8C] hover:bg-[#E5E7EB] transition flex items-center justify-center p-2 rounded-[2px] shadow-sm"
+                          title="Adicionar ao orçamento"
+                        >
+                          <ShoppingBag size={18} />
+                        </button>
+                        <div className="bg-[#2E8B57] text-white p-2 rounded-[2px] group-hover:bg-[#257046] transition">
+                          <ChevronRight size={18}/>
+                        </div>
                       </div>
                     </div>
                   </div>
