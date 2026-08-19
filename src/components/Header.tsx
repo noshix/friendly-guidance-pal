@@ -29,9 +29,19 @@ export function Header({ activePage }: { activePage?: string }) {
             </Link>
           ))}
         </nav>
-        <button className="bg-[#2E8B57] text-white px-5 py-2.5 rounded-[2px] font-bold text-[13px] hover:bg-[#257548] flex items-center gap-2 shadow-sm">
-          <MessageSquare size={16}/> WhatsApp
-        </button>
+        <div className="flex items-center gap-6">
+          <Link to="/orcamento" className="text-white hover:text-[#F5C400] transition flex items-center gap-2 relative">
+             <span className="uppercase font-bold text-[13px]">Orçamento</span>
+             {/* Simple cart icon visualization */}
+             <div className="relative">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                {/* Badge component here logic to follow */}
+             </div>
+          </Link>
+          <button className="bg-[#2E8B57] text-white px-5 py-2.5 rounded-[2px] font-bold text-[13px] hover:bg-[#257548] flex items-center gap-2 shadow-sm">
+            <MessageSquare size={16}/> WhatsApp
+          </button>
+        </div>
       </div>
     </header>
   );
