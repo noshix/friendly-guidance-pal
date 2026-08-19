@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronRight, MessageSquare, CheckCircle2 } from "lucide-react";
-import fachadaAsset from "@/assets/fachada.asset.json";
-import bobininhaAsset from "@/assets/bobininha.asset.json";
-import videoAsset from "@/assets/pizzatto-video01.mp4.asset.json";
+// Assets replaced by static public paths:
+// fachada -> /assets/fachada.jpg
+// bobininha -> /assets/bobininha.png
+// video -> /assets/pizzatto-institucional.mp4
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { PIZZATTO_WHATSAPP } from "@/lib/config";
@@ -37,7 +38,7 @@ function EmpresaPage() {
           <div className="order-2 md:order-1 relative">
             <div className="absolute -top-4 -left-4 w-full h-full border-2 border-[#174F8C]/10 -z-10 rounded-[4px]"></div>
             <img 
-              src={fachadaAsset.url} 
+              src="/assets/fachada.jpg" 
               alt="Fachada Pizzatto Materiais Elétricos" 
               className="w-full h-auto rounded-[4px] shadow-xl border border-[#E5E7EB]"
             />
@@ -84,7 +85,7 @@ function EmpresaPage() {
           
           <div className="mt-12 max-w-[800px] mx-auto aspect-video bg-black rounded-[4px] shadow-2xl overflow-hidden border border-[#174F8C]/10 relative group">
             <video 
-              src={videoAsset.url}
+              src="/assets/pizzatto-institucional.mp4"
               controls
               preload="metadata"
               className="w-full h-full object-cover"
@@ -149,7 +150,7 @@ function EmpresaPage() {
       <section className="max-w-4xl mx-auto px-4 py-20">
         <div className="bg-[#174F8C] rounded-[4px] p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden shadow-2xl">
           <div className="absolute top-0 right-0 w-32 h-full bg-[#123E70]/30 skew-x-12 translate-x-10"></div>
-          <img src={bobininhaAsset.url} alt="Bobininha" className="w-32 h-32 object-contain relative z-10" />
+          <img src="/assets/bobininha.png" alt="Bobininha" className="w-32 h-32 object-contain relative z-10" />
           <div className="flex-1 text-center md:text-left text-white relative z-10">
             <h3 className="text-[24px] font-black mb-2 uppercase">Precisa encontrar um material?</h3>
             <p className="text-white/80 text-[18px] mb-6">Fale com nossa equipe pelo WhatsApp.</p>

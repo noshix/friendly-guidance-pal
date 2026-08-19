@@ -1,5 +1,5 @@
 import { createFileRoute, Link, Outlet, useLocation, useNavigate } from "@tanstack/react-router";
-import logoAsset from "@/assets/logo.asset.json";
+// Logo asset replaced by static public path /assets/logo-pizzatto.png
 import { 
   LayoutDashboard, 
   Package, 
@@ -66,7 +66,7 @@ function AdminLayout() {
         <div className={`h-[80px] flex items-center ${isSidebarOpen ? 'px-8' : 'justify-center'} border-b border-white/5`}>
           {isSidebarOpen ? (
             <div className="py-2 flex items-center h-full w-full">
-              <img src={logoAsset.url} alt="Pizzatto" className="h-10 w-auto object-contain invert brightness-0" />
+              <img src="/assets/logo-pizzatto.png" alt="Pizzatto" className="h-10 w-auto object-contain invert brightness-0" />
             </div>
           ) : (
             <div className="w-8 h-8 bg-[#174F8C] rounded-[2px] flex items-center justify-center font-black text-[14px]">P</div>

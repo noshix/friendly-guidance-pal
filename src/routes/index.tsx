@@ -1,9 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Search, ChevronRight, MessageSquare, ShoppingBag } from "lucide-react";
-import logoAsset from "@/assets/logo.asset.json";
-import logoIconAsset from "@/assets/logo-pizzatto-icon-new.png.asset.json";
-import bobininhaAsset from "@/assets/bobininha.asset.json";
-import fachadaAsset from "@/assets/fachada.asset.json";
+// Assets replaced by static public paths:
+// logo -> /assets/logo-pizzatto.png
+// logo-icon -> /assets/simbolo-pizzatto.png
+// bobininha -> /assets/bobininha.png
+// fachada -> /assets/fachada.jpg
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
@@ -76,7 +77,7 @@ function Index() {
         <div className="flex-1 relative h-[500px]">
            <div className="absolute inset-0 bg-transparent rounded-[4px] overflow-hidden">
              <ImageWithFallback 
-               src={logoIconAsset.url} 
+               src="/assets/simbolo-pizzatto.png" 
                alt="Pizzatto Materiais Elétricos" 
                className="w-full h-full object-contain p-12"
              />
@@ -203,7 +204,7 @@ function Index() {
       <section className="max-w-7xl mx-auto px-4 py-24 flex items-center gap-16">
         <div className="flex-1 relative">
           <div className="absolute -top-4 -left-4 w-full h-full border-2 border-[#174F8C]/10 -z-10 rounded-[4px]"></div>
-          <img src={fachadaAsset.url} alt="Fachada Pizzatto" className="w-full h-auto rounded-[4px] shadow-xl border border-[#E5E7EB]"/>
+          <img src="/assets/fachada.jpg" alt="Fachada Pizzatto" className="w-full h-auto rounded-[4px] shadow-xl border border-[#E5E7EB]"/>
           <div className="absolute top-8 left-8 bg-[#F5C400] text-[#174F8C] px-4 py-2 font-black italic shadow-lg rounded-[2px] transform -rotate-2">
             CUIABÁ - MT
           </div>
@@ -228,7 +229,7 @@ function Index() {
         <div className="max-w-5xl mx-auto px-4 flex flex-col md:flex-row items-center gap-12 relative z-10">
           <div className="relative group">
             <div className="absolute inset-0 bg-white/20 rounded-full blur-2xl group-hover:bg-white/30 transition duration-500"></div>
-            <img src={bobininhaAsset.url} alt="Bobininha" className="w-48 h-48 object-contain relative z-10" />
+            <img src="/assets/bobininha.png" alt="Bobininha" className="w-48 h-48 object-contain relative z-10" />
           </div>
           <div className="flex-1 text-center md:text-left text-white">
             <h2 className="text-[32px] font-black mb-4 leading-tight">Dúvidas sobre materiais ou precisa de orçamento?</h2>
