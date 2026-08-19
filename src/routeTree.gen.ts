@@ -16,7 +16,9 @@ import { Route as ContatoRouteImport } from './routes/contato'
 import { Route as EmpresaRouteImport } from './routes/empresa'
 import { Route as MarcasRouteRouteImport } from './routes/marcas/route'
 import { Route as OrcamentoRouteImport } from './routes/orcamento'
+import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as ProdutosRouteRouteImport } from './routes/produtos/route'
+import { Route as TermosDeUsoRouteImport } from './routes/termos-de-uso'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as CategoriasIndexRouteImport } from './routes/categorias/index'
@@ -66,9 +68,19 @@ const OrcamentoRoute = OrcamentoRouteImport.update({
   path: '/orcamento',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacidadeRoute = PrivacidadeRouteImport.update({
+  id: '/privacidade',
+  path: '/privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProdutosRouteRoute = ProdutosRouteRouteImport.update({
   id: '/produtos',
   path: '/produtos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermosDeUsoRoute = TermosDeUsoRouteImport.update({
+  id: '/termos-de-uso',
+  path: '/termos-de-uso',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -146,6 +158,8 @@ export interface FileRoutesByFullPath {
   '/contato': typeof ContatoRoute
   '/empresa': typeof EmpresaRoute
   '/orcamento': typeof OrcamentoRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/termos-de-uso': typeof TermosDeUsoRoute
   '/admin/login': typeof AdminLoginRoute
   '/categorias/$slug': typeof CategoriasSlugRoute
   '/marcas/$slug': typeof MarcasSlugRoute
@@ -165,6 +179,8 @@ export interface FileRoutesByTo {
   '/contato': typeof ContatoRoute
   '/empresa': typeof EmpresaRoute
   '/orcamento': typeof OrcamentoRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/termos-de-uso': typeof TermosDeUsoRoute
   '/admin/login': typeof AdminLoginRoute
   '/categorias/$slug': typeof CategoriasSlugRoute
   '/marcas/$slug': typeof MarcasSlugRoute
@@ -189,6 +205,8 @@ export interface FileRoutesById {
   '/contato': typeof ContatoRoute
   '/empresa': typeof EmpresaRoute
   '/orcamento': typeof OrcamentoRoute
+  '/privacidade': typeof PrivacidadeRoute
+  '/termos-de-uso': typeof TermosDeUsoRoute
   '/admin/login': typeof AdminLoginRoute
   '/categorias/$slug': typeof CategoriasSlugRoute
   '/marcas/$slug': typeof MarcasSlugRoute
@@ -214,6 +232,8 @@ export interface FileRouteTypes {
     | '/contato'
     | '/empresa'
     | '/orcamento'
+    | '/privacidade'
+    | '/termos-de-uso'
     | '/admin/login'
     | '/categorias/$slug'
     | '/marcas/$slug'
@@ -233,6 +253,8 @@ export interface FileRouteTypes {
     | '/contato'
     | '/empresa'
     | '/orcamento'
+    | '/privacidade'
+    | '/termos-de-uso'
     | '/admin/login'
     | '/categorias/$slug'
     | '/marcas/$slug'
@@ -256,6 +278,8 @@ export interface FileRouteTypes {
     | '/contato'
     | '/empresa'
     | '/orcamento'
+    | '/privacidade'
+    | '/termos-de-uso'
     | '/admin/login'
     | '/categorias/$slug'
     | '/marcas/$slug'
@@ -280,6 +304,8 @@ export interface RootRouteChildren {
   ContatoRoute: typeof ContatoRoute
   EmpresaRoute: typeof EmpresaRoute
   OrcamentoRoute: typeof OrcamentoRoute
+  PrivacidadeRoute: typeof PrivacidadeRoute
+  TermosDeUsoRoute: typeof TermosDeUsoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -333,11 +359,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrcamentoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacidade': {
+      id: '/privacidade'
+      path: '/privacidade'
+      fullPath: '/privacidade'
+      preLoaderRoute: typeof PrivacidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/produtos': {
       id: '/produtos'
       path: '/produtos'
       fullPath: '/produtos'
       preLoaderRoute: typeof ProdutosRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/termos-de-uso': {
+      id: '/termos-de-uso'
+      path: '/termos-de-uso'
+      fullPath: '/termos-de-uso'
+      preLoaderRoute: typeof TermosDeUsoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
@@ -509,6 +549,8 @@ const rootRouteChildren: RootRouteChildren = {
   ContatoRoute: ContatoRoute,
   EmpresaRoute: EmpresaRoute,
   OrcamentoRoute: OrcamentoRoute,
+  PrivacidadeRoute: PrivacidadeRoute,
+  TermosDeUsoRoute: TermosDeUsoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
