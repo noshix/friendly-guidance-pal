@@ -132,12 +132,12 @@ function ProductDetail() {
                 </div>
 
                 <div className="mb-10">
-                  {PRODUCT.price ? (
+                  {PRODUCT.price && parseFloat(PRODUCT.price.replace(".", "").replace(",", ".")) > 0 ? (
                     <div className="text-4xl font-black text-[#252A2E] tracking-tight">
                       R$ {PRODUCT.price}
                     </div>
                   ) : (
-                    <div className="text-3xl font-black text-[#252A2E]/30 uppercase tracking-widest">
+                    <div className="text-3xl font-black text-[#174F8C] uppercase tracking-widest">
                       Consulte
                     </div>
                   )}

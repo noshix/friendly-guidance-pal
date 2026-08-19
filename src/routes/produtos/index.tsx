@@ -220,10 +220,10 @@ function Products() {
                         
                         <div className="flex flex-col gap-4">
                           <div className="min-h-[32px] flex flex-col justify-end">
-                            {prod.price ? (
+                            {prod.price && parseFloat(prod.price.replace(".", "").replace(",", ".")) > 0 ? (
                               <div className="text-lg font-black text-[#252A2E]">R$ {prod.price}</div>
                             ) : (
-                              <div className="text-[14px] font-black text-[#252A2E]/30 uppercase tracking-[0.1em]">Consulte</div>
+                              <div className="text-[14px] font-black text-[#174F8C] uppercase tracking-[0.1em]">Consulte</div>
                             )}
                           </div>
                           

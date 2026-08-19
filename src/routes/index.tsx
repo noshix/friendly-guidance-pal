@@ -168,7 +168,11 @@ function Index() {
                     <div className="flex justify-between items-end">
                       <div>
                         <span className="text-[10px] text-[#252A2E]/40 block leading-none mb-1">Por apenas</span>
-                        <div className="text-xl font-black text-[#252A2E]">R$ {prod.price}</div>
+                        {prod.price && parseFloat(prod.price.replace(".", "").replace(",", ".")) > 0 ? (
+                          <div className="text-xl font-black text-[#252A2E]">R$ {prod.price}</div>
+                        ) : (
+                          <div className="text-[16px] font-black text-[#174F8C] uppercase tracking-[0.1em]">Consulte</div>
+                        )}
                       </div>
                       <div className="flex gap-2">
                         <button 
