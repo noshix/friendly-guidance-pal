@@ -51,7 +51,7 @@ function ProductDetail() {
       ref: PRODUCT.ref,
       img: PRODUCT.img,
       quantity: quantity,
-      price: PRODUCT.price || undefined,
+      price: PRODUCT.price,
       inStock: PRODUCT.inStock
     });
     toast.success(`${quantity} item(s) adicionado(s) ao orçamento`);

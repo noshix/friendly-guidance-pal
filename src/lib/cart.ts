@@ -8,7 +8,7 @@ export interface CartItem {
   ref: string;
   img: string;
   quantity: number;
-  price?: string;
+  price?: string | null;
   inStock?: boolean;
 }
 
