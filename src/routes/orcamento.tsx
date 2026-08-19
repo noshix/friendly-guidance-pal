@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Trash2, Plus, Minus, Send, ShoppingBag } from "lucide-react";
+import { Trash2, Plus, Minus, Send, ShoppingBag, Info } from "lucide-react";
 import { useCartStore } from "@/lib/cart";
+import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -36,27 +37,35 @@ function Orcamento() {
       return;
     }
 
-    const itemsText = items.map(item => 
-      `• ${item.quantity}x ${item.name}\n  Código: ${item.id}`
-    ).join("\n\n");
+    const itemsText = items.map(item => {
+      const parts = [`• ${item.quantity}x ${item.name}`, `  Código: ${item.id}`];
+      if (item.ref && item.ref !== "N/A") {
+        parts.push(`  Ref.: ${item.ref}`);
+      }
+      return parts.join("\n");
+    }).join("\n\n");
 
     const message = `Olá! Gostaria de solicitar um orçamento na Pizzatto Materiais Elétricos.\n\nITENS:\n${itemsText}\n\nDADOS:\nNome: ${formData.nome}\nEmpresa: ${formData.empresa || "Não informada"}\nTelefone: ${formData.telefone || "Não informado"}\nObservações:\n${formData.observacoes || "Nenhuma."}\n\nAguardo o orçamento. Obrigado!`;
 
-    // Using a mock number as requested, or the one from Header if we had it.
-    // The instructions said "Usar o MESMO destino/número já configurado".
-    // I'll use a placeholder variable as a real number isn't visible in the current components.
     const phone = "556530524200"; 
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
     window.open(url, "_blank");
   };
 
   const estimatedTotal = items.reduce((acc, item) => {
-    if (item.price) {
+    if (item.price && parseFloat(item.price.replace(".", "").replace(",", ".")) > 0) {
       const priceVal = parseFloat(item.price.replace(".", "").replace(",", "."));
       return acc + (priceVal * item.quantity);
     }
     return acc;
   }, 0);
+
+  const handleClearCart = () => {
+    if (window.confirm("Remover todos os itens do orçamento?")) {
+      clearCart();
+      toast.success("Lista limpa com sucesso.");
+    }
+  };
 
   if (items.length === 0) {
     return (
@@ -93,7 +102,7 @@ function Orcamento() {
             {items.map((item) => (
               <div key={item.id} className="bg-white border border-[#E5E7EB] p-4 md:p-6 rounded-[2px] shadow-sm flex flex-col md:flex-row gap-6 relative group">
                 <div className="w-full md:w-24 aspect-square bg-[#F4F5F6] rounded-[2px] overflow-hidden flex-shrink-0">
-                  <img src={item.img || "/placeholder.svg"} alt={item.name} className="w-full h-full object-contain mix-blend-multiply" />
+                  <ImageWithFallback src={item.img} alt={item.name} className="w-full h-full object-contain mix-blend-multiply" />
                 </div>
                 
                 <div className="flex-1">
@@ -130,9 +139,13 @@ function Orcamento() {
                 <div className="md:text-right flex flex-row md:flex-col justify-between items-end md:items-end border-t md:border-t-0 md:border-l border-[#F4F5F6] pt-4 md:pt-0 md:pl-6">
                    <div className="text-[11px] font-bold text-[#252A2E]/40 uppercase tracking-widest mb-1">Preço Un.</div>
                    <div className="text-[16px] font-black">
-                     {item.price ? `R$ ${item.price}` : <span className="text-[#252A2E]/30 uppercase tracking-widest text-[12px]">Consulte</span>}
+                     {item.price && parseFloat(item.price.replace(".", "").replace(",", ".")) > 0 ? (
+                       `R$ ${item.price}`
+                     ) : (
+                       <span className="text-[#174F8C] uppercase tracking-widest text-[12px]">Consulte</span>
+                     )}
                    </div>
-                   {item.price && (
+                   {item.price && parseFloat(item.price.replace(".", "").replace(",", ".")) > 0 && (
                      <div className="hidden md:block mt-auto pt-4 border-t border-[#F4F5F6] w-full">
                        <div className="text-[10px] font-bold text-[#252A2E]/30 uppercase mb-1">Subtotal</div>
                        <div className="text-[14px] font-bold text-[#174F8C]">
@@ -145,15 +158,15 @@ function Orcamento() {
             ))}
             
             <button 
-              onClick={() => clearCart()}
-              className="text-[12px] font-bold text-[#252A2E]/40 hover:text-[#252A2E] uppercase tracking-widest py-2 px-4 transition"
+              onClick={handleClearCart}
+              className="text-[12px] font-bold text-[#252A2E]/40 hover:text-[#D9272E] uppercase tracking-widest py-2 px-4 transition"
             >
               Limpar toda a lista
             </button>
           </div>
 
           {/* Sidebar: Form & Summary */}
-          <aside className="space-y-6">
+          <aside className="space-y-6 lg:sticky lg:top-28 self-start">
             <div className="bg-white border border-[#E5E7EB] rounded-[2px] p-6 shadow-sm space-y-6">
               <h2 className="text-[14px] font-black uppercase tracking-[0.2em] border-b border-[#F4F5F6] pb-4">Seus dados</h2>
               
@@ -219,8 +232,9 @@ function Orcamento() {
                   </div>
                 )}
                 
-                <div className="bg-white/5 p-4 rounded-[2px] text-[11px] font-medium leading-relaxed text-white/60 italic">
-                  * Valores e disponibilidade serão confirmados pela nossa equipe técnica após o envio da solicitação.
+                <div className="bg-white/5 p-4 rounded-[2px] text-[11px] font-medium leading-relaxed text-white/70 italic flex gap-3">
+                  <Info size={16} className="shrink-0 text-[#F5C400]" />
+                  <span>Valores e disponibilidade serão confirmados pela nossa equipe técnica após o envio da solicitação.</span>
                 </div>
 
                 <button 
