@@ -38,12 +38,12 @@ function ProductDetail() {
   const { id } = Route.useParams();
   const [quantity, setQuantity] = useState(1);
   const addItem = useCartStore((state) => state.addItem);
-  const { id } = Route.useParams();
   
   // Find product by ID or fallback to first one if not found (mock behavior)
   const PRODUCT = MOCK_PRODUCTS.find(p => p.id === id) || MOCK_PRODUCTS[0];
 
   const handleAddToCart = () => {
+    if (!PRODUCT) return;
     addItem({
       id: PRODUCT.id,
       name: PRODUCT.name,
@@ -51,13 +51,14 @@ function ProductDetail() {
       ref: PRODUCT.ref,
       img: PRODUCT.img,
       quantity: quantity,
-      price: PRODUCT.price,
+      price: PRODUCT.price || undefined,
       inStock: PRODUCT.inStock
     });
     toast.success(`${quantity} item(s) adicionado(s) ao orçamento`);
   };
 
   const handleWhatsAppDirect = () => {
+    if (!PRODUCT) return;
     const message = `Olá! Tenho interesse no produto: ${PRODUCT.name} (Ref: ${PRODUCT.ref}, Código: ${PRODUCT.id}). Gostaria de mais informações.`;
     const phone = "556530524200"; 
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
