@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronRight, Phone, MapPin, MessageSquare, Navigation } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { PIZZATTO_WHATSAPP } from "@/lib/config";
+
 
 export const Route = createFileRoute("/contato")({
   component: ContatoPage,
@@ -49,9 +51,14 @@ function ContatoPage() {
             </div>
             <h3 className="font-black text-[18px] mb-2 uppercase tracking-tight">WhatsApp</h3>
             <p className="text-[#252A2E]/60 text-[14px] mb-8">Atendimento rápido para dúvidas e orçamentos.</p>
-            <button className="w-full bg-[#2E8B57] text-white py-4 rounded-[2px] font-black uppercase tracking-widest hover:bg-[#257548] transition shadow-md">
+            <a 
+              href={PIZZATTO_WHATSAPP.getLink()} 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full bg-[#2E8B57] text-white py-4 rounded-[2px] font-black uppercase tracking-widest hover:bg-[#257548] transition shadow-md flex items-center justify-center"
+            >
               Falar no WhatsApp
-            </button>
+            </a>
           </div>
 
           {/* Phone Card */}
@@ -62,9 +69,12 @@ function ContatoPage() {
             <h3 className="font-black text-[18px] mb-2 uppercase tracking-tight">Telefone</h3>
             <p className="text-[#252A2E]/60 text-[14px] mb-2">Central de atendimento:</p>
             <div className="text-[24px] font-black text-[#174F8C] mb-8">{phone}</div>
-            <button className="w-full bg-white text-[#174F8C] border border-[#174F8C] py-4 rounded-[2px] font-black uppercase tracking-widest hover:bg-[#174F8C] hover:text-white transition">
+            <a 
+              href={`tel:${PIZZATTO_WHATSAPP.NUMBER}`}
+              className="w-full bg-white text-[#174F8C] border border-[#174F8C] py-4 rounded-[2px] font-black uppercase tracking-widest hover:bg-[#174F8C] hover:text-white transition flex items-center justify-center"
+            >
               Ligar
-            </button>
+            </a>
           </div>
 
           {/* Location Card */}
@@ -76,9 +86,14 @@ function ContatoPage() {
             <p className="text-[#252A2E]/60 text-[14px] mb-8 leading-relaxed">
               {address}
             </p>
-            <button className="w-full bg-[#174F8C] text-white py-4 rounded-[2px] font-black uppercase tracking-widest hover:bg-[#123E70] transition flex items-center justify-center gap-2 shadow-md">
+            <a 
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full bg-[#174F8C] text-white py-4 rounded-[2px] font-black uppercase tracking-widest hover:bg-[#123E70] transition flex items-center justify-center gap-2 shadow-md"
+            >
               <Navigation size={18} /> Como chegar
-            </button>
+            </a>
           </div>
         </div>
       </section>

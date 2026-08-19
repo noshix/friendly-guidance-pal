@@ -5,6 +5,8 @@ import bobininhaAsset from "@/assets/bobininha.asset.json";
 import videoAsset from "@/assets/pizzatto-video01.mp4.asset.json";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { PIZZATTO_WHATSAPP } from "@/lib/config";
+
 
 export const Route = createFileRoute("/empresa")({
   component: EmpresaPage,
@@ -151,9 +153,14 @@ function EmpresaPage() {
           <div className="flex-1 text-center md:text-left text-white relative z-10">
             <h3 className="text-[24px] font-black mb-2 uppercase">Precisa encontrar um material?</h3>
             <p className="text-white/80 text-[18px] mb-6">Fale com nossa equipe pelo WhatsApp.</p>
-            <button className="bg-[#2E8B57] text-white px-8 py-4 rounded-[2px] font-black uppercase tracking-widest flex items-center gap-3 hover:bg-[#257548] transition w-full md:w-auto justify-center">
+            <a 
+              href={PIZZATTO_WHATSAPP.getLink()} 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#2E8B57] text-white px-8 py-4 rounded-[2px] font-black uppercase tracking-widest flex items-center gap-3 hover:bg-[#257548] transition w-full md:w-auto justify-center"
+            >
               <MessageSquare size={20}/> Falar no WhatsApp
-            </button>
+            </a>
           </div>
         </div>
       </section>

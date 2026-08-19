@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Search, ChevronRight, MessageSquare, ShoppingBag } from "lucide-react";
 import logoAsset from "@/assets/logo.asset.json";
 import logoIconAsset from "@/assets/logo-pizzatto-icon-new.png.asset.json";
@@ -9,6 +9,8 @@ import { Footer } from "@/components/Footer";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { useCartStore } from "@/lib/cart";
 import { toast } from "sonner";
+import { PIZZATTO_WHATSAPP } from "@/lib/config";
+
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -26,6 +28,8 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const addItem = useCartStore((state) => state.addItem);
+  const navigate = useNavigate();
+
 
   const handleAddToCart = (e: React.MouseEvent, prod: any) => {
     e.preventDefault();
@@ -60,8 +64,9 @@ function Index() {
             Encontre materiais elétricos para sua casa, obra, empresa ou projeto com a experiência de quem atua há mais de 40 anos no segmento.
           </p>
           <div className="flex gap-4 pt-4">
-            <button className="bg-[#2E8B57] text-white px-8 py-4 rounded-[2px] font-bold uppercase text-[14px] hover:bg-[#257046] transition shadow-md">Explorar catálogo</button>
-            <button className="bg-[#F5C400] text-[#252A2E] px-8 py-4 rounded-[2px] font-bold uppercase text-[14px] hover:bg-[#E0B200] transition shadow-md">Solicitar orçamento</button>
+            <Link to="/produtos" className="bg-[#2E8B57] text-white px-8 py-4 rounded-[2px] font-bold uppercase text-[14px] hover:bg-[#257046] transition shadow-md flex items-center justify-center">Explorar catálogo</Link>
+            <Link to="/orcamento" className="bg-[#F5C400] text-[#252A2E] px-8 py-4 rounded-[2px] font-bold uppercase text-[14px] hover:bg-[#E0B200] transition shadow-md flex items-center justify-center">Solicitar orçamento</Link>
+
           </div>
           <div className="relative pt-6">
             <Search className="absolute left-4 top-10 text-[#252A2E]/30" size={20}/>
@@ -231,12 +236,17 @@ function Index() {
               Fale com nossa equipe e solicite atendimento via WhatsApp para sua lista de materiais.
             </p>
             <div className="flex flex-wrap justify-center md:justify-start gap-4">
-              <button className="bg-[#2E8B57] text-white px-10 py-4 rounded-[2px] font-black uppercase tracking-widest flex items-center gap-3 hover:bg-[#257548] transition shadow-2xl">
+              <a 
+                href={PIZZATTO_WHATSAPP.getLink()} 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-[#2E8B57] text-white px-10 py-4 rounded-[2px] font-black uppercase tracking-widest flex items-center gap-3 hover:bg-[#257548] transition shadow-2xl"
+              >
                 <MessageSquare size={20}/> Falar no WhatsApp
-              </button>
-              <button className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-10 py-4 rounded-[2px] font-black uppercase tracking-widest hover:bg-white/20 transition">
+              </a>
+              <Link to="/contato" className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-10 py-4 rounded-[2px] font-black uppercase tracking-widest hover:bg-white/20 transition flex items-center justify-center">
                 Localização
-              </button>
+              </Link>
             </div>
           </div>
         </div>

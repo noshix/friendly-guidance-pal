@@ -1,4 +1,4 @@
-import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useLocation, useNavigate } from "@tanstack/react-router";
 import logoAsset from "@/assets/logo.asset.json";
 import { 
   LayoutDashboard, 
@@ -11,7 +11,8 @@ import {
   User,
   Plus
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useHydrated } from "@/hooks/use-hydrated";
 
 export const Route = createFileRoute("/admin")({
   component: AdminLayout,
@@ -20,6 +21,18 @@ export const Route = createFileRoute("/admin")({
 function AdminLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const location = useLocation();
+  const navigate = useNavigate();
+  const isHydrated = useHydrated();
+
+  useEffect(() => {
+    if (isHydrated && location.pathname !== "/admin/login") {
+      const session = localStorage.getItem('pizzatto_admin_session');
+      if (!session) {
+        navigate({ to: "/admin/login" });
+      }
+    }
+  }, [isHydrated, location.pathname, navigate]);
+
 
   // 1. LOGIN INDEPENDENTE - If we are on /admin/login, don't show the sidebar/topbar layout
   if (location.pathname === "/admin/login") {
@@ -109,13 +122,16 @@ function AdminLayout() {
             isOpen={isSidebarOpen}
             isActive={false}
           />
-          <SidebarItem 
-            icon={<LogOut size={20} />} 
-            label="Sair" 
-            to="/admin/login" 
-            isOpen={isSidebarOpen}
-            isActive={false}
-          />
+          <button 
+            onClick={() => {
+              localStorage.removeItem('pizzatto_admin_session');
+              navigate({ to: "/admin/login" });
+            }}
+            className="w-full flex items-center px-6 py-4 transition-all duration-200 border-l-4 text-white/60 hover:text-white hover:bg-white/5 border-transparent"
+          >
+            <div className="shrink-0"><LogOut size={20} /></div>
+            {isSidebarOpen && <span className="ml-4 text-[13px] font-bold uppercase tracking-wider">Sair</span>}
+          </button>
         </nav>
       </aside>
 

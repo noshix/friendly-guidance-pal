@@ -7,6 +7,8 @@ import { ChevronRight, MessageCircle, FileText, Package, Tag, Hash, Building2, C
 import { useState } from "react";
 import { useCartStore } from "@/lib/cart";
 import { toast } from "sonner";
+import { PIZZATTO_WHATSAPP } from "@/lib/config";
+
 
 export const Route = createFileRoute("/produtos/$id")({
   component: ProductDetail,
@@ -60,9 +62,8 @@ function ProductDetail() {
   const handleWhatsAppDirect = () => {
     if (!PRODUCT) return;
     const message = `Olá! Tenho interesse no produto: ${PRODUCT.name} (Ref: ${PRODUCT.ref}, Código: ${PRODUCT.id}). Gostaria de mais informações.`;
-    const phone = "556530524200"; 
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-    window.open(url, "_blank");
+    window.open(PIZZATTO_WHATSAPP.getLink(message), "_blank");
+
   };
 
   // Related products (different from current one)

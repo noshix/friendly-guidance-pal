@@ -1,8 +1,25 @@
 import logoAsset from "@/assets/logo.asset.json";
 import { Phone, MapPin, ChevronRight } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { PIZZATTO_WHATSAPP } from "@/lib/config";
+import { useHydrated } from "@/hooks/use-hydrated";
 
 export function Footer() {
+  const navigate = useNavigate();
+  const isHydrated = useHydrated();
+
+  const handleAdminClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (isHydrated) {
+      const session = localStorage.getItem('pizzatto_admin_session');
+      if (session) {
+        navigate({ to: "/admin" });
+      } else {
+        navigate({ to: "/admin/login" });
+      }
+    }
+  };
+
   return (
     <footer className="bg-[#252A2E] text-white pt-24 pb-12">
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12">
@@ -15,9 +32,14 @@ export function Footer() {
         <div>
           <h4 className="text-[12px] font-black tracking-[0.2em] text-[#F5C400] mb-8 uppercase">Catálogo</h4>
           <ul className="space-y-4 text-[14px] text-white/70">
-            {['Produtos', 'Categorias', 'Marcas'].map(item => (
-              <li key={item} className="hover:text-white cursor-pointer transition flex items-center gap-2">
-                <ChevronRight size={12} className="text-[#F5C400]"/> {item}
+            {[
+              { label: 'Produtos', to: '/produtos' },
+              { label: 'Categorias', to: '/categorias' },
+              { label: 'Marcas', to: '/marcas' }
+            ].map(item => (
+              <li key={item.label} className="hover:text-white transition flex items-center gap-2">
+                <ChevronRight size={12} className="text-[#F5C400]"/> 
+                <Link to={item.to as any} className="hover:text-white transition">{item.label}</Link>
               </li>
             ))}
           </ul>
@@ -53,11 +75,15 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[12px] text-white/40">
         <div>© {new Date().getFullYear()} Pizzatto Materiais Elétricos. Mais de 40 anos de experiência.</div>
         <div className="flex gap-8 items-center">
-          <span className="hover:text-white cursor-pointer transition">Privacidade</span>
-          <span className="hover:text-white cursor-pointer transition">Termos de Uso</span>
-          <Link to="/admin" className="px-3 py-1 bg-white/5 hover:bg-white/10 text-white/40 hover:text-white rounded transition text-[10px] uppercase font-bold tracking-wider">
+          <Link to="/privacidade" className="hover:text-white cursor-pointer transition">Privacidade</Link>
+          <Link to="/termos-de-uso" className="hover:text-white cursor-pointer transition">Termos de Uso</Link>
+          <a 
+            href="/admin" 
+            onClick={handleAdminClick}
+            className="px-3 py-1 bg-white/5 hover:bg-white/10 text-white/40 hover:text-white rounded transition text-[10px] uppercase font-bold tracking-wider"
+          >
             Área Restrita
-          </Link>
+          </a>
         </div>
       </div>
     </footer>

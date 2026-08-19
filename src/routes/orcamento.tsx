@@ -6,6 +6,8 @@ import { useCartStore } from "@/lib/cart";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { useState } from "react";
 import { toast } from "sonner";
+import { PIZZATTO_WHATSAPP } from "@/lib/config";
+
 
 export const Route = createFileRoute("/orcamento")({
   component: Orcamento,
@@ -47,9 +49,8 @@ function Orcamento() {
 
     const message = `Olá! Gostaria de solicitar um orçamento na Pizzatto Materiais Elétricos.\n\nITENS:\n${itemsText}\n\nDADOS:\nNome: ${formData.nome}\nEmpresa: ${formData.empresa || "Não informada"}\nTelefone: ${formData.telefone || "Não informado"}\nObservações:\n${formData.observacoes || "Nenhuma."}\n\nAguardo o orçamento. Obrigado!`;
 
-    const phone = "556530524200"; 
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-    window.open(url, "_blank");
+    window.open(PIZZATTO_WHATSAPP.getLink(message), "_blank");
+
   };
 
   const estimatedTotal = items.reduce((acc, item) => {
