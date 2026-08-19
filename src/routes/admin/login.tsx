@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import logoAsset from "@/assets/logo.asset.json";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useHydrated } from "@/hooks/use-hydrated";
 
 export const Route = createFileRoute("/admin/login")({
   component: Login,
@@ -8,6 +9,22 @@ export const Route = createFileRoute("/admin/login")({
 
 function Login() {
   const navigate = useNavigate();
+  const isHydrated = useHydrated();
+
+  useEffect(() => {
+    if (isHydrated) {
+      const session = localStorage.getItem('pizzatto_admin_session');
+      if (session) {
+        navigate({ to: "/admin" });
+      }
+    }
+  }, [isHydrated, navigate]);
+
+  const handleLogin = () => {
+    localStorage.setItem('pizzatto_admin_session', 'true');
+    navigate({ to: "/admin" });
+  };
+
   return (
     <div className="min-h-screen bg-[#F4F5F6] flex items-center justify-center p-4">
       <div className="bg-white p-8 md:p-12 rounded-[2px] shadow-xl border border-[#E5E7EB] w-full max-w-md animate-in fade-in zoom-in-95 duration-500">
@@ -27,7 +44,7 @@ function Login() {
             <input type="password" className="w-full border border-[#E5E7EB] p-3 rounded-[2px] focus:border-[#174F8C] outline-none text-[14px]" />
           </div>
           <button 
-            onClick={() => navigate({ to: "/admin" })}
+            onClick={handleLogin}
             className="w-full bg-[#174F8C] text-white py-4 rounded-[2px] font-bold uppercase tracking-widest hover:bg-[#123E70] transition shadow-md"
           >
             Entrar
