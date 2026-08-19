@@ -4,7 +4,6 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { PIZZATTO_WHATSAPP } from "@/lib/config";
 import { useHydrated } from "@/hooks/use-hydrated";
 
-
 export function Footer() {
   const navigate = useNavigate();
   const isHydrated = useHydrated();
@@ -23,7 +22,7 @@ export function Footer() {
 
   return (
     <footer className="bg-[#252A2E] text-white pt-24 pb-12">
-
+      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12">
         <div className="space-y-6">
           <img src={logoAsset.url} alt="Pizzatto" className="h-12 w-auto brightness-0 invert" />
           <p className="text-[14px] text-white/60 leading-relaxed">
