@@ -25,6 +25,24 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const addItem = useCartStore((state) => state.addItem);
+
+  const handleAddToCart = (e: React.MouseEvent, prod: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addItem({
+      id: prod.id.toString(),
+      name: prod.name,
+      brand: prod.brand,
+      ref: prod.ref,
+      img: prod.img,
+      quantity: 1,
+      price: prod.price,
+      inStock: prod.inStock
+    });
+    toast.success("Produto adicionado ao orçamento");
+  };
+
   return (
     <div className="min-h-screen bg-white text-[#252A2E]">
       <Header />
