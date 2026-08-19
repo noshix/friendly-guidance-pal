@@ -1,4 +1,4 @@
-import logoAsset from "@/assets/logo.asset.json";
+// Logo asset replaced by static public path /assets/logo-pizzatto.png
 import { MessageSquare, ShoppingBag } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useCartStore } from "@/lib/cart";
@@ -14,7 +14,7 @@ export function Header({ activePage }: { activePage?: string }) {
       <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
         <div className="flex items-center gap-6 py-1">
           <Link to="/">
-            <img src={logoAsset.url} alt="Pizzatto Materiais Elétricos" className="h-16 w-auto object-contain py-1" />
+            <img src="/assets/logo-pizzatto.png" alt="Pizzatto Materiais Elétricos" className="h-16 w-auto object-contain py-1" />
           </Link>
         </div>
 
