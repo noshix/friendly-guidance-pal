@@ -3,6 +3,8 @@ import { MessageSquare, ShoppingBag } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useCartStore } from "@/lib/cart";
 import { useHydrated } from "@/hooks/use-hydrated";
+import { PIZZATTO_WHATSAPP } from "@/lib/config";
+
 
 export function Header({ activePage }: { activePage?: string }) {
   const items = useCartStore((state) => state.items);
@@ -45,9 +47,14 @@ export function Header({ activePage }: { activePage?: string }) {
                 )}
              </div>
           </Link>
-          <button className="bg-[#2E8B57] text-white px-5 py-2.5 rounded-[2px] font-bold text-[13px] hover:bg-[#257548] flex items-center gap-2 shadow-sm">
+          <a 
+            href={PIZZATTO_WHATSAPP.getLink()} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="bg-[#2E8B57] text-white px-5 py-2.5 rounded-[2px] font-bold text-[13px] hover:bg-[#257548] flex items-center gap-2 shadow-sm"
+          >
             <MessageSquare size={16}/> WhatsApp
-          </button>
+          </a>
         </div>
       </div>
     </header>
