@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Search, ChevronRight, Filter, Grid, List, ChevronDown, Check, X } from "lucide-react";
+import { Search, ChevronRight, Filter, Grid, List, ChevronDown, Check, X, ShoppingBag } from "lucide-react";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { useState } from "react";
+import { useCartStore } from "@/lib/cart";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/produtos/")({
   component: Products,
@@ -43,6 +45,23 @@ const CATEGORIES = [
 function Products() {
   const [isFilterMobileOpen, setIsFilterMobileOpen] = useState(false);
   const [viewMode] = useState<'grid' | 'list'>('grid');
+  const addItem = useCartStore((state) => state.addItem);
+
+  const handleAddToCart = (e: React.MouseEvent, prod: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addItem({
+      id: prod.id.toString(),
+      name: prod.name,
+      brand: prod.brand,
+      ref: prod.ref,
+      img: prod.img,
+      quantity: 1,
+      price: prod.price,
+      inStock: prod.inStock
+    });
+    toast.success("Produto adicionado ao orçamento");
+  };
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] text-[#252A2E]">
@@ -206,10 +225,19 @@ function Products() {
                             <div className="text-[14px] font-black text-[#252A2E]/30 uppercase tracking-[0.1em]">Consulte</div>
                           )}
                         </div>
-                        <span className="w-full bg-[#174F8C] text-white py-2.5 rounded-[2px] hover:bg-[#123E70] transition flex items-center justify-center gap-2 group/btn shadow-sm">
-                          <span className="text-[11px] font-bold uppercase tracking-wider">Ver produto</span>
-                          <ChevronRight size={14} className="group-hover/btn:translate-x-1 transition"/>
-                        </span>
+                        <div className="grid grid-cols-5 gap-2">
+                          <span className="col-span-4 bg-[#174F8C] text-white py-2.5 rounded-[2px] hover:bg-[#123E70] transition flex items-center justify-center gap-2 group/btn shadow-sm">
+                            <span className="text-[11px] font-bold uppercase tracking-wider">Ver produto</span>
+                            <ChevronRight size={14} className="group-hover/btn:translate-x-1 transition"/>
+                          </span>
+                          <button 
+                            onClick={(e) => handleAddToCart(e, prod)}
+                            className="bg-[#F4F5F6] text-[#252A2E]/60 hover:text-[#174F8C] hover:bg-[#E5E7EB] transition flex items-center justify-center rounded-[2px] shadow-sm"
+                            title="Adicionar ao orçamento"
+                          >
+                            <ShoppingBag size={16} />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
