@@ -20,7 +20,7 @@ export const Route = createFileRoute("/produtos/$id")({
 
 // Mock Products List (shared data source for detail and related)
 const MOCK_PRODUCTS = [
-  { id: "3481", brand: 'SIEMENS', name: 'Disjuntor Tripolar 32A', ref: '5SX2332-7', price: '189,90', img: '', inStock: true, unit: "UN", ncm: "8536.20.00", barcode: "7891234567890", category: "Proteção Elétrica", description: "" },
+  { id: "3481", brand: 'SIEMENS', name: 'Disjuntor Tripolar 32A', ref: '5SX2332-7', price: '189,90', img: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=400', inStock: true, unit: "UN", ncm: "8536.20.00", barcode: "7891234567890", category: "Proteção Elétrica", description: "" },
   { id: "2", brand: 'SIL', name: 'Cabo Flexível 2,5 mm² Azul 750V', ref: 'Rolo 100m', price: '349,00', img: 'https://images.unsplash.com/photo-1558346490-a72e53ae2d4e?auto=format&fit=crop&q=80&w=400', inStock: true, unit: "UN", ncm: "8544.49.00", barcode: "7891234567891", category: "Cabos e Condutores", description: "" },
   { id: "3", brand: 'ALUMBRA', name: 'Lâmpada LED High Power 40W', ref: '6500K Bivolt', price: '49,90', img: 'https://images.unsplash.com/photo-1558002038-1055907df8d7?auto=format&fit=crop&q=80&w=400', inStock: true, unit: "UN", ncm: "8539.50.00", barcode: "7891234567892", category: "Iluminação", description: "" },
   { id: "4", brand: 'STECK', name: 'Quadro de Distribuição 24 DIN', ref: 'Sobrepor', price: '124,50', img: 'https://images.unsplash.com/photo-1596734509421-419b67484462?auto=format&fit=crop&q=80&w=400', inStock: false, unit: "UN", ncm: "8537.10.90", barcode: "7891234567893", category: "Proteção Elétrica", description: "" },
@@ -132,12 +132,12 @@ function ProductDetail() {
                 </div>
 
                 <div className="mb-10">
-                  {PRODUCT.price ? (
+                  {PRODUCT.price && parseFloat(PRODUCT.price.replace(".", "").replace(",", ".")) > 0 ? (
                     <div className="text-4xl font-black text-[#252A2E] tracking-tight">
                       R$ {PRODUCT.price}
                     </div>
                   ) : (
-                    <div className="text-3xl font-black text-[#252A2E]/30 uppercase tracking-widest">
+                    <div className="text-3xl font-black text-[#174F8C] uppercase tracking-widest">
                       Consulte
                     </div>
                   )}

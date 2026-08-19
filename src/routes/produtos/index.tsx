@@ -23,7 +23,7 @@ export const Route = createFileRoute("/produtos/")({
 
 // Mock Data
 const MOCK_PRODUCTS = [
-  { id: 1, brand: 'SIEMENS', name: 'Disjuntor Tripolar 32A', ref: '5SX2332-7', price: '189,90', img: '', inStock: true },
+  { id: 1, brand: 'SIEMENS', name: 'Disjuntor Tripolar 32A', ref: '5SX2332-7', price: '189,90', img: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=400', inStock: true },
   { id: 2, brand: 'SIL', name: 'Cabo Flexível 2,5 mm² Azul 750V', ref: 'Rolo 100m', price: '349,00', img: 'https://images.unsplash.com/photo-1558346490-a72e53ae2d4e?auto=format&fit=crop&q=80&w=400', inStock: true },
   { id: 3, brand: 'ALUMBRA', name: 'Lâmpada LED High Power 40W', ref: '6500K Bivolt', price: '49,90', img: 'https://images.unsplash.com/photo-1558002038-1055907df8d7?auto=format&fit=crop&q=80&w=400', inStock: true },
   { id: 4, brand: 'STECK', name: 'Quadro de Distribuição 24 DIN', ref: 'Sobrepor', price: '124,50', img: 'https://images.unsplash.com/photo-1596734509421-419b67484462?auto=format&fit=crop&q=80&w=400', inStock: false },
@@ -220,10 +220,10 @@ function Products() {
                         
                         <div className="flex flex-col gap-4">
                           <div className="min-h-[32px] flex flex-col justify-end">
-                            {prod.price ? (
+                            {prod.price && parseFloat(prod.price.replace(".", "").replace(",", ".")) > 0 ? (
                               <div className="text-lg font-black text-[#252A2E]">R$ {prod.price}</div>
                             ) : (
-                              <div className="text-[14px] font-black text-[#252A2E]/30 uppercase tracking-[0.1em]">Consulte</div>
+                              <div className="text-[14px] font-black text-[#174F8C] uppercase tracking-[0.1em]">Consulte</div>
                             )}
                           </div>
                           
