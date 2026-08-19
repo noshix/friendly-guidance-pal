@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Search, ChevronRight, Filter, Grid, List, ChevronDown, Check, X } from "lucide-react";
+import { Search, ChevronRight, Filter, Grid, List, ChevronDown, Check, X, ShoppingBag } from "lucide-react";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
 import { useState } from "react";
+import { useCartStore } from "@/lib/cart";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/produtos/")({
   component: Products,
@@ -43,6 +45,23 @@ const CATEGORIES = [
 function Products() {
   const [isFilterMobileOpen, setIsFilterMobileOpen] = useState(false);
   const [viewMode] = useState<'grid' | 'list'>('grid');
+  const addItem = useCartStore((state) => state.addItem);
+
+  const handleAddToCart = (e: React.MouseEvent, prod: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addItem({
+      id: prod.id.toString(),
+      name: prod.name,
+      brand: prod.brand,
+      ref: prod.ref,
+      img: prod.img,
+      quantity: 1,
+      price: prod.price,
+      inStock: prod.inStock
+    });
+    toast.success("Produto adicionado ao orçamento");
+  };
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] text-[#252A2E]">
@@ -177,43 +196,55 @@ function Products() {
             {/* Grid */}
             <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
               {MOCK_PRODUCTS.map((prod) => (
-                <Link key={prod.id} to="/produtos/$id" params={{ id: prod.id.toString() }} className="bg-white border border-[#E5E7EB] rounded-[2px] p-5 hover:border-[#174F8C] hover:shadow-lg transition duration-300 group flex flex-col h-full relative">
-                  
-                  <div className="relative w-full aspect-square mb-6 rounded-[2px] overflow-hidden bg-[#F4F5F6]/50">
-                    <ImageWithFallback 
-                      src={prod.img} 
-                      alt={prod.name} 
-                      className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition duration-500"
-                    />
-                  </div>
-
-                  <div className="flex-1 flex flex-col">
-                    <div className="text-[9px] font-black text-[#174F8C]/40 tracking-[0.2em] mb-2 uppercase">{prod.brand}</div>
-                    <h3 className="font-bold text-[14px] mb-1 leading-tight text-[#252A2E] group-hover:text-[#174F8C] transition uppercase min-h-[40px] line-clamp-2">{prod.name}</h3>
-                    <div className="text-[10px] text-[#252A2E]/40 mb-4 font-medium italic">Ref: {prod.ref}</div>
+                <div key={prod.id} className="bg-white border border-[#E5E7EB] rounded-[2px] p-5 hover:border-[#174F8C] hover:shadow-lg transition duration-300 group flex flex-col h-full relative">
+                  <Link to="/produtos/$id" params={{ id: prod.id.toString() }} className="flex flex-col h-full">
                     
-                    <div className="mt-auto pt-4 border-t border-[#F4F5F6]">
-                      <div className={`flex items-center gap-1.5 text-[10px] font-bold mb-4 uppercase tracking-tighter ${prod.inStock ? 'text-[#2E8B57]' : 'text-[#252A2E]/40'}`}>
-                        <div className={`w-1.5 h-1.5 rounded-full ${prod.inStock ? 'bg-[#2E8B57] animate-pulse' : 'bg-[#E5E7EB]'}`}></div>
-                        {prod.inStock ? 'Em estoque' : 'Consulte disponibilidade'}
-                      </div>
+                    <div className="relative w-full aspect-square mb-6 rounded-[2px] overflow-hidden bg-[#F4F5F6]/50">
+                      <ImageWithFallback 
+                        src={prod.img} 
+                        alt={prod.name} 
+                        className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition duration-500"
+                      />
+                    </div>
+
+                    <div className="flex-1 flex flex-col">
+                      <div className="text-[9px] font-black text-[#174F8C]/40 tracking-[0.2em] mb-2 uppercase">{prod.brand}</div>
+                      <h3 className="font-bold text-[14px] mb-1 leading-tight text-[#252A2E] group-hover:text-[#174F8C] transition uppercase min-h-[40px] line-clamp-2">{prod.name}</h3>
+                      <div className="text-[10px] text-[#252A2E]/40 mb-4 font-medium italic">Ref: {prod.ref}</div>
                       
-                      <div className="flex flex-col gap-4">
-                        <div className="min-h-[32px] flex flex-col justify-end">
-                          {prod.price ? (
-                            <div className="text-lg font-black text-[#252A2E]">R$ {prod.price}</div>
-                          ) : (
-                            <div className="text-[14px] font-black text-[#252A2E]/30 uppercase tracking-[0.1em]">Consulte</div>
-                          )}
+                      <div className="mt-auto pt-4 border-t border-[#F4F5F6]">
+                        <div className={`flex items-center gap-1.5 text-[10px] font-bold mb-4 uppercase tracking-tighter ${prod.inStock ? 'text-[#2E8B57]' : 'text-[#252A2E]/40'}`}>
+                          <div className={`w-1.5 h-1.5 rounded-full ${prod.inStock ? 'bg-[#2E8B57] animate-pulse' : 'bg-[#E5E7EB]'}`}></div>
+                          {prod.inStock ? 'Em estoque' : 'Consulte disponibilidade'}
                         </div>
-                        <span className="w-full bg-[#174F8C] text-white py-2.5 rounded-[2px] hover:bg-[#123E70] transition flex items-center justify-center gap-2 group/btn shadow-sm">
-                          <span className="text-[11px] font-bold uppercase tracking-wider">Ver produto</span>
-                          <ChevronRight size={14} className="group-hover/btn:translate-x-1 transition"/>
-                        </span>
+                        
+                        <div className="flex flex-col gap-4">
+                          <div className="min-h-[32px] flex flex-col justify-end">
+                            {prod.price ? (
+                              <div className="text-lg font-black text-[#252A2E]">R$ {prod.price}</div>
+                            ) : (
+                              <div className="text-[14px] font-black text-[#252A2E]/30 uppercase tracking-[0.1em]">Consulte</div>
+                            )}
+                          </div>
+                          
+                          <div className="grid grid-cols-5 gap-2">
+                            <span className="col-span-4 bg-[#174F8C] text-white py-2.5 rounded-[2px] hover:bg-[#123E70] transition flex items-center justify-center gap-2 group/btn shadow-sm">
+                              <span className="text-[11px] font-bold uppercase tracking-wider">Ver produto</span>
+                              <ChevronRight size={14} className="group-hover/btn:translate-x-1 transition"/>
+                            </span>
+                            <button 
+                              onClick={(e) => handleAddToCart(e, prod)}
+                              className="bg-[#F4F5F6] text-[#252A2E]/60 hover:text-[#174F8C] hover:bg-[#E5E7EB] transition flex items-center justify-center rounded-[2px] shadow-sm"
+                              title="Adicionar ao orçamento"
+                            >
+                              <ShoppingBag size={16} />
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                </div>
               ))}
             </div>
 

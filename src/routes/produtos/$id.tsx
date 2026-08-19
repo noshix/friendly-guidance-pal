@@ -3,7 +3,10 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Link } from "@tanstack/react-router";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
-import { ChevronRight, MessageCircle, FileText, Package, Tag, Hash, Building2, CheckCircle2 } from "lucide-react";
+import { ChevronRight, MessageCircle, FileText, Package, Tag, Hash, Building2, CheckCircle2, Plus, Minus, ShoppingBag } from "lucide-react";
+import { useState } from "react";
+import { useCartStore } from "@/lib/cart";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/produtos/$id")({
   component: ProductDetail,
@@ -33,9 +36,34 @@ const MOCK_PRODUCTS = [
 
 function ProductDetail() {
   const { id } = Route.useParams();
+  const [quantity, setQuantity] = useState(1);
+  const addItem = useCartStore((state) => state.addItem);
   
   // Find product by ID or fallback to first one if not found (mock behavior)
   const PRODUCT = MOCK_PRODUCTS.find(p => p.id === id) || MOCK_PRODUCTS[0];
+
+  const handleAddToCart = () => {
+    if (!PRODUCT) return;
+    addItem({
+      id: PRODUCT.id,
+      name: PRODUCT.name,
+      brand: PRODUCT.brand,
+      ref: PRODUCT.ref,
+      img: PRODUCT.img,
+      quantity: quantity,
+      price: PRODUCT.price,
+      inStock: PRODUCT.inStock
+    });
+    toast.success(`${quantity} item(s) adicionado(s) ao orçamento`);
+  };
+
+  const handleWhatsAppDirect = () => {
+    if (!PRODUCT) return;
+    const message = `Olá! Tenho interesse no produto: ${PRODUCT.name} (Ref: ${PRODUCT.ref}, Código: ${PRODUCT.id}). Gostaria de mais informações.`;
+    const phone = "556530524200"; 
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
+  };
 
   // Related products (different from current one)
   const RELATED_PRODUCTS = MOCK_PRODUCTS
@@ -115,14 +143,38 @@ function ProductDetail() {
                   )}
                 </div>
 
-                <div className="flex flex-col gap-4 max-w-md">
-                  <button className="w-full bg-[#174F8C] text-white py-5 rounded-[2px] font-black uppercase tracking-[0.1em] text-[14px] hover:bg-[#123E70] transition shadow-lg flex items-center justify-center gap-3 group">
-                    <FileText size={20} />
-                    Solicitar Orçamento
+                <div className="flex flex-col gap-6 max-w-md">
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center border border-[#E5E7EB] rounded-[2px] bg-white">
+                      <button 
+                        onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
+                        className="p-3 hover:bg-[#F4F5F6] transition text-[#252A2E]/60"
+                      >
+                        <Minus size={18} />
+                      </button>
+                      <span className="w-12 text-center font-bold text-[16px]">{quantity}</span>
+                      <button 
+                        onClick={() => setQuantity(prev => prev + 1)}
+                        className="p-3 hover:bg-[#F4F5F6] transition text-[#252A2E]/60"
+                      >
+                        <Plus size={18} />
+                      </button>
+                    </div>
+                  </div>
+
+                  <button 
+                    onClick={handleAddToCart}
+                    className="w-full bg-[#174F8C] text-white py-5 rounded-[2px] font-black uppercase tracking-[0.1em] text-[14px] hover:bg-[#123E70] transition shadow-lg flex items-center justify-center gap-3 group"
+                  >
+                    <ShoppingBag size={20} />
+                    Adicionar ao Orçamento
                   </button>
-                  <button className="w-full bg-[#2E8B57] text-white py-5 rounded-[2px] font-black uppercase tracking-[0.1em] text-[14px] hover:bg-[#256F46] transition shadow-lg flex items-center justify-center gap-3">
+                  <button 
+                    onClick={handleWhatsAppDirect}
+                    className="w-full bg-[#2E8B57] text-white py-5 rounded-[2px] font-black uppercase tracking-[0.1em] text-[14px] hover:bg-[#256F46] transition shadow-lg flex items-center justify-center gap-3"
+                  >
                     <MessageCircle size={20} />
-                    Falar pelo WhatsApp
+                    Falar sobre este produto no WhatsApp
                   </button>
                 </div>
                 
