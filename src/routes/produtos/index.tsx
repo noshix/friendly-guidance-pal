@@ -1,67 +1,206 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Search, ChevronRight, Filter, Grid, List, ChevronDown, Check, X, ShoppingBag } from "lucide-react";
+import { Search, ChevronRight, Filter, ChevronDown, Check, X, ShoppingBag } from "lucide-react";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useCartStore } from "@/lib/cart";
+import {
+  PUBLIC_CATALOG_PAGE_SIZE,
+  apiPageToUiPage,
+  fetchPublicProducts,
+  formatAvailability,
+  formatPublicPrice,
+  isProductInStock,
+  toCartItem,
+  uiPageToApiPage,
+  type PublicProductSummary,
+} from "@/lib/api/public-catalog";
 import { toast } from "sonner";
 
+interface ProductsRouteSearch {
+  search?: string | undefined;
+  manufacturer?: string | undefined;
+  category?: string | undefined;
+  page?: number | undefined;
+}
+
+function normalizeSearchValue(value: unknown): string | undefined {
+  return typeof value === "string" && value.trim() ? value.trim() : undefined;
+}
+
+function normalizeRoutePage(value: unknown): number {
+  const page = typeof value === "number" ? value : Number(value);
+  return Number.isInteger(page) && page >= 1 ? page : 1;
+}
+
 export const Route = createFileRoute("/produtos/")({
+  validateSearch: (search): ProductsRouteSearch => ({
+    search: normalizeSearchValue(search["search"]),
+    manufacturer: normalizeSearchValue(search["manufacturer"]),
+    category: normalizeSearchValue(search["category"]),
+    page: normalizeRoutePage(search["page"]),
+  }),
   component: Products,
   head: () => ({
     meta: [
       { title: "Produtos | Catálogo Pizzatto Materiais Elétricos" },
-      { name: "description", content: "Catálogo completo de materiais elétricos da Pizzatto. Encontre cabos, iluminação, proteção e muito mais." },
+      {
+        name: "description",
+        content:
+          "Catálogo completo de materiais elétricos da Pizzatto. Encontre cabos, iluminação, proteção e muito mais.",
+      },
       { property: "og:title", content: "Produtos | Catálogo Pizzatto Materiais Elétricos" },
-      { property: "og:description", content: "Catálogo completo de materiais elétricos da Pizzatto. Encontre cabos, iluminação, proteção e muito mais." },
+      {
+        property: "og:description",
+        content:
+          "Catálogo completo de materiais elétricos da Pizzatto. Encontre cabos, iluminação, proteção e muito mais.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
 });
 
-// Mock Data
-const MOCK_PRODUCTS = [
-  { id: 1, brand: 'SIEMENS', name: 'Disjuntor Tripolar 32A', ref: '5SX2332-7', price: '189,90', img: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=400', inStock: true },
-  { id: 2, brand: 'SIL', name: 'Cabo Flexível 2,5 mm² Azul 750V', ref: 'Rolo 100m', price: '349,00', img: 'https://images.unsplash.com/photo-1558346490-a72e53ae2d4e?auto=format&fit=crop&q=80&w=400', inStock: true },
-  { id: 3, brand: 'ALUMBRA', name: 'Lâmpada LED High Power 40W', ref: '6500K Bivolt', price: '49,90', img: 'https://images.unsplash.com/photo-1558002038-1055907df8d7?auto=format&fit=crop&q=80&w=400', inStock: true },
-  { id: 4, brand: 'STECK', name: 'Quadro de Distribuição 24 DIN', ref: 'Sobrepor', price: '124,50', img: 'https://images.unsplash.com/photo-1596734509421-419b67484462?auto=format&fit=crop&q=80&w=400', inStock: false },
-  { id: 5, brand: 'WEG', name: 'Motor Trifásico 2CV', ref: 'W22 Premium', price: null, img: '', inStock: true },
-  { id: 6, brand: 'TRAMONTINA', name: 'Alicate Universal 8"', ref: 'Isolado 1000V', price: '85,90', img: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&q=80&w=400', inStock: true },
-  { id: 7, brand: 'CORFIO', name: 'Cabo PP 3x2,5mm²', ref: 'Metro', price: '12,50', img: '', inStock: false },
-  { id: 8, brand: 'PIAL', name: 'Interruptor Simples 4x2', ref: 'Pial Plus', price: '22,90', img: 'https://images.unsplash.com/photo-1563770660941-20978e870e93?auto=format&fit=crop&q=80&w=400', inStock: true },
-  { id: 9, brand: 'SIEMENS', name: 'Contator Trifásico 25A', ref: '3RT2026-1AK60', price: '245,00', img: '', inStock: true },
-  { id: 10, brand: 'SIL', name: 'Cabo Flexível 6,0 mm² Preto', ref: 'Metro', price: '8,90', img: '', inStock: true },
-  { id: 11, brand: 'ALUMBRA', name: 'Plafon LED 18W Quadrado', ref: 'Embutir', price: '32,90', img: '', inStock: true },
-  { id: 12, brand: 'STECK', name: 'Tomada Industrial 2P+T 16A', ref: 'Azul', price: '45,00', img: '', inStock: true },
+const CATEGORIES = [
+  "Cabos e Condutores",
+  "Iluminação",
+  "Proteção Elétrica",
+  "Conectores",
+  "Ferramentas",
+  "Aterramento",
+  "Transformadores",
+  "Tubos e Conduítes",
 ];
 
-const CATEGORIES = [
-  'Cabos e Condutores', 'Iluminação', 'Proteção Elétrica', 'Conectores', 
-  'Ferramentas', 'Aterramento', 'Transformadores', 'Tubos e Conduítes'
-];
+const MANUFACTURERS = ["SIEMENS", "SIL", "ALUMBRA", "STECK", "WEG"];
+
+function paginationItems(currentPage: number, totalPages: number): Array<number | "ellipsis"> {
+  if (totalPages <= 5) {
+    return Array.from({ length: totalPages }, (_, index) => index + 1);
+  }
+  const candidates = new Set([1, totalPages, currentPage - 1, currentPage, currentPage + 1]);
+  const pages = [...candidates]
+    .filter((page) => page >= 1 && page <= totalPages)
+    .sort((a, b) => a - b);
+  const result: Array<number | "ellipsis"> = [];
+  pages.forEach((page, index) => {
+    const previous = pages[index - 1];
+    if (previous !== undefined && page - previous > 1) result.push("ellipsis");
+    result.push(page);
+  });
+  return result;
+}
 
 function Products() {
   const [isFilterMobileOpen, setIsFilterMobileOpen] = useState(false);
-  const [viewMode] = useState<'grid' | 'list'>('grid');
+  const routeSearch = Route.useSearch();
+  const navigate = Route.useNavigate();
+  const [searchInput, setSearchInput] = useState(routeSearch.search ?? "");
+  const [draftCategory, setDraftCategory] = useState(routeSearch.category);
+  const [draftManufacturer, setDraftManufacturer] = useState(routeSearch.manufacturer);
   const addItem = useCartStore((state) => state.addItem);
 
-  const handleAddToCart = (e: React.MouseEvent, prod: any) => {
+  const apiParams = useMemo(
+    () => ({
+      search: routeSearch.search,
+      manufacturer: routeSearch.manufacturer,
+      category: routeSearch.category,
+      page: uiPageToApiPage(routeSearch.page ?? 1),
+      size: PUBLIC_CATALOG_PAGE_SIZE,
+    }),
+    [routeSearch],
+  );
+
+  const productsQuery = useQuery({
+    queryKey: ["public-products", apiParams],
+    queryFn: () => fetchPublicProducts(apiParams),
+    enabled: typeof window !== "undefined",
+    placeholderData: keepPreviousData,
+    staleTime: 30_000,
+    retry: 1,
+  });
+
+  useEffect(() => {
+    setSearchInput(routeSearch.search ?? "");
+  }, [routeSearch.search]);
+
+  useEffect(() => {
+    setDraftCategory(routeSearch.category);
+    setDraftManufacturer(routeSearch.manufacturer);
+  }, [routeSearch.category, routeSearch.manufacturer]);
+
+  useEffect(() => {
+    const normalizedInput = searchInput.trim();
+    if (normalizedInput === (routeSearch.search ?? "")) return;
+    const timeout = window.setTimeout(() => {
+      void navigate({
+        search: (previous) => ({
+          ...previous,
+          search: normalizedInput || undefined,
+          page: 1,
+        }),
+        replace: true,
+      });
+    }, 400);
+    return () => window.clearTimeout(timeout);
+  }, [navigate, routeSearch.search, searchInput]);
+
+  const applySearch = () => {
+    void navigate({
+      search: (previous) => ({
+        ...previous,
+        search: searchInput.trim() || undefined,
+        page: 1,
+      }),
+    });
+  };
+
+  const applyFilters = () => {
+    void navigate({
+      search: (previous) => ({
+        ...previous,
+        category: draftCategory,
+        manufacturer: draftManufacturer,
+        page: 1,
+      }),
+    });
+    setIsFilterMobileOpen(false);
+  };
+
+  const clearFilters = () => {
+    setSearchInput("");
+    setDraftCategory(undefined);
+    setDraftManufacturer(undefined);
+    void navigate({ search: { page: 1 } });
+    setIsFilterMobileOpen(false);
+  };
+
+  const selectFastCategory = (category: string) => {
+    const nextCategory = routeSearch.category === category ? undefined : category;
+    setDraftCategory(nextCategory);
+    void navigate({
+      search: (previous) => ({ ...previous, category: nextCategory, page: 1 }),
+    });
+  };
+
+  const goToPage = (uiPage: number) => {
+    void navigate({
+      search: (previous) => ({ ...previous, page: uiPage }),
+    });
+  };
+
+  const handleAddToCart = (e: React.MouseEvent, product: PublicProductSummary) => {
     e.preventDefault();
     e.stopPropagation();
-    addItem({
-      id: prod.id.toString(),
-      name: prod.name,
-      brand: prod.brand,
-      ref: prod.ref,
-      img: prod.img,
-      quantity: 1,
-      price: prod.price,
-      inStock: prod.inStock
-    });
+    addItem(toCartItem(product));
     toast.success("Produto adicionado ao orçamento");
   };
+
+  const productPage = productsQuery.data;
+  const products = productPage?.items ?? [];
+  const currentPage = productPage ? apiPageToUiPage(productPage.page) : (routeSearch.page ?? 1);
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] text-[#252A2E]">
@@ -71,11 +210,15 @@ function Products() {
       <div className="bg-white border-b border-[#E5E7EB]">
         <div className="max-w-7xl mx-auto px-4 py-8">
           <nav className="flex items-center gap-2 text-[12px] text-[#252A2E]/50 mb-4 font-medium uppercase tracking-wider">
-            <Link to="/" className="hover:text-[#174F8C]">Início</Link>
+            <Link to="/" className="hover:text-[#174F8C]">
+              Início
+            </Link>
             <ChevronRight size={12} />
             <span className="text-[#252A2E]">Produtos</span>
           </nav>
-          <h1 className="text-4xl font-black text-[#252A2E] tracking-tight mb-2 uppercase">Produtos</h1>
+          <h1 className="text-4xl font-black text-[#252A2E] tracking-tight mb-2 uppercase">
+            Produtos
+          </h1>
           <p className="text-[#252A2E]/60 max-w-2xl font-medium">
             Encontre materiais elétricos para sua casa, obra, empresa ou projeto.
           </p>
@@ -86,14 +229,25 @@ function Products() {
       <div className="max-w-7xl mx-auto px-4 -mt-8 relative z-20">
         <div className="bg-white p-2 rounded-[2px] shadow-xl border border-[#E5E7EB] flex flex-col md:flex-row gap-2">
           <div className="flex-1 relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#252A2E]/30" size={20}/>
-            <input 
-              type="text" 
-              placeholder="Busque por produto, código, referência ou fabricante..." 
+            <Search
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-[#252A2E]/30"
+              size={20}
+            />
+            <input
+              type="text"
+              value={searchInput}
+              onChange={(event) => setSearchInput(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") applySearch();
+              }}
+              placeholder="Busque por produto, código, referência ou fabricante..."
               className="w-full bg-white py-4 pl-12 pr-4 rounded-[2px] outline-none text-[#252A2E] placeholder:text-[#252A2E]/40 font-medium"
             />
           </div>
-          <button className="bg-[#174F8C] text-white px-10 py-4 rounded-[2px] font-bold uppercase text-[14px] hover:bg-[#123E70] transition shadow-md">
+          <button
+            onClick={applySearch}
+            className="bg-[#174F8C] text-white px-10 py-4 rounded-[2px] font-bold uppercase text-[14px] hover:bg-[#123E70] transition shadow-md"
+          >
             Buscar
           </button>
         </div>
@@ -102,8 +256,12 @@ function Products() {
       {/* Fast Categories */}
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex flex-wrap gap-2 overflow-x-auto pb-4 scrollbar-hide">
-          {CATEGORIES.map(cat => (
-            <button key={cat} className="whitespace-nowrap bg-white border border-[#E5E7EB] px-4 py-2 rounded-[2px] text-[12px] font-bold text-[#252A2E]/70 hover:border-[#174F8C] hover:text-[#174F8C] transition uppercase tracking-wider shadow-sm">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => selectFastCategory(cat)}
+              className={`whitespace-nowrap bg-white border px-4 py-2 rounded-[2px] text-[12px] font-bold hover:border-[#174F8C] hover:text-[#174F8C] transition uppercase tracking-wider shadow-sm ${routeSearch.category === cat ? "border-[#174F8C] text-[#174F8C]" : "border-[#E5E7EB] text-[#252A2E]/70"}`}
+            >
               {cat}
             </button>
           ))}
@@ -112,56 +270,100 @@ function Products() {
 
       <div className="max-w-7xl mx-auto px-4 pb-24">
         <div className="flex flex-col lg:flex-row gap-8">
-          
           {/* Sidebar - Desktop */}
           <aside className="hidden lg:block w-[240px] space-y-8">
             <div className="bg-white border border-[#E5E7EB] rounded-[2px] p-6 space-y-6 shadow-sm sticky top-28">
               <div>
-                <h3 className="text-[12px] font-black uppercase tracking-[0.2em] text-[#252A2E] mb-4 border-b border-[#F4F5F6] pb-2">Categoria</h3>
+                <h3 className="text-[12px] font-black uppercase tracking-[0.2em] text-[#252A2E] mb-4 border-b border-[#F4F5F6] pb-2">
+                  Categoria
+                </h3>
                 <div className="space-y-3">
-                  {CATEGORIES.slice(0, 5).map(cat => (
-                    <label key={cat} className="flex items-center gap-2 group cursor-pointer">
+                  {CATEGORIES.slice(0, 5).map((cat) => (
+                    <button
+                      type="button"
+                      key={cat}
+                      onClick={() => setDraftCategory(draftCategory === cat ? undefined : cat)}
+                      className="flex items-center gap-2 group cursor-pointer text-left w-full"
+                    >
                       <div className="w-4 h-4 border border-[#E5E7EB] group-hover:border-[#174F8C] rounded-[2px] flex items-center justify-center transition">
-                        <Check size={10} className="text-[#174F8C] opacity-0 group-hover:opacity-20" />
+                        <Check
+                          size={10}
+                          className={`text-[#174F8C] ${draftCategory === cat ? "opacity-100" : "opacity-0 group-hover:opacity-20"}`}
+                        />
                       </div>
-                      <span className="text-[13px] text-[#252A2E]/70 group-hover:text-[#252A2E] transition">{cat}</span>
-                    </label>
+                      <span className="text-[13px] text-[#252A2E]/70 group-hover:text-[#252A2E] transition">
+                        {cat}
+                      </span>
+                    </button>
                   ))}
-                  <button className="text-[11px] font-bold text-[#174F8C] hover:underline uppercase tracking-wider pt-1">Ver todas</button>
+                  <button className="text-[11px] font-bold text-[#174F8C] hover:underline uppercase tracking-wider pt-1">
+                    Ver todas
+                  </button>
                 </div>
               </div>
 
               <div>
-                <h3 className="text-[12px] font-black uppercase tracking-[0.2em] text-[#252A2E] mb-4 border-b border-[#F4F5F6] pb-2">Fabricante</h3>
+                <h3 className="text-[12px] font-black uppercase tracking-[0.2em] text-[#252A2E] mb-4 border-b border-[#F4F5F6] pb-2">
+                  Fabricante
+                </h3>
                 <div className="space-y-3">
-                  {['Siemens', 'Sil', 'Alumbra', 'Steck', 'Weg'].map(brand => (
-                    <label key={brand} className="flex items-center gap-2 group cursor-pointer">
+                  {MANUFACTURERS.map((brand) => (
+                    <button
+                      type="button"
+                      key={brand}
+                      onClick={() =>
+                        setDraftManufacturer(draftManufacturer === brand ? undefined : brand)
+                      }
+                      className="flex items-center gap-2 group cursor-pointer text-left w-full"
+                    >
                       <div className="w-4 h-4 border border-[#E5E7EB] group-hover:border-[#174F8C] rounded-[2px] flex items-center justify-center transition">
-                        <Check size={10} className="text-[#174F8C] opacity-0 group-hover:opacity-20" />
+                        <Check
+                          size={10}
+                          className={`text-[#174F8C] ${draftManufacturer === brand ? "opacity-100" : "opacity-0 group-hover:opacity-20"}`}
+                        />
                       </div>
-                      <span className="text-[13px] text-[#252A2E]/70 group-hover:text-[#252A2E] transition">{brand}</span>
-                    </label>
+                      <span className="text-[13px] text-[#252A2E]/70 group-hover:text-[#252A2E] transition">
+                        {brand}
+                      </span>
+                    </button>
                   ))}
                 </div>
               </div>
 
               <div>
-                <h3 className="text-[12px] font-black uppercase tracking-[0.2em] text-[#252A2E] mb-4 border-b border-[#F4F5F6] pb-2">Disponibilidade</h3>
+                <h3 className="text-[12px] font-black uppercase tracking-[0.2em] text-[#252A2E] mb-4 border-b border-[#F4F5F6] pb-2">
+                  Disponibilidade
+                </h3>
                 <div className="space-y-3">
-                  {['Em estoque', 'Consulte disponibilidade'].map(status => (
+                  {["Em estoque", "Consulte disponibilidade"].map((status) => (
                     <label key={status} className="flex items-center gap-2 group cursor-pointer">
                       <div className="w-4 h-4 border border-[#E5E7EB] group-hover:border-[#174F8C] rounded-[2px] flex items-center justify-center transition">
-                        <Check size={10} className="text-[#174F8C] opacity-0 group-hover:opacity-20" />
+                        <Check
+                          size={10}
+                          className="text-[#174F8C] opacity-0 group-hover:opacity-20"
+                        />
                       </div>
-                      <span className="text-[13px] text-[#252A2E]/70 group-hover:text-[#252A2E] transition">{status}</span>
+                      <span className="text-[13px] text-[#252A2E]/70 group-hover:text-[#252A2E] transition">
+                        {status}
+                      </span>
                     </label>
                   ))}
                 </div>
               </div>
 
               <div className="pt-4 space-y-3">
-                <button className="w-full bg-[#174F8C] text-white py-3 rounded-[2px] text-[12px] font-bold uppercase tracking-widest hover:bg-[#123E70] transition shadow-md">Aplicar Filtros</button>
-                <button className="w-full bg-white text-[#252A2E]/50 py-3 rounded-[2px] text-[11px] font-bold uppercase tracking-widest hover:text-[#252A2E] transition">Limpar Filtros</button>
+                <button
+                  onClick={applyFilters}
+                  className="w-full bg-[#174F8C] text-white py-3 rounded-[2px] text-[12px] font-bold uppercase tracking-widest hover:bg-[#123E70] transition shadow-md"
+                >
+                  Aplicar Filtros
+                </button>
+                <button
+                  onClick={clearFilters}
+                  className="w-full bg-white text-[#252A2E]/50 py-3 rounded-[2px] text-[11px] font-bold uppercase tracking-widest hover:text-[#252A2E] transition"
+                >
+                  Limpar Filtros
+                </button>
               </div>
             </div>
           </aside>
@@ -171,19 +373,22 @@ function Products() {
             {/* Toolbar */}
             <div className="bg-white border border-[#E5E7EB] rounded-[2px] p-4 mb-6 flex items-center justify-between shadow-sm">
               <div className="flex items-center gap-4">
-                <button 
+                <button
                   onClick={() => setIsFilterMobileOpen(true)}
                   className="lg:hidden flex items-center gap-2 bg-[#F4F5F6] px-4 py-2 rounded-[2px] text-[12px] font-bold uppercase tracking-wider"
                 >
                   <Filter size={14} /> Filtrar
                 </button>
                 <span className="text-[13px] font-bold text-[#252A2E]/60 uppercase tracking-wider">
-                  <span className="font-normal italic mr-1">Exibindo</span> {MOCK_PRODUCTS.length} Produtos encontrados
+                  <span className="font-normal italic mr-1">Exibindo</span>{" "}
+                  {productPage?.totalElements ?? 0} Produtos encontrados
                 </span>
               </div>
               <div className="flex items-center gap-6">
                 <div className="flex items-center gap-2">
-                  <span className="hidden sm:inline text-[11px] font-bold text-[#252A2E]/40 uppercase tracking-widest">Ordenar por:</span>
+                  <span className="hidden sm:inline text-[11px] font-bold text-[#252A2E]/40 uppercase tracking-widest">
+                    Ordenar por:
+                  </span>
                   <div className="relative group">
                     <button className="flex items-center gap-2 bg-[#F4F5F6] px-4 py-2 rounded-[2px] text-[12px] font-bold uppercase tracking-wider min-w-[160px] justify-between">
                       Mais relevantes <ChevronDown size={14} />
@@ -194,72 +399,171 @@ function Products() {
             </div>
 
             {/* Grid */}
-            <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-              {MOCK_PRODUCTS.map((prod) => (
-                <div key={prod.id} className="bg-white border border-[#E5E7EB] rounded-[2px] p-5 hover:border-[#174F8C] hover:shadow-lg transition duration-300 group flex flex-col h-full relative">
-                  <Link to="/produtos/$id" params={{ id: prod.id.toString() }} className="flex flex-col h-full">
-                    
-                    <div className="relative w-full aspect-square mb-6 rounded-[2px] overflow-hidden bg-[#F4F5F6]/50">
-                      <ImageWithFallback 
-                        src={prod.img} 
-                        alt={prod.name} 
-                        className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition duration-500"
-                      />
-                    </div>
+            {productsQuery.isPending ? (
+              <div
+                className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
+                aria-label="Carregando produtos"
+              >
+                {Array.from({ length: 8 }, (_, index) => (
+                  <div
+                    key={index}
+                    className="bg-white border border-[#E5E7EB] rounded-[2px] p-5 animate-pulse"
+                  >
+                    <div className="w-full aspect-square mb-6 bg-[#F4F5F6]" />
+                    <div className="h-3 w-1/3 bg-[#F4F5F6] mb-3" />
+                    <div className="h-4 w-full bg-[#F4F5F6] mb-2" />
+                    <div className="h-4 w-2/3 bg-[#F4F5F6]" />
+                  </div>
+                ))}
+              </div>
+            ) : productsQuery.isError ? (
+              <div className="bg-white border border-[#E5E7EB] rounded-[2px] py-16 px-6 text-center shadow-sm">
+                <h2 className="text-xl font-black uppercase tracking-tight mb-3">
+                  Não foi possível carregar os produtos
+                </h2>
+                <p className="text-[#252A2E]/60 mb-6">Tente novamente em alguns instantes.</p>
+                <button
+                  onClick={() => void productsQuery.refetch()}
+                  className="bg-[#174F8C] text-white px-8 py-3 rounded-[2px] font-bold uppercase text-[12px] hover:bg-[#123E70] transition"
+                >
+                  Tentar novamente
+                </button>
+              </div>
+            ) : products.length === 0 ? (
+              <div className="bg-white border border-[#E5E7EB] rounded-[2px] py-16 px-6 text-center shadow-sm">
+                <h2 className="text-xl font-black uppercase tracking-tight mb-3">
+                  Nenhum produto encontrado
+                </h2>
+                <p className="text-[#252A2E]/60 mb-6">
+                  Revise a busca ou limpe os filtros para tentar novamente.
+                </p>
+                <button
+                  onClick={clearFilters}
+                  className="bg-[#174F8C] text-white px-8 py-3 rounded-[2px] font-bold uppercase text-[12px] hover:bg-[#123E70] transition"
+                >
+                  Limpar filtros
+                </button>
+              </div>
+            ) : (
+              <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+                {products.map((prod) => {
+                  const inStock = isProductInStock(prod.availability);
+                  return (
+                    <div
+                      key={prod.erpId}
+                      className="bg-white border border-[#E5E7EB] rounded-[2px] p-5 hover:border-[#174F8C] hover:shadow-lg transition duration-300 group flex flex-col h-full relative"
+                    >
+                      <Link
+                        to="/produtos/$id"
+                        params={{ id: prod.erpId }}
+                        className="flex flex-col h-full"
+                      >
+                        <div className="relative w-full aspect-square mb-6 rounded-[2px] overflow-hidden bg-[#F4F5F6]/50">
+                          <ImageWithFallback
+                            src=""
+                            alt={prod.name}
+                            className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition duration-500"
+                          />
+                        </div>
 
-                    <div className="flex-1 flex flex-col">
-                      <div className="text-[9px] font-black text-[#174F8C]/40 tracking-[0.2em] mb-2 uppercase">{prod.brand}</div>
-                      <h3 className="font-bold text-[14px] mb-1 leading-tight text-[#252A2E] group-hover:text-[#174F8C] transition uppercase min-h-[40px] line-clamp-2">{prod.name}</h3>
-                      <div className="text-[10px] text-[#252A2E]/40 mb-4 font-medium italic">Ref: {prod.ref}</div>
-                      
-                      <div className="mt-auto pt-4 border-t border-[#F4F5F6]">
-                        <div className={`flex items-center gap-1.5 text-[10px] font-bold mb-4 uppercase tracking-tighter ${prod.inStock ? 'text-[#2E8B57]' : 'text-[#252A2E]/40'}`}>
-                          <div className={`w-1.5 h-1.5 rounded-full ${prod.inStock ? 'bg-[#2E8B57] animate-pulse' : 'bg-[#E5E7EB]'}`}></div>
-                          {prod.inStock ? 'Em estoque' : 'Consulte disponibilidade'}
-                        </div>
-                        
-                        <div className="flex flex-col gap-4">
-                          <div className="min-h-[32px] flex flex-col justify-end">
-                            {prod.price && parseFloat(prod.price.replace(".", "").replace(",", ".")) > 0 ? (
-                              <div className="text-lg font-black text-[#252A2E]">R$ {prod.price}</div>
-                            ) : (
-                              <div className="text-[14px] font-black text-[#174F8C] uppercase tracking-[0.1em]">Consulte</div>
-                            )}
+                        <div className="flex-1 flex flex-col">
+                          <div className="text-[9px] font-black text-[#174F8C]/40 tracking-[0.2em] mb-2 uppercase">
+                            {prod.manufacturer}
                           </div>
-                          
-                          <div className="grid grid-cols-5 gap-2">
-                            <span className="col-span-4 bg-[#174F8C] text-white py-2.5 rounded-[2px] hover:bg-[#123E70] transition flex items-center justify-center gap-2 group/btn shadow-sm">
-                              <span className="text-[11px] font-bold uppercase tracking-wider">Ver produto</span>
-                              <ChevronRight size={14} className="group-hover/btn:translate-x-1 transition"/>
-                            </span>
-                            <button 
-                              onClick={(e) => handleAddToCart(e, prod)}
-                              className="bg-[#F4F5F6] text-[#252A2E]/60 hover:text-[#174F8C] hover:bg-[#E5E7EB] transition flex items-center justify-center rounded-[2px] shadow-sm"
-                              title="Adicionar ao orçamento"
+                          <h3 className="font-bold text-[14px] mb-1 leading-tight text-[#252A2E] group-hover:text-[#174F8C] transition uppercase h-[54px] line-clamp-3">
+                            {prod.name}
+                          </h3>
+                          <div className="text-[10px] text-[#252A2E]/40 mb-4 font-medium italic">
+                            Ref: {prod.reference ?? "N/A"}
+                          </div>
+
+                          <div className="mt-auto pt-4 border-t border-[#F4F5F6]">
+                            <div
+                              className={`flex items-center gap-1.5 text-[10px] font-bold mb-4 uppercase tracking-tighter ${inStock ? "text-[#2E8B57]" : "text-[#252A2E]/40"}`}
                             >
-                              <ShoppingBag size={16} />
-                            </button>
+                              <div
+                                className={`w-1.5 h-1.5 rounded-full ${inStock ? "bg-[#2E8B57] animate-pulse" : "bg-[#E5E7EB]"}`}
+                              ></div>
+                              {formatAvailability(prod.availability)}
+                            </div>
+
+                            <div className="flex flex-col gap-4">
+                              <div className="min-h-[32px] flex flex-col justify-end">
+                                {prod.price !== null ? (
+                                  <div className="text-lg font-black text-[#252A2E]">
+                                    {formatPublicPrice(prod.price)}
+                                  </div>
+                                ) : (
+                                  <div className="text-[14px] font-black text-[#174F8C] uppercase tracking-[0.1em]">
+                                    Consulte
+                                  </div>
+                                )}
+                              </div>
+
+                              <div className="grid grid-cols-5 gap-2">
+                                <span className="col-span-4 bg-[#174F8C] text-white py-2.5 rounded-[2px] hover:bg-[#123E70] transition flex items-center justify-center gap-2 group/btn shadow-sm">
+                                  <span className="text-[11px] font-bold uppercase tracking-wider">
+                                    Ver produto
+                                  </span>
+                                  <ChevronRight
+                                    size={14}
+                                    className="group-hover/btn:translate-x-1 transition"
+                                  />
+                                </span>
+                                <button
+                                  onClick={(e) => handleAddToCart(e, prod)}
+                                  className="bg-[#F4F5F6] text-[#252A2E]/60 hover:text-[#174F8C] hover:bg-[#E5E7EB] transition flex items-center justify-center rounded-[2px] shadow-sm"
+                                  title="Adicionar ao orçamento"
+                                >
+                                  <ShoppingBag size={16} />
+                                </button>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      </Link>
                     </div>
-                  </Link>
-                </div>
-              ))}
-            </div>
+                  );
+                })}
+              </div>
+            )}
 
             {/* Pagination */}
-            <div className="mt-16 flex justify-center">
-              <nav className="flex items-center gap-1">
-                <button className="px-4 py-2 border border-[#E5E7EB] rounded-[2px] text-[12px] font-bold uppercase tracking-wider text-[#252A2E]/40 hover:bg-[#F4F5F6] transition cursor-not-allowed">Anterior</button>
-                <button className="w-10 h-10 bg-[#174F8C] text-white rounded-[2px] text-[12px] font-bold">1</button>
-                <button className="w-10 h-10 border border-[#E5E7EB] text-[#252A2E]/60 rounded-[2px] text-[12px] font-bold hover:bg-[#F4F5F6] transition">2</button>
-                <button className="w-10 h-10 border border-[#E5E7EB] text-[#252A2E]/60 rounded-[2px] text-[12px] font-bold hover:bg-[#F4F5F6] transition">3</button>
-                <span className="px-2 text-[#252A2E]/30 font-bold">...</span>
-                <button className="w-10 h-10 border border-[#E5E7EB] text-[#252A2E]/60 rounded-[2px] text-[12px] font-bold hover:bg-[#F4F5F6] transition">42</button>
-                <button className="px-4 py-2 border border-[#E5E7EB] rounded-[2px] text-[12px] font-bold uppercase tracking-wider text-[#252A2E] hover:bg-[#F4F5F6] transition flex items-center gap-2">Próxima <ChevronRight size={14}/></button>
-              </nav>
-            </div>
+            {productPage && productPage.totalPages > 1 && (
+              <div className="mt-16 flex justify-center">
+                <nav className="flex items-center gap-1">
+                  <button
+                    disabled={currentPage <= 1}
+                    onClick={() => goToPage(currentPage - 1)}
+                    className="px-4 py-2 border border-[#E5E7EB] rounded-[2px] text-[12px] font-bold uppercase tracking-wider text-[#252A2E]/40 hover:bg-[#F4F5F6] transition disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    Anterior
+                  </button>
+                  {paginationItems(currentPage, productPage.totalPages).map((item, index) =>
+                    item === "ellipsis" ? (
+                      <span key={`ellipsis-${index}`} className="px-2 text-[#252A2E]/30 font-bold">
+                        ...
+                      </span>
+                    ) : (
+                      <button
+                        key={item}
+                        onClick={() => goToPage(item)}
+                        className={`w-10 h-10 rounded-[2px] text-[12px] font-bold transition ${item === currentPage ? "bg-[#174F8C] text-white" : "border border-[#E5E7EB] text-[#252A2E]/60 hover:bg-[#F4F5F6]"}`}
+                      >
+                        {item}
+                      </button>
+                    ),
+                  )}
+                  <button
+                    disabled={currentPage >= productPage.totalPages}
+                    onClick={() => goToPage(currentPage + 1)}
+                    className="px-4 py-2 border border-[#E5E7EB] rounded-[2px] text-[12px] font-bold uppercase tracking-wider text-[#252A2E] hover:bg-[#F4F5F6] transition flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    Próxima <ChevronRight size={14} />
+                  </button>
+                </nav>
+              </div>
+            )}
           </main>
         </div>
       </div>
@@ -270,27 +574,49 @@ function Products() {
           <div className="absolute right-0 top-0 bottom-0 w-full max-w-xs bg-white shadow-2xl flex flex-col">
             <div className="p-6 border-b border-[#E5E7EB] flex items-center justify-between">
               <h2 className="text-[14px] font-black uppercase tracking-[0.2em]">Filtros</h2>
-              <button onClick={() => setIsFilterMobileOpen(false)} className="p-2 text-[#252A2E]/40 hover:text-[#252A2E]">
+              <button
+                onClick={() => setIsFilterMobileOpen(false)}
+                className="p-2 text-[#252A2E]/40 hover:text-[#252A2E]"
+              >
                 <X size={24} />
               </button>
             </div>
             <div className="flex-1 overflow-y-auto p-6 space-y-8">
               {/* Same filters as desktop */}
               <div>
-                <h3 className="text-[12px] font-black uppercase tracking-[0.2em] text-[#252A2E] mb-4 pb-2 border-b border-[#F4F5F6]">Categoria</h3>
+                <h3 className="text-[12px] font-black uppercase tracking-[0.2em] text-[#252A2E] mb-4 pb-2 border-b border-[#F4F5F6]">
+                  Categoria
+                </h3>
                 <div className="space-y-4">
-                  {CATEGORIES.map(cat => (
-                    <label key={cat} className="flex items-center gap-3">
-                      <div className="w-5 h-5 border border-[#E5E7EB] rounded-[2px]"></div>
+                  {CATEGORIES.map((cat) => (
+                    <button
+                      type="button"
+                      key={cat}
+                      onClick={() => setDraftCategory(draftCategory === cat ? undefined : cat)}
+                      className="flex items-center gap-3 w-full text-left"
+                    >
+                      <div className="w-5 h-5 border border-[#E5E7EB] rounded-[2px] flex items-center justify-center">
+                        {draftCategory === cat && <Check size={12} className="text-[#174F8C]" />}
+                      </div>
                       <span className="text-[14px] text-[#252A2E]/70">{cat}</span>
-                    </label>
+                    </button>
                   ))}
                 </div>
               </div>
             </div>
             <div className="p-6 border-t border-[#E5E7EB] space-y-3">
-              <button className="w-full bg-[#174F8C] text-white py-4 rounded-[2px] text-[13px] font-bold uppercase tracking-widest shadow-lg">Aplicar Filtros</button>
-              <button onClick={() => setIsFilterMobileOpen(false)} className="w-full text-[#252A2E]/40 py-2 text-[11px] font-bold uppercase tracking-widest">Limpar</button>
+              <button
+                onClick={applyFilters}
+                className="w-full bg-[#174F8C] text-white py-4 rounded-[2px] text-[13px] font-bold uppercase tracking-widest shadow-lg"
+              >
+                Aplicar Filtros
+              </button>
+              <button
+                onClick={clearFilters}
+                className="w-full text-[#252A2E]/40 py-2 text-[11px] font-bold uppercase tracking-widest"
+              >
+                Limpar
+              </button>
             </div>
           </div>
         </div>
