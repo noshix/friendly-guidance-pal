@@ -8,12 +8,17 @@ import { useEffect, useMemo, useState } from "react";
 import { useCartStore } from "@/lib/cart";
 import {
   PUBLIC_CATALOG_PAGE_SIZE,
+  PUBLIC_TAXONOMY_STALE_TIME,
   apiPageToUiPage,
   fetchPublicProducts,
   formatAvailability,
   formatPublicPrice,
+  getCategories,
+  getManufacturers,
   isProductInStock,
+  toCategoryFilterOption,
   toCartItem,
+  toManufacturerFilterOption,
   uiPageToApiPage,
   type PublicProductSummary,
 } from "@/lib/api/public-catalog";
@@ -63,19 +68,6 @@ export const Route = createFileRoute("/produtos/")({
   }),
 });
 
-const CATEGORIES = [
-  "Cabos e Condutores",
-  "Iluminação",
-  "Proteção Elétrica",
-  "Conectores",
-  "Ferramentas",
-  "Aterramento",
-  "Transformadores",
-  "Tubos e Conduítes",
-];
-
-const MANUFACTURERS = ["SIEMENS", "SIL", "ALUMBRA", "STECK", "WEG"];
-
 function paginationItems(currentPage: number, totalPages: number): Array<number | "ellipsis"> {
   if (totalPages <= 5) {
     return Array.from({ length: totalPages }, (_, index) => index + 1);
@@ -121,6 +113,31 @@ function Products() {
     staleTime: 30_000,
     retry: 1,
   });
+
+  const categoriesQuery = useQuery({
+    queryKey: ["public-categories"],
+    queryFn: () => getCategories(),
+    enabled: typeof window !== "undefined",
+    staleTime: PUBLIC_TAXONOMY_STALE_TIME,
+    retry: 1,
+  });
+
+  const manufacturersQuery = useQuery({
+    queryKey: ["public-manufacturers"],
+    queryFn: () => getManufacturers(),
+    enabled: typeof window !== "undefined",
+    staleTime: PUBLIC_TAXONOMY_STALE_TIME,
+    retry: 1,
+  });
+
+  const categoryOptions = useMemo(
+    () => (categoriesQuery.data ?? []).map(toCategoryFilterOption),
+    [categoriesQuery.data],
+  );
+  const manufacturerOptions = useMemo(
+    () => (manufacturersQuery.data ?? []).map(toManufacturerFilterOption),
+    [manufacturersQuery.data],
+  );
 
   useEffect(() => {
     setSearchInput(routeSearch.search ?? "");
@@ -256,13 +273,13 @@ function Products() {
       {/* Fast Categories */}
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex flex-wrap gap-2 overflow-x-auto pb-4 scrollbar-hide">
-          {CATEGORIES.map((cat) => (
+          {categoryOptions.map((category) => (
             <button
-              key={cat}
-              onClick={() => selectFastCategory(cat)}
-              className={`whitespace-nowrap bg-white border px-4 py-2 rounded-[2px] text-[12px] font-bold hover:border-[#174F8C] hover:text-[#174F8C] transition uppercase tracking-wider shadow-sm ${routeSearch.category === cat ? "border-[#174F8C] text-[#174F8C]" : "border-[#E5E7EB] text-[#252A2E]/70"}`}
+              key={category.slug}
+              onClick={() => selectFastCategory(category.value)}
+              className={`whitespace-nowrap bg-white border px-4 py-2 rounded-[2px] text-[12px] font-bold hover:border-[#174F8C] hover:text-[#174F8C] transition uppercase tracking-wider shadow-sm ${routeSearch.category === category.value ? "border-[#174F8C] text-[#174F8C]" : "border-[#E5E7EB] text-[#252A2E]/70"}`}
             >
-              {cat}
+              {category.label}
             </button>
           ))}
         </div>
@@ -278,27 +295,39 @@ function Products() {
                   Categoria
                 </h3>
                 <div className="space-y-3">
-                  {CATEGORIES.slice(0, 5).map((cat) => (
+                  {categoryOptions.slice(0, 5).map((category) => (
                     <button
                       type="button"
-                      key={cat}
-                      onClick={() => setDraftCategory(draftCategory === cat ? undefined : cat)}
+                      key={category.slug}
+                      onClick={() =>
+                        setDraftCategory(
+                          draftCategory === category.value ? undefined : category.value,
+                        )
+                      }
                       className="flex items-center gap-2 group cursor-pointer text-left w-full"
                     >
                       <div className="w-4 h-4 border border-[#E5E7EB] group-hover:border-[#174F8C] rounded-[2px] flex items-center justify-center transition">
                         <Check
                           size={10}
-                          className={`text-[#174F8C] ${draftCategory === cat ? "opacity-100" : "opacity-0 group-hover:opacity-20"}`}
+                          className={`text-[#174F8C] ${draftCategory === category.value ? "opacity-100" : "opacity-0 group-hover:opacity-20"}`}
                         />
                       </div>
                       <span className="text-[13px] text-[#252A2E]/70 group-hover:text-[#252A2E] transition">
-                        {cat}
+                        {category.label}
                       </span>
                     </button>
                   ))}
-                  <button className="text-[11px] font-bold text-[#174F8C] hover:underline uppercase tracking-wider pt-1">
+                  {categoriesQuery.isError && (
+                    <p className="text-[11px] text-[#252A2E]/50">
+                      Não foi possível carregar as categorias.
+                    </p>
+                  )}
+                  <Link
+                    to="/categorias"
+                    className="inline-block text-[11px] font-bold text-[#174F8C] hover:underline uppercase tracking-wider pt-1"
+                  >
                     Ver todas
-                  </button>
+                  </Link>
                 </div>
               </div>
 
@@ -307,26 +336,33 @@ function Products() {
                   Fabricante
                 </h3>
                 <div className="space-y-3">
-                  {MANUFACTURERS.map((brand) => (
+                  {manufacturerOptions.map((manufacturer) => (
                     <button
                       type="button"
-                      key={brand}
+                      key={manufacturer.slug}
                       onClick={() =>
-                        setDraftManufacturer(draftManufacturer === brand ? undefined : brand)
+                        setDraftManufacturer(
+                          draftManufacturer === manufacturer.value ? undefined : manufacturer.value,
+                        )
                       }
                       className="flex items-center gap-2 group cursor-pointer text-left w-full"
                     >
                       <div className="w-4 h-4 border border-[#E5E7EB] group-hover:border-[#174F8C] rounded-[2px] flex items-center justify-center transition">
                         <Check
                           size={10}
-                          className={`text-[#174F8C] ${draftManufacturer === brand ? "opacity-100" : "opacity-0 group-hover:opacity-20"}`}
+                          className={`text-[#174F8C] ${draftManufacturer === manufacturer.value ? "opacity-100" : "opacity-0 group-hover:opacity-20"}`}
                         />
                       </div>
                       <span className="text-[13px] text-[#252A2E]/70 group-hover:text-[#252A2E] transition">
-                        {brand}
+                        {manufacturer.label}
                       </span>
                     </button>
                   ))}
+                  {manufacturersQuery.isError && (
+                    <p className="text-[11px] text-[#252A2E]/50">
+                      Não foi possível carregar as marcas.
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -588,17 +624,23 @@ function Products() {
                   Categoria
                 </h3>
                 <div className="space-y-4">
-                  {CATEGORIES.map((cat) => (
+                  {categoryOptions.map((category) => (
                     <button
                       type="button"
-                      key={cat}
-                      onClick={() => setDraftCategory(draftCategory === cat ? undefined : cat)}
+                      key={category.slug}
+                      onClick={() =>
+                        setDraftCategory(
+                          draftCategory === category.value ? undefined : category.value,
+                        )
+                      }
                       className="flex items-center gap-3 w-full text-left"
                     >
                       <div className="w-5 h-5 border border-[#E5E7EB] rounded-[2px] flex items-center justify-center">
-                        {draftCategory === cat && <Check size={12} className="text-[#174F8C]" />}
+                        {draftCategory === category.value && (
+                          <Check size={12} className="text-[#174F8C]" />
+                        )}
                       </div>
-                      <span className="text-[14px] text-[#252A2E]/70">{cat}</span>
+                      <span className="text-[14px] text-[#252A2E]/70">{category.label}</span>
                     </button>
                   ))}
                 </div>

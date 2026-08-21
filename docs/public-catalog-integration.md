@@ -1,7 +1,8 @@
 # Integração do catálogo público
 
-As rotas `/produtos` e `/produtos/{erpId}` consomem a API pública Spring por meio
-do cliente tipado `src/lib/api/public-catalog.ts`.
+As rotas `/produtos`, `/produtos/{erpId}`, `/categorias`, `/categorias/{slug}`,
+`/marcas` e `/marcas/{slug}` consomem a API pública Spring por meio do cliente
+tipado `src/lib/api/public-catalog.ts`.
 
 ## Execução local
 
@@ -22,20 +23,27 @@ relativa não possui origem no processo Node e não deve ser resolvida por supos
 O HTML inicial apresenta o estado de carregamento e o React Query inicia a chamada
 same-origin após a hidratação no navegador.
 
-## Escopo dos mocks
+## Taxonomias públicas
 
-Os mocks foram removidos somente das rotas de listagem e detalhe de produtos.
-Mocks usados por Home, categorias, marcas e páginas administrativas permanecem
-intactos porque essas áreas não fazem parte da V1.6B.
+Categorias e fabricantes usam React Query com `staleTime` de cinco minutos e os
+seguintes endpoints same-origin:
 
-O backend ainda não oferece endpoints públicos para listar todas as categorias e
-todos os fabricantes. Por isso, as opções visuais já aprovadas foram preservadas e
-seus valores selecionados são enviados como filtros exatos à API. A cobertura
-completa dos valores ERP depende da futura fase de taxonomias; o frontend não
-deriva uma taxonomia incompleta apenas dos 24 itens da página atual.
+- `GET /api/public/categories`;
+- `GET /api/public/categories/{slug}`;
+- `GET /api/public/manufacturers`;
+- `GET /api/public/manufacturers/{slug}`.
 
-O filtro visual de disponibilidade também foi preservado, mas não é enviado à API
-porque o contrato público atual não possui esse parâmetro.
+O nome público da categoria é exibido em `name`, enquanto o filtro de produtos
+usa o valor exato `erpName`. Fabricantes usam o `name` retornado pelo backend. As
+páginas por slug sempre resolvem o slug no Spring antes de buscar produtos; elas
+não tentam reconstruir valores ERP no navegador. Contagens e páginas de produto
+continuam sendo calculadas no backend.
+
+Os mocks foram removidos das páginas de produtos, categorias e marcas. Home e
+áreas administrativas permanecem fora deste escopo e conservam seus dados atuais.
+
+O filtro visual de disponibilidade foi preservado, mas continua apenas visual e
+não é enviado à API porque o contrato público atual não possui esse parâmetro.
 
 Produtos ainda não possuem imagem na API. Os cards e o detalhe continuam usando o
 fallback aprovado “Imagem em breve”.

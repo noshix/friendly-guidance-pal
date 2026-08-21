@@ -1,17 +1,30 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import {
   PublicCatalogApiError,
   apiPageToUiPage,
+  buildCategoryProductsParams,
+  buildManufacturerProductsParams,
+  buildPublicCategoryDetailUrl,
+  buildPublicManufacturerDetailUrl,
   buildPublicProductDetailUrl,
   buildPublicProductsUrl,
   fetchPublicProductDetail,
   fetchPublicProducts,
   formatAvailability,
   formatPublicPrice,
+  getCategories,
+  getCategoryBySlug,
+  getManufacturerBySlug,
+  getManufacturers,
+  mapPublicCategory,
+  mapPublicManufacturer,
   mapPublicProductSummary,
+  toCategoryFilterOption,
   toCartItem,
+  toManufacturerFilterOption,
   uiPageToApiPage,
 } from "./public-catalog.ts";
 
@@ -145,4 +158,157 @@ test("orçamento recebe o erpId real como String", () => {
   assert.equal(typeof item.id, "string");
   assert.equal(item.quantity, 2);
   assert.equal(item.price, "39,98");
+});
+
+const categoryPayload = {
+  name: "Condutores",
+  erpName: "CONDUTOR ERP",
+  slug: "condutores",
+  productCount: 1234,
+};
+
+const manufacturerPayload = {
+  name: "Schneider Electric",
+  slug: "schneider-electric",
+  productCount: 432,
+};
+
+test("getCategories mapeia categorias e preserva contagens", async () => {
+  let requestedUrl = "";
+  const fetchMock = async (input: string | URL | Request) => {
+    requestedUrl = String(input);
+    return new Response(JSON.stringify([categoryPayload]), {
+      status: 200,
+      headers: { "content-type": "application/json" },
+    });
+  };
+
+  const categories = await getCategories(fetchMock);
+
+  assert.equal(requestedUrl, "/api/public/categories");
+  assert.deepEqual(categories, [categoryPayload]);
+  assert.equal(categories[0]?.productCount, 1234);
+});
+
+test("getCategoryBySlug codifica slug e resolve o erpName real", async () => {
+  let requestedUrl = "";
+  const fetchMock = async (input: string | URL | Request) => {
+    requestedUrl = String(input);
+    return new Response(JSON.stringify(categoryPayload), { status: 200 });
+  };
+
+  const category = await getCategoryBySlug("condutores/industrial", fetchMock);
+
+  assert.equal(
+    buildPublicCategoryDetailUrl("condutores/industrial"),
+    "/api/public/categories/condutores%2Findustrial",
+  );
+  assert.equal(requestedUrl, "/api/public/categories/condutores%2Findustrial");
+  assert.equal(category.erpName, "CONDUTOR ERP");
+});
+
+test("getManufacturers mapeia fabricantes e preserva contagens", async () => {
+  let requestedUrl = "";
+  const fetchMock = async (input: string | URL | Request) => {
+    requestedUrl = String(input);
+    return new Response(JSON.stringify([manufacturerPayload]), { status: 200 });
+  };
+
+  const manufacturers = await getManufacturers(fetchMock);
+
+  assert.equal(requestedUrl, "/api/public/manufacturers");
+  assert.deepEqual(manufacturers, [manufacturerPayload]);
+  assert.equal(manufacturers[0]?.productCount, 432);
+});
+
+test("getManufacturerBySlug codifica slug e preserva o nome usado no filtro", async () => {
+  let requestedUrl = "";
+  const fetchMock = async (input: string | URL | Request) => {
+    requestedUrl = String(input);
+    return new Response(JSON.stringify(manufacturerPayload), { status: 200 });
+  };
+
+  const manufacturer = await getManufacturerBySlug("schneider/electric", fetchMock);
+
+  assert.equal(
+    buildPublicManufacturerDetailUrl("schneider/electric"),
+    "/api/public/manufacturers/schneider%2Felectric",
+  );
+  assert.equal(requestedUrl, "/api/public/manufacturers/schneider%2Felectric");
+  assert.equal(manufacturer.name, "Schneider Electric");
+});
+
+test("categoria exibe name mas usa erpName como valor do filtro", () => {
+  const category = mapPublicCategory(categoryPayload);
+  const option = toCategoryFilterOption(category);
+  const params = buildCategoryProductsParams(category, 3, " cabo ", " SIL ");
+
+  assert.equal(option.label, "Condutores");
+  assert.equal(option.value, "CONDUTOR ERP");
+  assert.deepEqual(params, {
+    category: "CONDUTOR ERP",
+    page: 2,
+    size: 24,
+    search: "cabo",
+    manufacturer: "SIL",
+  });
+});
+
+test("fabricante exibe e envia o nome real com paginação no backend", () => {
+  const manufacturer = mapPublicManufacturer(manufacturerPayload);
+  const option = toManufacturerFilterOption(manufacturer);
+  const params = buildManufacturerProductsParams(manufacturer, 4, " disjuntor ", " PROTEÇÃO ");
+
+  assert.equal(option.label, "Schneider Electric");
+  assert.equal(option.value, "Schneider Electric");
+  assert.deepEqual(params, {
+    manufacturer: "Schneider Electric",
+    page: 3,
+    size: 24,
+    search: "disjuntor",
+    category: "PROTEÇÃO",
+  });
+});
+
+test("rejeita contagens de taxonomia inválidas", () => {
+  assert.throws(
+    () => mapPublicCategory({ ...categoryPayload, productCount: -1 }),
+    PublicCatalogApiError,
+  );
+  assert.throws(
+    () => mapPublicManufacturer({ ...manufacturerPayload, productCount: 1.5 }),
+    PublicCatalogApiError,
+  );
+});
+
+test("preserva 404 seguro ao resolver slugs inexistentes", async () => {
+  const notFoundFetch = async () =>
+    new Response(JSON.stringify({ code: "CATEGORY_NOT_FOUND", message: "detalhe interno" }), {
+      status: 404,
+      headers: { "content-type": "application/json" },
+    });
+
+  await assert.rejects(
+    getCategoryBySlug("inexistente", notFoundFetch),
+    (error: unknown) =>
+      error instanceof PublicCatalogApiError &&
+      error.status === 404 &&
+      error.code === "CATEGORY_NOT_FOUND" &&
+      !error.message.includes("detalhe interno"),
+  );
+});
+
+test("rotas integradas não mantêm mocks ou taxonomias hardcoded", async () => {
+  const routeUrls = [
+    new URL("../../routes/produtos/index.tsx", import.meta.url),
+    new URL("../../routes/categorias/index.tsx", import.meta.url),
+    new URL("../../routes/categorias/$slug.tsx", import.meta.url),
+    new URL("../../routes/marcas/index.tsx", import.meta.url),
+    new URL("../../routes/marcas/$slug.tsx", import.meta.url),
+  ];
+  const sources = await Promise.all(routeUrls.map((url) => readFile(url, "utf8")));
+  const integratedRoutes = sources.join("\n");
+
+  assert.doesNotMatch(integratedRoutes, /MOCK_PRODUCTS|CATEGORY_MAP|SUB_GROUPS/);
+  assert.doesNotMatch(integratedRoutes, /const (CATEGORIES|MANUFACTURERS|BRANDS)\s*=/);
 });
