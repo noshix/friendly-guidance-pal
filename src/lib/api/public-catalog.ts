@@ -2,6 +2,7 @@ import type { CartItem } from "@/lib/cart";
 
 export const PUBLIC_CATALOG_PAGE_SIZE = 24;
 export const PUBLIC_CATALOG_MAX_PAGE_SIZE = 100;
+export const PUBLIC_TAXONOMY_STALE_TIME = 5 * 60_000;
 
 export type PublicProductAvailability = "EM_ESTOQUE" | "CONSULTE_DISPONIBILIDADE";
 
@@ -39,6 +40,26 @@ export interface PublicProductListParams {
   size?: number | undefined;
 }
 
+export interface PublicCategory {
+  name: string;
+  erpName: string;
+  slug: string;
+  productCount: number;
+}
+
+export interface PublicManufacturer {
+  name: string;
+  slug: string;
+  productCount: number;
+}
+
+export interface PublicTaxonomyFilterOption {
+  label: string;
+  value: string;
+  slug: string;
+  productCount: number;
+}
+
 export class PublicCatalogApiError extends Error {
   readonly status: number;
   readonly code: string;
@@ -54,6 +75,8 @@ export class PublicCatalogApiError extends Error {
 type FetchImplementation = (input: string | URL | Request, init?: RequestInit) => Promise<Response>;
 
 const PRODUCTS_PATH = "/api/public/products";
+const CATEGORIES_PATH = "/api/public/categories";
+const MANUFACTURERS_PATH = "/api/public/manufacturers";
 
 function normalizeFilter(value: string | undefined): string | undefined {
   const normalized = value?.trim();
@@ -86,6 +109,14 @@ export function buildPublicProductsUrl(params: PublicProductListParams = {}): st
 
 export function buildPublicProductDetailUrl(erpId: string): string {
   return `${PRODUCTS_PATH}/${encodeURIComponent(erpId)}`;
+}
+
+export function buildPublicCategoryDetailUrl(slug: string): string {
+  return `${CATEGORIES_PATH}/${encodeURIComponent(slug)}`;
+}
+
+export function buildPublicManufacturerDetailUrl(slug: string): string {
+  return `${MANUFACTURERS_PATH}/${encodeURIComponent(slug)}`;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -173,6 +204,30 @@ export function mapPublicProductPage(value: unknown): PublicProductPage {
   };
 }
 
+export function mapPublicCategory(value: unknown): PublicCategory {
+  if (!isRecord(value)) throw invalidResponse("category");
+  return {
+    name: requiredString(value["name"], "name"),
+    erpName: requiredString(value["erpName"], "erpName"),
+    slug: requiredString(value["slug"], "slug"),
+    productCount: nonNegativeInteger(value["productCount"], "productCount"),
+  };
+}
+
+export function mapPublicManufacturer(value: unknown): PublicManufacturer {
+  if (!isRecord(value)) throw invalidResponse("manufacturer");
+  return {
+    name: requiredString(value["name"], "name"),
+    slug: requiredString(value["slug"], "slug"),
+    productCount: nonNegativeInteger(value["productCount"], "productCount"),
+  };
+}
+
+function mapTaxonomyList<T>(value: unknown, mapper: (item: unknown) => T, field: string): T[] {
+  if (!Array.isArray(value)) throw invalidResponse(field);
+  return value.map(mapper);
+}
+
 async function requestJson(
   url: string,
   fetchImplementation: FetchImplementation,
@@ -220,6 +275,91 @@ export async function fetchPublicProductDetail(
 ): Promise<PublicProductDetail> {
   const payload = await requestJson(buildPublicProductDetailUrl(erpId), fetchImplementation);
   return mapPublicProductDetail(payload);
+}
+
+export async function getCategories(
+  fetchImplementation: FetchImplementation = fetch,
+): Promise<PublicCategory[]> {
+  const payload = await requestJson(CATEGORIES_PATH, fetchImplementation);
+  return mapTaxonomyList(payload, mapPublicCategory, "categories");
+}
+
+export async function getCategoryBySlug(
+  slug: string,
+  fetchImplementation: FetchImplementation = fetch,
+): Promise<PublicCategory> {
+  const payload = await requestJson(buildPublicCategoryDetailUrl(slug), fetchImplementation);
+  return mapPublicCategory(payload);
+}
+
+export async function getManufacturers(
+  fetchImplementation: FetchImplementation = fetch,
+): Promise<PublicManufacturer[]> {
+  const payload = await requestJson(MANUFACTURERS_PATH, fetchImplementation);
+  return mapTaxonomyList(payload, mapPublicManufacturer, "manufacturers");
+}
+
+export async function getManufacturerBySlug(
+  slug: string,
+  fetchImplementation: FetchImplementation = fetch,
+): Promise<PublicManufacturer> {
+  const payload = await requestJson(buildPublicManufacturerDetailUrl(slug), fetchImplementation);
+  return mapPublicManufacturer(payload);
+}
+
+export function toCategoryFilterOption(category: PublicCategory): PublicTaxonomyFilterOption {
+  return {
+    label: category.name,
+    value: category.erpName,
+    slug: category.slug,
+    productCount: category.productCount,
+  };
+}
+
+export function toManufacturerFilterOption(
+  manufacturer: PublicManufacturer,
+): PublicTaxonomyFilterOption {
+  return {
+    label: manufacturer.name,
+    value: manufacturer.name,
+    slug: manufacturer.slug,
+    productCount: manufacturer.productCount,
+  };
+}
+
+export function buildCategoryProductsParams(
+  category: PublicCategory,
+  page: number,
+  search?: string,
+  manufacturer?: string,
+): PublicProductListParams {
+  return {
+    category: category.erpName,
+    page: uiPageToApiPage(page),
+    size: PUBLIC_CATALOG_PAGE_SIZE,
+    ...(normalizeFilter(search) ? { search: normalizeFilter(search) } : {}),
+    ...(normalizeFilter(manufacturer) ? { manufacturer: normalizeFilter(manufacturer) } : {}),
+  };
+}
+
+export function buildManufacturerProductsParams(
+  manufacturer: PublicManufacturer,
+  page: number,
+  search?: string,
+  category?: string,
+): PublicProductListParams {
+  return {
+    manufacturer: manufacturer.name,
+    page: uiPageToApiPage(page),
+    size: PUBLIC_CATALOG_PAGE_SIZE,
+    ...(normalizeFilter(search) ? { search: normalizeFilter(search) } : {}),
+    ...(normalizeFilter(category) ? { category: normalizeFilter(category) } : {}),
+  };
+}
+
+export function shouldRetryPublicTaxonomy(failureCount: number, error: Error): boolean {
+  if (error instanceof PublicCatalogApiError && error.status === 404) return false;
+  return failureCount < 1;
 }
 
 export function formatPublicPrice(price: number | null): string {
