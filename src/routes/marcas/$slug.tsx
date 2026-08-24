@@ -298,8 +298,8 @@ function BrandDetail() {
           </aside>
 
           <section className="flex-1">
-            <div className="bg-white border border-[#E5E7EB] rounded-[2px] p-4 mb-6 flex items-center justify-between shadow-sm">
-              <div className="flex items-center gap-4">
+            <div className="bg-white border border-[#E5E7EB] rounded-[2px] p-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+              <div className="flex items-center gap-3 min-w-0">
                 <button
                   type="button"
                   onClick={() => setIsFilterMobileOpen(true)}
@@ -307,17 +307,17 @@ function BrandDetail() {
                 >
                   <Filter size={14} /> Filtrar
                 </button>
-                <span className="text-[13px] font-bold text-[#252A2E]/60 uppercase tracking-wider">
+                <span className="text-[13px] font-bold text-[#252A2E]/60 uppercase tracking-wider leading-snug">
                   {productsQuery.data?.totalElements ?? 0} Produtos encontrados
                 </span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 w-full sm:w-auto">
                 <span className="hidden sm:inline text-[11px] font-bold text-[#252A2E]/40 uppercase tracking-widest">
                   Ordenar:
                 </span>
                 <button
                   type="button"
-                  className="flex items-center gap-2 bg-[#F4F5F6] px-4 py-2 rounded-[2px] text-[12px] font-bold uppercase tracking-wider min-w-[140px] justify-between"
+                  className="w-full sm:min-w-[140px] flex items-center gap-2 bg-[#F4F5F6] px-4 py-2 rounded-[2px] text-[12px] font-bold uppercase tracking-wider justify-between"
                 >
                   Relevância <ChevronDown size={14} />
                 </button>

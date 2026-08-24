@@ -104,29 +104,29 @@ function Index() {
     <div className="min-h-screen bg-white text-[#252A2E]">
       <Header />
 
-      <section className="max-w-7xl mx-auto px-4 py-12 flex items-center gap-12">
-        <div className="flex-1 space-y-6">
+      <section className="max-w-7xl mx-auto px-4 py-8 sm:py-12 flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+        <div className="w-full lg:flex-1 min-w-0 space-y-6">
           <div className="inline-flex items-center bg-[#174F8C]/10 text-[#174F8C] px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest">
             Pizzatto Materiais Elétricos
           </div>
-          <h1 className="text-[52px] font-extrabold text-[#252A2E] leading-[1] tracking-tighter">
-            Materiais elétricos para <br />
+          <h1 className="text-[36px] sm:text-[44px] lg:text-[52px] font-extrabold text-[#252A2E] leading-[1] tracking-tighter">
+            Materiais elétricos para <br className="hidden sm:block" />
             sua obra, empresa e projeto.
           </h1>
           <p className="text-[18px] text-[#252A2E]/70 leading-relaxed max-w-[550px]">
             Encontre materiais elétricos para sua casa, obra, empresa ou projeto com a experiência
             de quem atua há mais de 40 anos no segmento.
           </p>
-          <div className="flex gap-4 pt-4">
+          <div className="flex flex-col sm:flex-row gap-4 pt-4">
             <Link
               to="/produtos"
-              className="bg-[#2E8B57] text-white px-8 py-4 rounded-[2px] font-bold uppercase text-[14px] hover:bg-[#257046] transition shadow-md flex items-center justify-center"
+              className="w-full sm:w-auto bg-[#2E8B57] text-white px-5 sm:px-8 py-4 rounded-[2px] font-bold uppercase text-[14px] hover:bg-[#257046] transition shadow-md flex items-center justify-center text-center"
             >
               Explorar catálogo
             </Link>
             <Link
               to="/orcamento"
-              className="bg-[#F5C400] text-[#252A2E] px-8 py-4 rounded-[2px] font-bold uppercase text-[14px] hover:bg-[#E0B200] transition shadow-md flex items-center justify-center"
+              className="w-full sm:w-auto bg-[#F5C400] text-[#252A2E] px-5 sm:px-8 py-4 rounded-[2px] font-bold uppercase text-[14px] hover:bg-[#E0B200] transition shadow-md flex items-center justify-center text-center"
             >
               Solicitar orçamento
             </Link>
@@ -140,16 +140,16 @@ function Index() {
             />
           </div>
         </div>
-        <div className="flex-1 relative h-[500px]">
+        <div className="lg:flex-1 min-w-0 relative w-full max-w-[500px] lg:max-w-none h-[280px] sm:h-[380px] lg:h-[500px]">
           <div className="absolute inset-0 bg-transparent rounded-[4px] overflow-hidden">
             <ImageWithFallback
               src="/assets/simbolo-pizzatto.png"
               alt="Pizzatto Materiais Elétricos"
-              className="w-full h-full object-contain p-12"
+              className="w-full h-full object-contain p-8 sm:p-12"
             />
           </div>
-          <div className="absolute -bottom-6 -right-6 bg-[#2E8B57] text-white p-6 rounded-[2px] shadow-xl z-10">
-            <div className="text-[40px] font-black italic leading-none">40+</div>
+          <div className="absolute -bottom-4 right-0 sm:-bottom-6 sm:-right-2 xl:-right-6 bg-[#2E8B57] text-white p-4 sm:p-6 rounded-[2px] shadow-xl z-10">
+            <div className="text-[32px] sm:text-[40px] font-black italic leading-none">40+</div>
             <div className="text-[10px] font-bold tracking-widest uppercase mt-1">
               Anos de Experiência
             </div>
@@ -355,8 +355,8 @@ function Index() {
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 py-24 flex items-center gap-16">
-        <div className="flex-1 relative">
+      <section className="max-w-7xl mx-auto px-4 py-16 lg:py-24 flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+        <div className="flex-1 min-w-0 relative">
           <div className="absolute -top-4 -left-4 w-full h-full border-2 border-[#174F8C]/10 -z-10 rounded-[4px]"></div>
           <img
             src="/assets/fachada.jpg"
@@ -367,9 +367,9 @@ function Index() {
             CUIABÁ - MT
           </div>
         </div>
-        <div className="flex-1 space-y-6">
+        <div className="flex-1 min-w-0 space-y-6">
           <div className="w-16 h-1 bg-[#174F8C] mb-2"></div>
-          <h2 className="text-[40px] font-extrabold text-[#252A2E] leading-tight">
+          <h2 className="text-[32px] sm:text-[40px] font-extrabold text-[#252A2E] leading-tight">
             Há mais de 40 anos ao lado de quem constrói.
           </h2>
           <p className="text-[18px] text-[#252A2E]/70 leading-relaxed">
@@ -389,8 +389,8 @@ function Index() {
       </section>
 
       <section className="bg-[#174F8C] py-20 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/3 h-full bg-[#123E70]/50 skew-x-12 transform translate-x-20"></div>
-        <div className="max-w-5xl mx-auto px-4 flex flex-col md:flex-row items-center gap-12 relative z-10">
+        <div className="absolute top-0 right-0 w-1/2 sm:w-1/3 h-full bg-[#123E70]/50 skew-x-12 transform translate-x-10 sm:translate-x-20 pointer-events-none"></div>
+        <div className="max-w-5xl mx-auto px-4 flex flex-col md:flex-row items-center gap-8 md:gap-12 relative z-10">
           <div className="relative group">
             <div className="absolute inset-0 bg-white/20 rounded-full blur-2xl group-hover:bg-white/30 transition duration-500"></div>
             <img
@@ -400,24 +400,24 @@ function Index() {
             />
           </div>
           <div className="flex-1 text-center md:text-left text-white">
-            <h2 className="text-[32px] font-black mb-4 leading-tight">
+            <h2 className="text-[28px] sm:text-[32px] font-black mb-4 leading-tight">
               Dúvidas sobre materiais ou precisa de orçamento?
             </h2>
             <p className="text-white/80 mb-8 text-[18px] max-w-[600px]">
               Fale com nossa equipe e solicite atendimento via WhatsApp para sua lista de materiais.
             </p>
-            <div className="flex flex-wrap justify-center md:justify-start gap-4">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap justify-center md:justify-start gap-4">
               <a
                 href={PIZZATTO_WHATSAPP.getLink()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-[#2E8B57] text-white px-10 py-4 rounded-[2px] font-black uppercase tracking-widest flex items-center gap-3 hover:bg-[#257548] transition shadow-2xl"
+                className="w-full sm:w-auto bg-[#2E8B57] text-white px-5 sm:px-10 py-4 rounded-[2px] font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-[#257548] transition shadow-2xl text-center"
               >
                 <MessageSquare size={20} /> Falar no WhatsApp
               </a>
               <Link
                 to="/contato"
-                className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-10 py-4 rounded-[2px] font-black uppercase tracking-widest hover:bg-white/20 transition flex items-center justify-center"
+                className="w-full sm:w-auto bg-white/10 backdrop-blur-md text-white border border-white/20 px-5 sm:px-10 py-4 rounded-[2px] font-black uppercase tracking-widest hover:bg-white/20 transition flex items-center justify-center text-center"
               >
                 Localização
               </Link>
