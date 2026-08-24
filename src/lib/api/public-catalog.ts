@@ -3,6 +3,9 @@ import type { CartItem } from "@/lib/cart";
 export const PUBLIC_CATALOG_PAGE_SIZE = 24;
 export const PUBLIC_CATALOG_MAX_PAGE_SIZE = 100;
 export const PUBLIC_TAXONOMY_STALE_TIME = 5 * 60_000;
+export const PUBLIC_PRODUCTS_STALE_TIME = 60_000;
+export const HOME_CATEGORY_LIMIT = 8;
+export const HOME_PRODUCT_LIMIT = 4;
 
 export type PublicProductAvailability = "EM_ESTOQUE" | "CONSULTE_DISPONIBILIDADE";
 
@@ -105,6 +108,13 @@ export function buildPublicProductsUrl(params: PublicProductListParams = {}): st
   query.set("size", String(normalizeSize(params.size)));
 
   return `${PRODUCTS_PATH}?${query.toString()}`;
+}
+
+export function buildHomeProductsParams(): PublicProductListParams {
+  return {
+    page: 0,
+    size: HOME_PRODUCT_LIMIT,
+  };
 }
 
 export function buildPublicProductDetailUrl(erpId: string): string {
@@ -314,6 +324,22 @@ export function toCategoryFilterOption(category: PublicCategory): PublicTaxonomy
     slug: category.slug,
     productCount: category.productCount,
   };
+}
+
+export function selectHomeCategories(
+  categories: readonly PublicCategory[],
+  limit = HOME_CATEGORY_LIMIT,
+): PublicCategory[] {
+  const normalizedLimit = Number.isInteger(limit) ? Math.max(0, limit) : HOME_CATEGORY_LIMIT;
+
+  return [...categories]
+    .sort(
+      (left, right) =>
+        right.productCount - left.productCount ||
+        left.name.localeCompare(right.name, "pt-BR", { sensitivity: "base" }) ||
+        left.slug.localeCompare(right.slug),
+    )
+    .slice(0, normalizedLimit);
 }
 
 export function toManufacturerFilterOption(
