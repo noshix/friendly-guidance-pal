@@ -6,6 +6,7 @@ import {
   PublicCatalogApiError,
   apiPageToUiPage,
   buildCategoryProductsParams,
+  buildHomeProductsParams,
   buildManufacturerProductsParams,
   buildPublicCategoryDetailUrl,
   buildPublicManufacturerDetailUrl,
@@ -22,6 +23,7 @@ import {
   mapPublicCategory,
   mapPublicManufacturer,
   mapPublicProductSummary,
+  selectHomeCategories,
   toCategoryFilterOption,
   toCartItem,
   toManufacturerFilterOption,
@@ -296,6 +298,53 @@ test("preserva 404 seguro ao resolver slugs inexistentes", async () => {
       error.code === "CATEGORY_NOT_FOUND" &&
       !error.message.includes("detalhe interno"),
   );
+});
+
+test("seleciona categorias reais da Home por contagem com ordem estável", () => {
+  const categories = [
+    { name: "Iluminação", erpName: "ILUMINACAO", slug: "iluminacao", productCount: 8 },
+    { name: "Condutores", erpName: "CONDUTORES", slug: "condutores", productCount: 12 },
+    { name: "Acessórios", erpName: "ACESSORIOS", slug: "acessorios", productCount: 8 },
+  ];
+
+  assert.deepEqual(
+    selectHomeCategories(categories, 2).map((category) => category.slug),
+    ["condutores", "acessorios"],
+  );
+  assert.deepEqual(
+    categories.map((category) => category.slug),
+    ["iluminacao", "condutores", "acessorios"],
+  );
+  assert.deepEqual(selectHomeCategories([], 8), []);
+});
+
+test("Home solicita somente a primeira página pública com limite pequeno", () => {
+  assert.deepEqual(buildHomeProductsParams(), { page: 0, size: 4 });
+  assert.equal(
+    buildPublicProductsUrl(buildHomeProductsParams()),
+    "/api/public/products?page=0&size=4",
+  );
+});
+
+test("Home usa API, slugs e ERP IDs reais sem manter mocks comerciais", async () => {
+  const homeSource = await readFile(new URL("../../routes/index.tsx", import.meta.url), "utf8");
+
+  assert.match(homeSource, /getCategories/);
+  assert.match(homeSource, /getManufacturers/);
+  assert.match(homeSource, /fetchPublicProducts/);
+  assert.match(homeSource, /params=\{\{ slug: category\.slug \}\}/);
+  assert.match(homeSource, /params=\{\{ slug: manufacturer\.slug \}\}/);
+  assert.match(homeSource, /params=\{\{ id: product\.erpId \}\}/);
+  assert.match(homeSource, /categoriesQuery\.isPending/);
+  assert.match(homeSource, /categoriesQuery\.isError/);
+  assert.match(homeSource, /productsQuery\.isPending/);
+  assert.match(homeSource, /productsQuery\.isError/);
+  assert.doesNotMatch(homeSource, /images\.unsplash\.com/);
+  assert.doesNotMatch(
+    homeSource,
+    /Cabos e Condutores|Proteção Elétrica|SIEMENS|Disjuntor Tripolar 32A/,
+  );
+  assert.doesNotMatch(homeSource, /11\s*mil produtos|11[.]?000 produtos/i);
 });
 
 test("rotas integradas não mantêm mocks ou taxonomias hardcoded", async () => {
