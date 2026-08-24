@@ -46,6 +46,46 @@ test("encaminha listagem pública sem duplicar /api e preserva a query string", 
   assert.equal(forwardedUrl, "https://spring.example.com/api/public/products?page=0&size=3");
 });
 
+test("preserva Cookie, Set-Cookie e o status da sessão administrativa", async () => {
+  let forwardedCookie = "";
+  const response = await proxySpringApiRequest(
+    new Request("https://preview.example.com/api/admin/auth/session", {
+      headers: { cookie: "JSESSIONID=session-value" },
+    }),
+    { SPRING_API_ORIGIN: "https://spring.example.com" },
+    async (request) => {
+      forwardedCookie = request.headers.get("cookie") ?? "";
+      return Response.json(
+        { authenticated: true, username: "admin" },
+        { headers: { "set-cookie": "JSESSIONID=rotated; HttpOnly; Secure; SameSite=Lax" } },
+      );
+    },
+  );
+
+  assert.equal(forwardedCookie, "JSESSIONID=session-value");
+  assert.equal(
+    response?.headers.get("set-cookie"),
+    "JSESSIONID=rotated; HttpOnly; Secure; SameSite=Lax",
+  );
+  assert.equal(response?.status, 200);
+});
+
+test("preserva respostas 401 e 403 do Spring sem convertê-las em HTML", async () => {
+  for (const status of [401, 403]) {
+    const response = await proxySpringApiRequest(
+      new Request("https://preview.example.com/api/admin/protected"),
+      { SPRING_API_ORIGIN: "https://spring.example.com" },
+      async () =>
+        Response.json({ code: status === 401 ? "UNAUTHORIZED" : "FORBIDDEN" }, { status }),
+    );
+
+    assert.equal(response?.status, status);
+    assert.deepEqual(await response?.json(), {
+      code: status === 401 ? "UNAUTHORIZED" : "FORBIDDEN",
+    });
+  }
+});
+
 test("não envia uma rota frontend ao Spring", async () => {
   let fetchCalled = false;
   const response = await proxySpringApiRequest(
