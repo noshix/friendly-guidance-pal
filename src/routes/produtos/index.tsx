@@ -407,26 +407,26 @@ function Products() {
           {/* Main Content */}
           <main className="flex-1">
             {/* Toolbar */}
-            <div className="bg-white border border-[#E5E7EB] rounded-[2px] p-4 mb-6 flex items-center justify-between shadow-sm">
-              <div className="flex items-center gap-4">
+            <div className="bg-white border border-[#E5E7EB] rounded-[2px] p-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+              <div className="flex items-center gap-3 min-w-0">
                 <button
                   onClick={() => setIsFilterMobileOpen(true)}
                   className="lg:hidden flex items-center gap-2 bg-[#F4F5F6] px-4 py-2 rounded-[2px] text-[12px] font-bold uppercase tracking-wider"
                 >
                   <Filter size={14} /> Filtrar
                 </button>
-                <span className="text-[13px] font-bold text-[#252A2E]/60 uppercase tracking-wider">
+                <span className="text-[13px] font-bold text-[#252A2E]/60 uppercase tracking-wider leading-snug">
                   <span className="font-normal italic mr-1">Exibindo</span>{" "}
                   {productPage?.totalElements ?? 0} Produtos encontrados
                 </span>
               </div>
-              <div className="flex items-center gap-6">
-                <div className="flex items-center gap-2">
+              <div className="flex items-center gap-6 w-full sm:w-auto">
+                <div className="flex items-center gap-2 w-full sm:w-auto">
                   <span className="hidden sm:inline text-[11px] font-bold text-[#252A2E]/40 uppercase tracking-widest">
                     Ordenar por:
                   </span>
-                  <div className="relative group">
-                    <button className="flex items-center gap-2 bg-[#F4F5F6] px-4 py-2 rounded-[2px] text-[12px] font-bold uppercase tracking-wider min-w-[160px] justify-between">
+                  <div className="relative group w-full sm:w-auto">
+                    <button className="w-full sm:min-w-[160px] flex items-center gap-2 bg-[#F4F5F6] px-4 py-2 rounded-[2px] text-[12px] font-bold uppercase tracking-wider justify-between">
                       Mais relevantes <ChevronDown size={14} />
                     </button>
                   </div>
