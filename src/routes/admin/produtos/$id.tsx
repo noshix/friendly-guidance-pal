@@ -1,140 +1,337 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { 
-  ChevronLeft, 
-  Database, 
-  Globe, 
-  Save, 
-  X, 
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  AlertCircle,
+  CheckCircle2,
+  ChevronLeft,
+  Database,
+  Globe,
   Info,
-  CheckCircle2
+  Loader2,
+  RotateCcw,
+  Save,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import { formatAdminPrice, formatAdminQuantity } from "@/lib/admin-products-flow";
+import {
+  adminProductQueryKey,
+  expireAdminProductSession,
+  invalidateAdminProductData,
+} from "@/lib/admin-products-query";
+import { getAdminCsrf } from "@/lib/api/admin-auth";
+import {
+  AdminProductsApiError,
+  getAdminProduct,
+  isAdminProductsUnauthorizedError,
+  updateAdminProductEditorial,
+  type AdminProductDetail,
+} from "@/lib/api/admin-products";
 
 export const Route = createFileRoute("/admin/produtos/$id")({
   component: EditProduct,
 });
 
-function EditProduct() {
-  const [isVisible, setIsVisible] = useState(true);
-  const [displayName, setDisplayName] = useState("Disjuntor Tripolar 32A");
-  const [showSuccess, setShowSuccess] = useState(false);
-  const navigate = useNavigate();
+type SaveFeedback = { kind: "success" | "error"; message: string } | null;
 
-  const handleSave = () => {
-    setShowSuccess(true);
-    setTimeout(() => {
-      setShowSuccess(false);
-      navigate({ to: "/admin/produtos" });
-    }, 2000);
+function EditProduct() {
+  const { id } = Route.useParams();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [displayName, setDisplayName] = useState("");
+  const [visible, setVisible] = useState(false);
+  const [feedback, setFeedback] = useState<SaveFeedback>(null);
+  const productQuery = useQuery({
+    queryKey: adminProductQueryKey(id),
+    queryFn: () => getAdminProduct(id),
+    retry: (failureCount, error) =>
+      !(error instanceof AdminProductsApiError && [401, 404].includes(error.status)) &&
+      failureCount < 1,
+  });
+
+  useEffect(() => {
+    if (productQuery.data) {
+      setDisplayName(productQuery.data.editorial.displayName ?? "");
+      setVisible(productQuery.data.editorial.visible);
+    }
+  }, [productQuery.data]);
+
+  const saveMutation = useMutation({
+    mutationFn: async () =>
+      updateAdminProductEditorial(
+        id,
+        { displayName: displayName.trim() || null, visible },
+        await getAdminCsrf(),
+      ),
+    onSuccess: async (product) => {
+      queryClient.setQueryData(adminProductQueryKey(id), product);
+      await invalidateAdminProductData(queryClient, id);
+      setDisplayName(product.editorial.displayName ?? "");
+      setVisible(product.editorial.visible);
+      setFeedback({ kind: "success", message: "Produto salvo com sucesso." });
+    },
+    onError: (error) => {
+      if (!isAdminProductsUnauthorizedError(error)) {
+        setFeedback({ kind: "error", message: "Não foi possível salvar o produto." });
+      }
+    },
+  });
+
+  const expiredError = [productQuery.error, saveMutation.error].find(
+    isAdminProductsUnauthorizedError,
+  );
+  useEffect(() => {
+    if (expiredError) {
+      void expireAdminProductSession(expiredError, queryClient, () =>
+        navigate({ to: "/admin/login", replace: true }),
+      );
+    }
+  }, [expiredError, navigate, queryClient]);
+
+  if (expiredError) {
+    return <ProductDetailState message="Sessão expirada. Redirecionando para o login..." loading />;
+  }
+
+  if (productQuery.isPending) {
+    return <ProductDetailState message="Carregando dados reais do produto..." loading />;
+  }
+
+  if (productQuery.error instanceof AdminProductsApiError && productQuery.error.status === 404) {
+    return (
+      <ProductDetailState message="Produto não encontrado.">
+        <Link
+          to="/admin/produtos"
+          className="rounded-[2px] bg-[#174F8C] px-5 py-3 text-[10px] font-black uppercase tracking-widest text-white"
+        >
+          Voltar aos produtos
+        </Link>
+      </ProductDetailState>
+    );
+  }
+
+  if (productQuery.isError || !productQuery.data) {
+    return (
+      <ProductDetailState message="Não foi possível carregar este produto.">
+        <button
+          type="button"
+          onClick={() => void productQuery.refetch()}
+          className="rounded-[2px] bg-[#174F8C] px-5 py-3 text-[10px] font-black uppercase tracking-widest text-white"
+        >
+          Tentar novamente
+        </button>
+      </ProductDetailState>
+    );
+  }
+
+  const product = productQuery.data;
+  const fallbackName = product.erpControlled.erpDescription;
+  const dirty =
+    displayName !== (product.editorial.displayName ?? "") || visible !== product.editorial.visible;
+
+  const resetForm = () => {
+    setDisplayName(product.editorial.displayName ?? "");
+    setVisible(product.editorial.visible);
+    setFeedback(null);
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 animate-in slide-in-from-bottom-4 duration-500 pb-20">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <Link to="/admin/produtos" className="p-2 text-[#252A2E]/40 hover:text-[#252A2E] hover:bg-white rounded-[2px] transition">
+    <div className="mx-auto max-w-6xl space-y-6 pb-20 animate-in slide-in-from-bottom-4 duration-500">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex min-w-0 items-center gap-3">
+          <Link
+            to="/admin/produtos"
+            className="shrink-0 rounded-[2px] p-2 text-[#252A2E]/40 transition hover:bg-white hover:text-[#252A2E]"
+          >
             <ChevronLeft size={20} />
           </Link>
-          <div className="flex flex-col">
-            <h2 className="text-2xl font-black text-[#252A2E] uppercase tracking-tight">Editar Produto</h2>
-            <p className="text-[12px] text-[#252A2E]/40 font-bold uppercase tracking-wider">ERP ID: 3481</p>
+          <div className="min-w-0">
+            <h2 className="text-2xl font-black uppercase tracking-tight text-[#252A2E]">
+              Editar Produto
+            </h2>
+            <p className="break-all text-[11px] font-bold uppercase tracking-wider text-[#252A2E]/45">
+              ERP ID: {product.erpId}
+            </p>
           </div>
         </div>
-        <div className="flex gap-4">
-          <button 
-            onClick={() => navigate({ to: "/admin/produtos" })}
-            className="px-6 py-3 border border-[#E5E7EB] text-[#252A2E]/60 text-[12px] font-bold uppercase tracking-widest hover:text-[#D9272E] hover:border-[#D9272E] transition"
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={resetForm}
+            disabled={!dirty || saveMutation.isPending}
+            className="inline-flex items-center gap-2 border border-[#E5E7EB] bg-white px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-[#252A2E]/65 disabled:opacity-35"
           >
-            Cancelar
+            <RotateCcw size={14} /> Desfazer
           </button>
-          <button 
-            onClick={handleSave}
-            className="px-8 py-3 bg-[#174F8C] text-white text-[12px] font-bold uppercase tracking-widest hover:bg-[#123E70] transition shadow-lg flex items-center gap-2"
+          <button
+            type="button"
+            onClick={() => saveMutation.mutate()}
+            disabled={!dirty || saveMutation.isPending}
+            className="inline-flex items-center gap-2 bg-[#174F8C] px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-white shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <Save size={16} /> Salvar Alterações
+            {saveMutation.isPending ? (
+              <Loader2 className="animate-spin" size={15} />
+            ) : (
+              <Save size={15} />
+            )}
+            {saveMutation.isPending ? "Salvando..." : "Salvar alterações"}
           </button>
         </div>
       </div>
 
-      {showSuccess && (
-        <div className="bg-[#2E8B57] text-white p-4 rounded-[2px] flex items-center gap-3 animate-in fade-in zoom-in-95 duration-300 shadow-lg">
-          <CheckCircle2 size={20} />
-          <span className="text-[13px] font-bold uppercase tracking-wider">Produto atualizado com sucesso no catálogo.</span>
+      {feedback && (
+        <div
+          role="status"
+          className={`flex items-center gap-3 border p-4 text-[12px] font-bold ${
+            feedback.kind === "success"
+              ? "border-[#2E8B57]/30 bg-[#2E8B57]/10 text-[#2E8B57]"
+              : "border-[#D9272E]/30 bg-[#D9272E]/10 text-[#D9272E]"
+          }`}
+        >
+          {feedback.kind === "success" ? <CheckCircle2 size={18} /> : <AlertCircle size={18} />}
+          {feedback.message}
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column - Editable */}
-        <div className="lg:col-span-2 space-y-8">
-          <div className="bg-white border border-[#E5E7EB] rounded-[2px] shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-[#F4F5F6] flex items-center gap-3">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="space-y-6 lg:col-span-2">
+          <section className="overflow-hidden rounded-[2px] border border-[#E5E7EB] bg-white shadow-sm">
+            <div className="flex items-center gap-3 border-b border-[#F4F5F6] p-6">
               <Globe className="text-[#174F8C]" size={18} />
-              <h3 className="text-[12px] font-black uppercase tracking-[0.2em] text-[#252A2E]">Publicação no Site</h3>
+              <h3 className="text-[12px] font-black uppercase tracking-[0.2em] text-[#252A2E]">
+                Publicação no site
+              </h3>
             </div>
-            <div className="p-8 space-y-8">
+            <div className="space-y-7 p-5 sm:p-8">
               <div>
-                <label className="block text-[11px] font-black text-[#252A2E]/50 uppercase tracking-[0.2em] mb-3">Nome de exibição no catálogo</label>
-                <input 
-                  type="text" 
+                <label
+                  htmlFor="admin-display-name"
+                  className="mb-3 block text-[10px] font-black uppercase tracking-[0.2em] text-[#252A2E]/50"
+                >
+                  Nome de exibição
+                </label>
+                <input
+                  id="admin-display-name"
+                  type="text"
+                  maxLength={500}
                   value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  className="w-full bg-[#F9FAFB] border border-[#E5E7EB] p-4 rounded-[2px] outline-none focus:border-[#174F8C] text-[14px] font-bold text-[#252A2E]"
+                  onChange={(event) => {
+                    setDisplayName(event.target.value);
+                    setFeedback(null);
+                  }}
+                  className="w-full rounded-[2px] border border-[#E5E7EB] bg-[#F9FAFB] p-4 text-[14px] font-bold text-[#252A2E] outline-none focus:border-[#174F8C]"
                 />
-                <p className="mt-2 text-[11px] text-[#252A2E]/40 font-medium italic">Este nome será exibido para os clientes no site público.</p>
+                <p className="mt-2 text-[11px] font-medium text-[#252A2E]/45">
+                  Pode ser limpo. Nesse caso, o catálogo usa a descrição original do ERP:
+                  <span className="mt-1 block font-bold text-[#252A2E]/65">{fallbackName}</span>
+                </p>
               </div>
 
-              <div className="flex items-center gap-4 p-6 bg-[#F9FAFB] border border-[#E5E7EB] rounded-[2px]">
-                <button 
-                  onClick={() => setIsVisible(!isVisible)}
-                  className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${isVisible ? 'bg-[#2E8B57]' : 'bg-[#E5E7EB]'}`}
+              <div className="flex items-center gap-4 rounded-[2px] border border-[#E5E7EB] bg-[#F9FAFB] p-5 sm:p-6">
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={visible}
+                  aria-label="Produto publicado no catálogo"
+                  onClick={() => {
+                    setVisible((current) => !current);
+                    setFeedback(null);
+                  }}
+                  className={`relative inline-flex h-6 w-11 shrink-0 rounded-full border-2 border-transparent transition-colors ${
+                    visible ? "bg-[#2E8B57]" : "bg-[#C9CDD1]"
+                  }`}
                 >
-                  <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isVisible ? 'translate-x-5' : 'translate-x-0'}`} />
+                  <span
+                    className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition ${
+                      visible ? "translate-x-5" : "translate-x-0"
+                    }`}
+                  />
                 </button>
-                <div className="flex flex-col">
-                  <span className="text-[13px] font-black text-[#252A2E] uppercase tracking-wider">Produto visível no catálogo</span>
-                  <span className="text-[11px] text-[#252A2E]/40 font-medium">Define se o produto aparece nas buscas e categorias públicas.</span>
+                <div>
+                  <span className="block text-[12px] font-black uppercase tracking-wider text-[#252A2E]">
+                    {visible ? "Publicado" : "Oculto"}
+                  </span>
+                  <span className="text-[10px] font-medium text-[#252A2E]/45">
+                    Produtos ocultos não aparecem nas buscas, categorias ou páginas públicas.
+                  </span>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          </section>
 
-        {/* Right Column - Read Only */}
-        <div className="lg:col-span-1 space-y-6">
-          <div className="bg-[#F4F5F6] border border-[#E5E7EB] rounded-[2px] shadow-sm overflow-hidden opacity-80">
-            <div className="p-6 border-b border-[#E5E7EB] flex items-center gap-3 bg-white/50">
-              <Database className="text-[#252A2E]/40" size={18} />
-              <h3 className="text-[12px] font-black uppercase tracking-[0.2em] text-[#252A2E]/60">Dados do ERP</h3>
-            </div>
-            <div className="p-6 space-y-6">
-              <ReadOnlyField label="Código ERP" value="3481" />
-              <ReadOnlyField label="Descrição ERP" value="DISJ TRIP 32A 5SX2332-7 SIEMENS" />
-              <ReadOnlyField label="Fabricante" value="SIEMENS" />
-              <ReadOnlyField label="Referência" value="5SX2332-7" />
-              <ReadOnlyField label="Preço ERP" value="R$ 189,90" />
-              <ReadOnlyField label="Saldo Disponível" value="6015" />
-              <ReadOnlyField label="NCM" value="8536.20.00" />
-            </div>
-          </div>
-
-          <div className="bg-[#174F8C]/5 border border-[#174F8C]/20 p-6 rounded-[2px] flex gap-4">
-            <Info className="text-[#174F8C] shrink-0" size={20} />
-            <p className="text-[12px] text-[#174F8C] font-medium leading-relaxed italic">
-              Os dados do ERP são atualizados através da importação e não podem ser alterados manualmente nesta tela.
+          <div className="flex gap-4 rounded-[2px] border border-[#174F8C]/20 bg-[#174F8C]/5 p-5">
+            <Info className="shrink-0 text-[#174F8C]" size={20} />
+            <p className="text-[11px] font-medium leading-relaxed text-[#174F8C]">
+              Somente nome de exibição e visibilidade são editáveis. Preço, estoque, fabricante,
+              categoria e os demais campos abaixo continuam sob autoridade exclusiva do ERP.
             </p>
           </div>
         </div>
+
+        <ErpFields product={product} />
       </div>
     </div>
   );
 }
 
-function ReadOnlyField({ label, value }: { label: string, value: string }) {
+function ErpFields({ product }: { product: AdminProductDetail }) {
+  const erp = product.erpControlled;
   return (
-    <div>
-      <label className="block text-[9px] font-black text-[#252A2E]/40 uppercase tracking-[0.2em] mb-1">{label}</label>
-      <div className="text-[12px] font-bold text-[#252A2E]/70 bg-white/50 px-3 py-2 border border-black/5 rounded-[2px]">{value}</div>
+    <section className="h-fit overflow-hidden rounded-[2px] border border-[#E5E7EB] bg-[#F4F5F6] shadow-sm lg:col-span-1">
+      <div className="flex items-center gap-3 border-b border-[#E5E7EB] bg-white/60 p-5">
+        <Database className="text-[#252A2E]/45" size={18} />
+        <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-[#252A2E]/65">
+          Dados do ERP · somente leitura
+        </h3>
+      </div>
+      <div className="grid gap-5 p-5 sm:grid-cols-2 lg:grid-cols-1">
+        <ReadOnlyField label="Código ERP" value={product.erpId} />
+        <ReadOnlyField label="Descrição original do ERP" value={erp.erpDescription} />
+        <ReadOnlyField label="Fabricante" value={erp.manufacturerRaw} />
+        <ReadOnlyField label="Categoria" value={erp.erpGroup} />
+        <ReadOnlyField label="Subcategoria" value={erp.erpSubgroup} />
+        <ReadOnlyField label="Referência" value={erp.reference} />
+        <ReadOnlyField label="Part number" value={erp.partNumber} />
+        <ReadOnlyField label="NCM" value={erp.ncm} />
+        <ReadOnlyField label="Unidade" value={erp.unit} />
+        <ReadOnlyField label="Preço de venda ERP" value={formatAdminPrice(erp.retailPrice)} />
+        <ReadOnlyField label="Saldo disponível" value={formatAdminQuantity(erp.availableStock)} />
+        <ReadOnlyField label="Saldo atual" value={formatAdminQuantity(erp.currentStock)} />
+      </div>
+    </section>
+  );
+}
+
+function ReadOnlyField({ label, value }: { label: string; value: string | null }) {
+  return (
+    <div className="min-w-0">
+      <span className="mb-1 block text-[9px] font-black uppercase tracking-[0.2em] text-[#252A2E]/40">
+        {label}
+      </span>
+      <span className="block break-words rounded-[2px] border border-black/5 bg-white/60 px-3 py-2 text-[11px] font-bold text-[#252A2E]/70">
+        {value || "—"}
+      </span>
+    </div>
+  );
+}
+
+function ProductDetailState({
+  message,
+  loading = false,
+  children,
+}: {
+  message: string;
+  loading?: boolean;
+  children?: React.ReactNode;
+}) {
+  return (
+    <div className="flex min-h-[420px] flex-col items-center justify-center gap-4 rounded-[2px] border border-[#E5E7EB] bg-white p-8 text-center">
+      {loading ? (
+        <Loader2 className="animate-spin text-[#174F8C]" size={26} />
+      ) : (
+        <AlertCircle className="text-[#D9272E]" size={26} />
+      )}
+      <p className="text-[13px] font-medium text-[#252A2E]/60">{message}</p>
+      {children}
     </div>
   );
 }

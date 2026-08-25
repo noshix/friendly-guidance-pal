@@ -21,6 +21,7 @@ import {
 } from "@/lib/admin-auth-query";
 import { getAdminCsrf, getAdminSession, logoutAdmin } from "@/lib/api/admin-auth";
 import { useHydrated } from "@/hooks/use-hydrated";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const Route = createFileRoute("/admin")({
   component: AdminLayout,
@@ -32,6 +33,7 @@ function AdminLayout() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const isHydrated = useHydrated();
+  const isMobile = useIsMobile();
   const isLoginRoute = location.pathname === "/admin/login";
   const sessionQuery = useQuery({
     queryKey: ADMIN_SESSION_QUERY_KEY,
@@ -59,6 +61,10 @@ function AdminLayout() {
       void navigate({ to: "/admin/login", replace: true });
     }
   }, [guardState, isLoginRoute, navigate]);
+
+  useEffect(() => {
+    if (isMobile) setIsSidebarOpen(false);
+  }, [isMobile]);
 
   if (isLoginRoute) {
     return <Outlet />;
@@ -92,10 +98,18 @@ function AdminLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F5F6] flex">
+    <div className="min-h-screen bg-[#F4F5F6] flex overflow-x-hidden">
+      {isMobile && isSidebarOpen && (
+        <button
+          type="button"
+          aria-label="Fechar menu administrativo"
+          onClick={() => setIsSidebarOpen(false)}
+          className="fixed inset-0 z-40 bg-black/45 md:hidden"
+        />
+      )}
       {/* Sidebar */}
       <aside
-        className={`${isSidebarOpen ? "w-[260px]" : "w-[80px]"} bg-[#252A2E] text-white flex flex-col transition-all duration-300 z-50 shrink-0`}
+        className={`${isSidebarOpen ? "w-[260px] translate-x-0" : "w-[80px] -translate-x-full md:translate-x-0"} fixed inset-y-0 left-0 z-50 flex shrink-0 flex-col bg-[#252A2E] text-white transition-all duration-300 md:static`}
       >
         {/* 5. SIDEBAR / LOGO - Improved padding and alignment */}
         <div
@@ -116,7 +130,12 @@ function AdminLayout() {
           )}
         </div>
 
-        <nav className="flex-1 py-6 overflow-y-auto">
+        <nav
+          className="flex-1 py-6 overflow-y-auto"
+          onClick={(event) => {
+            if (isMobile && (event.target as Element).closest("a")) setIsSidebarOpen(false);
+          }}
+        >
           {/* 3. ITEM ATIVO DA SIDEBAR - Using logic to highlight only one */}
           <SidebarItem
             icon={<LayoutDashboard size={20} />}
@@ -206,10 +225,13 @@ function AdminLayout() {
       {/* Main Area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Topbar */}
-        <header className="h-[70px] bg-white border-b border-[#E5E7EB] flex items-center justify-between px-8 sticky top-0 z-[60]">
+        <header className="sticky top-0 z-[60] flex h-[70px] items-center justify-between border-b border-[#E5E7EB] bg-white px-4 sm:px-8">
           <div className="flex items-center gap-4">
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              aria-label={
+                isSidebarOpen ? "Recolher menu administrativo" : "Abrir menu administrativo"
+              }
               className="p-2 text-[#252A2E]/40 hover:text-[#252A2E] hover:bg-[#F4F5F6] rounded-[2px] transition"
             >
               <Menu size={20} />
@@ -223,7 +245,7 @@ function AdminLayout() {
           <div className="flex items-center gap-6">
             <Link
               to="/"
-              className="text-[11px] font-bold text-[#174F8C] uppercase tracking-wider hover:underline"
+              className="hidden text-[11px] font-bold uppercase tracking-wider text-[#174F8C] hover:underline sm:block"
             >
               Ver site
             </Link>
@@ -245,7 +267,7 @@ function AdminLayout() {
         </header>
 
         {/* Content Area */}
-        <main className="flex-1 p-8 overflow-y-auto">
+        <main className="min-w-0 flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
           <Outlet />
         </main>
       </div>
