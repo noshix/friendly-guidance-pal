@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { AdminProductMediaSection } from "@/components/admin/AdminProductMediaSection";
 import { formatAdminPrice, formatAdminQuantity } from "@/lib/admin-products-flow";
 import {
   adminProductQueryKey,
@@ -257,6 +258,11 @@ function EditProduct() {
               </div>
             </div>
           </section>
+
+          <AdminProductMediaSection
+            erpId={product.erpId}
+            productName={product.editorial.displayName || product.erpControlled.erpDescription}
+          />
 
           <div className="flex gap-4 rounded-[2px] border border-[#174F8C]/20 bg-[#174F8C]/5 p-5">
             <Info className="shrink-0 text-[#174F8C]" size={20} />

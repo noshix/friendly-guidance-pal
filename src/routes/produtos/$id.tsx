@@ -165,8 +165,11 @@ function ProductDetail() {
             {/* Left Column: Image */}
             <div className="bg-[#F4F5F6] rounded-[2px] aspect-square flex items-center justify-center p-8 lg:p-16">
               <ImageWithFallback
-                src=""
+                src={PRODUCT.primaryImageUrl ?? ""}
                 alt={PRODUCT.name}
+                loading="eager"
+                width={720}
+                height={720}
                 className="w-full h-full object-contain mix-blend-multiply"
               />
             </div>
@@ -356,8 +359,11 @@ function ProductDetail() {
                 >
                   <div className="relative w-full aspect-square mb-6 rounded-[2px] overflow-hidden bg-[#F4F5F6]/50">
                     <ImageWithFallback
-                      src=""
+                      src={prod.primaryImageUrl ?? ""}
                       alt={prod.name}
+                      loading="lazy"
+                      width={480}
+                      height={480}
                       className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition duration-500"
                     />
                   </div>

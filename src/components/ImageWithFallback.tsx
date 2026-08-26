@@ -1,8 +1,26 @@
 import { Zap } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export function ImageWithFallback({ src, alt, className, type = 'product' }: { src: string, alt: string, className?: string, type?: 'product' | 'category' }) {
+export function ImageWithFallback({
+  src,
+  alt,
+  className,
+  type = "product",
+  loading,
+  width,
+  height,
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+  type?: "product" | "category";
+  loading?: "eager" | "lazy";
+  width?: number;
+  height?: number;
+}) {
   const [error, setError] = useState(!src);
+
+  useEffect(() => setError(!src), [src]);
 
   if (error) {
     return (
@@ -20,6 +38,9 @@ export function ImageWithFallback({ src, alt, className, type = 'product' }: { s
       src={src} 
       alt={alt} 
       className={className}
+      loading={loading}
+      width={width}
+      height={height}
       onError={() => setError(true)}
     />
   );
