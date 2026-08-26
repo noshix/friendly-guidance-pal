@@ -113,8 +113,11 @@ export function PublicTaxonomyProductResults({
             >
               <div className="relative w-full aspect-square mb-6 rounded-[2px] overflow-hidden bg-[#F4F5F6]/50">
                 <ImageWithFallback
-                  src=""
+                  src={product.primaryImageUrl ?? ""}
                   alt={product.name}
+                  loading="lazy"
+                  width={480}
+                  height={480}
                   className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition duration-500"
                 />
               </div>

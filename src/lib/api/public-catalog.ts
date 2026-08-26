@@ -17,6 +17,7 @@ export interface PublicProductSummary {
   category: string | null;
   price: number | null;
   availability: PublicProductAvailability;
+  primaryImageUrl: string | null;
 }
 
 export interface PublicProductDetail extends PublicProductSummary {
@@ -186,6 +187,7 @@ export function mapPublicProductSummary(value: unknown): PublicProductSummary {
     category: nullableString(value["category"], "category"),
     price: nullablePrice(value["price"]),
     availability: availability(value["availability"]),
+    primaryImageUrl: nullableString(value["primaryImageUrl"], "primaryImageUrl"),
   };
 }
 
@@ -423,7 +425,7 @@ export function toCartItem(product: PublicProductSummary, quantity = 1): CartIte
     name: product.name,
     brand: product.manufacturer ?? "",
     ref: product.reference ?? "N/A",
-    img: "",
+    img: product.primaryImageUrl ?? "",
     quantity: Math.max(1, Math.trunc(quantity)),
     price: formatPriceValue(product.price),
     inStock: isProductInStock(product.availability),

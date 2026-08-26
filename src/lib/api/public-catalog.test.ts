@@ -38,12 +38,14 @@ const summaryPayload = {
   category: "PROTEÇÃO",
   price: 39.98,
   availability: "EM_ESTOQUE",
+  primaryImageUrl: "https://media.example.test/products/3481/main.webp",
 };
 
 test("mapeia listagem, preço e disponibilidade sem converter erpId", () => {
   const product = mapPublicProductSummary(summaryPayload);
 
   assert.equal(product.erpId, "0003481");
+  assert.equal(product.primaryImageUrl, "https://media.example.test/products/3481/main.webp");
   assert.equal(formatPublicPrice(product.price), "R$ 39,98");
   assert.equal(formatAvailability(product.availability), "Em estoque");
 });
@@ -57,6 +59,11 @@ test("mantém price null como Consulte e disponibilidade sem saldo exato", () =>
 
   assert.equal(formatPublicPrice(product.price), "Consulte");
   assert.equal(formatAvailability(product.availability), "Consulte disponibilidade");
+});
+
+test("produto sem imagem preserva primaryImageUrl null para o fallback visual", () => {
+  const product = mapPublicProductSummary({ ...summaryPayload, primaryImageUrl: null });
+  assert.equal(product.primaryImageUrl, null);
 });
 
 test("constrói parâmetros de busca e filtros com paginação zero-based", () => {
@@ -153,13 +160,14 @@ test("transforma falha de rede em erro seguro", async () => {
   );
 });
 
-test("orçamento recebe o erpId real como String", () => {
+test("orçamento recebe o erpId real como String e a imagem pública", () => {
   const item = toCartItem(mapPublicProductSummary(summaryPayload), 2);
 
   assert.equal(item.id, "0003481");
   assert.equal(typeof item.id, "string");
   assert.equal(item.quantity, 2);
   assert.equal(item.price, "39,98");
+  assert.equal(item.img, "https://media.example.test/products/3481/main.webp");
 });
 
 const categoryPayload = {
@@ -360,4 +368,21 @@ test("rotas integradas não mantêm mocks ou taxonomias hardcoded", async () => 
 
   assert.doesNotMatch(integratedRoutes, /MOCK_PRODUCTS|CATEGORY_MAP|SUB_GROUPS/);
   assert.doesNotMatch(integratedRoutes, /const (CATEGORIES|MANUFACTURERS|BRANDS)\s*=/);
+});
+
+test("views públicas de produto usam primaryImageUrl e preservam fallback sem imagem", async () => {
+  const routeUrls = [
+    new URL("../../routes/index.tsx", import.meta.url),
+    new URL("../../routes/produtos/index.tsx", import.meta.url),
+    new URL("../../routes/produtos/$id.tsx", import.meta.url),
+    new URL("../../components/PublicTaxonomyProductResults.tsx", import.meta.url),
+  ];
+  const sources = await Promise.all(routeUrls.map((url) => readFile(url, "utf8")));
+
+  for (const source of sources) {
+    assert.match(source, /primaryImageUrl \?\? ""/);
+    assert.match(source, /ImageWithFallback/);
+  }
+  assert.match(sources[2] ?? "", /loading="eager"/);
+  assert.match(sources.join("\n"), /loading="lazy"/);
 });
