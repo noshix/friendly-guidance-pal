@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { AdminImageCandidateReview } from "@/components/admin/AdminImageCandidateReview";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -216,13 +217,16 @@ export function AdminProductMediaSection({ erpId, productName }: AdminProductMed
             </p>
           </div>
         </div>
-        <button
-          type="button"
-          onClick={() => setUploadOpen(true)}
-          className="inline-flex items-center justify-center gap-2 bg-[#174F8C] px-4 py-3 text-[10px] font-black uppercase tracking-widest text-white transition hover:bg-[#123E70]"
-        >
-          <Plus size={15} /> Adicionar imagem
-        </button>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <AdminImageCandidateReview erpId={erpId} productName={productName} />
+          <button
+            type="button"
+            onClick={() => setUploadOpen(true)}
+            className="inline-flex items-center justify-center gap-2 bg-[#174F8C] px-4 py-3 text-[10px] font-black uppercase tracking-widest text-white transition hover:bg-[#123E70]"
+          >
+            <Plus size={15} /> Adicionar imagem
+          </button>
+        </div>
       </div>
 
       <div className="space-y-5 p-5 sm:p-6">
