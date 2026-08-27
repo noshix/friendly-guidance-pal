@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "deploy": "npm run build && wrangler deploy",
     "cf-typegen": "wrangler types",
-    "test": "node --test src/lib/api/public-catalog.test.ts src/lib/api/admin-auth.test.ts src/lib/api/admin-products.test.ts src/lib/api/admin-product-media.test.ts src/lib/api/admin-imports.test.ts src/lib/admin-auth-flow.test.ts src/lib/admin-products-flow.test.ts src/lib/admin-product-media-flow.test.ts src/lib/admin-imports-flow.test.ts src/lib/spring-api-proxy.server.test.ts",
+    "test": "node --test src/lib/api/public-catalog.test.ts src/lib/api/admin-auth.test.ts src/lib/api/admin-products.test.ts src/lib/api/admin-product-media.test.ts src/lib/api/admin-image-candidates.test.ts src/lib/api/admin-imports.test.ts src/lib/admin-auth-flow.test.ts src/lib/admin-products-flow.test.ts src/lib/admin-product-media-flow.test.ts src/lib/admin-image-candidates-flow.test.ts src/lib/admin-imports-flow.test.ts src/lib/spring-api-proxy.server.test.ts",
     "lint": "eslint .",
     "format": "prettier --write ."
   },
