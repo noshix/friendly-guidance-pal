@@ -1,3 +1,6 @@
+import type { AdminCsrfResponse } from "./admin-auth.ts";
+import { mapAdminProductImage, type AdminProductImage } from "./admin-product-media.ts";
+
 export type AdminImageCandidateMatch =
   "EXACT_REFERENCE" | "EXACT_PART_NUMBER" | "EXACT_EAN" | "MANUFACTURER_AND_NAME" | "NAME_ONLY";
 
@@ -30,6 +33,11 @@ export interface AdminImageCandidateResponse {
   candidates: AdminImageCandidate[];
 }
 
+export interface AdminImageCandidateImportInput {
+  altText?: string;
+  primary: boolean;
+}
+
 export interface AdminImageCandidateApiErrorBody {
   code: string;
 }
@@ -39,7 +47,7 @@ export class AdminImageCandidateApiError extends Error {
   readonly code: string;
 
   constructor(status: number, code: string) {
-    super("Não foi possível buscar imagens candidatas");
+    super("Não foi possível concluir a operação com a imagem candidata");
     this.name = "AdminImageCandidateApiError";
     this.status = status;
     this.code = code;
@@ -171,8 +179,18 @@ function normalizedLimit(limit?: number): string {
   return `?limit=${limit}`;
 }
 
+function normalizedCandidateToken(candidateToken: string): string {
+  const value = candidateToken.trim();
+  if (!value) throw new AdminImageCandidateApiError(400, "INVALID_CANDIDATE_TOKEN");
+  return encodeURIComponent(value);
+}
+
 export function buildAdminImageCandidatesUrl(erpId: string, limit?: number): string {
   return `/api/admin/products/${normalizedErpId(erpId)}/image-candidates${normalizedLimit(limit)}`;
+}
+
+export function buildAdminImageCandidateImportUrl(erpId: string, candidateToken: string): string {
+  return `/api/admin/products/${normalizedErpId(erpId)}/image-candidates/${normalizedCandidateToken(candidateToken)}/import`;
 }
 
 async function readError(response: Response): Promise<AdminImageCandidateApiErrorBody> {
@@ -185,27 +203,71 @@ async function readError(response: Response): Promise<AdminImageCandidateApiErro
   return { code: "ADMIN_IMAGE_CANDIDATE_ERROR" };
 }
 
+async function execute(
+  path: string,
+  init: RequestInit,
+  fetchImplementation: AdminImageCandidateFetch,
+): Promise<Response> {
+  try {
+    return await fetchImplementation(path, {
+      ...init,
+      credentials: "include",
+      headers: { Accept: "application/json", ...init.headers },
+    });
+  } catch {
+    throw new AdminImageCandidateApiError(0, "NETWORK_ERROR");
+  }
+}
+
 export async function getAdminImageCandidates(
   erpId: string,
   limit?: number,
   fetchImplementation: AdminImageCandidateFetch = fetch,
 ): Promise<AdminImageCandidateResponse> {
   const path = buildAdminImageCandidatesUrl(erpId, limit);
-  let response: Response;
-  try {
-    response = await fetchImplementation(path, {
-      method: "GET",
-      credentials: "include",
-      headers: { Accept: "application/json" },
-    });
-  } catch {
-    throw new AdminImageCandidateApiError(0, "NETWORK_ERROR");
-  }
+  const response = await execute(path, { method: "GET" }, fetchImplementation);
   if (!response.ok) {
     throw new AdminImageCandidateApiError(response.status, (await readError(response)).code);
   }
   try {
     return mapAdminImageCandidateResponse((await response.json()) as unknown);
+  } catch (error) {
+    if (error instanceof AdminImageCandidateApiError) throw error;
+    throw new AdminImageCandidateApiError(502, "INVALID_JSON_RESPONSE");
+  }
+}
+
+export async function importAdminImageCandidate(
+  erpId: string,
+  candidateToken: string,
+  input: AdminImageCandidateImportInput,
+  csrf: AdminCsrfResponse,
+  fetchImplementation: AdminImageCandidateFetch = fetch,
+): Promise<AdminProductImage> {
+  if (typeof input.primary !== "boolean") {
+    throw new AdminImageCandidateApiError(400, "INVALID_PRIMARY");
+  }
+  const payload: { altText?: string; primary: boolean } = { primary: input.primary };
+  const normalizedAltText = input.altText?.trim();
+  if (normalizedAltText) payload.altText = normalizedAltText;
+
+  const response = await execute(
+    buildAdminImageCandidateImportUrl(erpId, candidateToken),
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        [csrf.headerName]: csrf.token,
+      },
+      body: JSON.stringify(payload),
+    },
+    fetchImplementation,
+  );
+  if (!response.ok) {
+    throw new AdminImageCandidateApiError(response.status, (await readError(response)).code);
+  }
+  try {
+    return mapAdminProductImage((await response.json()) as unknown);
   } catch (error) {
     if (error instanceof AdminImageCandidateApiError) throw error;
     throw new AdminImageCandidateApiError(502, "INVALID_JSON_RESPONSE");

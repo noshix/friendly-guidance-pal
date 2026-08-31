@@ -49,3 +49,38 @@ export function adminImageCandidateErrorMessage(error: unknown): string {
   }
   return "Não foi possível buscar imagens candidatas. Tente novamente.";
 }
+
+export function adminImageCandidateImportErrorMessage(error: unknown): string {
+  if (!(error instanceof AdminImageCandidateApiError)) {
+    return "Não foi possível adicionar a imagem. Tente novamente.";
+  }
+  if (error.status === 400) {
+    return "Esta sugestão ou os dados informados não são válidos. Busque as imagens novamente.";
+  }
+  if (error.status === 403) {
+    return "Acesso negado. Atualize a página e tente novamente.";
+  }
+  if (error.status === 404 || error.status === 410) {
+    return "Esta sugestão não está mais disponível. Busque as imagens novamente.";
+  }
+  if (error.status === 409) {
+    return "Esta imagem já foi adicionada ao produto.";
+  }
+  if (error.status === 413) {
+    return "A imagem encontrada é grande demais para ser importada.";
+  }
+  if (error.status === 422) {
+    return "A imagem encontrada não pôde ser validada.";
+  }
+  if (error.status === 0) {
+    return "Não foi possível conectar ao servidor para importar a imagem.";
+  }
+  if (error.status >= 500) {
+    return "O serviço de imagens está temporariamente indisponível. Tente novamente.";
+  }
+  return "Não foi possível adicionar a imagem. Tente novamente.";
+}
+
+export function defaultPrimaryForCandidateImport(hasPrimaryImage: boolean): boolean {
+  return !hasPrimaryImage;
+}
