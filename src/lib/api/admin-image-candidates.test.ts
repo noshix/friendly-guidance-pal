@@ -3,11 +3,29 @@ import test from "node:test";
 
 import {
   AdminImageCandidateApiError,
+  buildAdminImageCandidateImportUrl,
   buildAdminImageCandidatesUrl,
   getAdminImageCandidates,
+  importAdminImageCandidate,
   isAdminImageCandidatesUnauthorizedError,
   mapAdminImageCandidateResponse,
 } from "./admin-image-candidates.ts";
+import type { AdminCsrfResponse } from "./admin-auth.ts";
+
+const CSRF: AdminCsrfResponse = {
+  token: "csrf-real",
+  headerName: "X-CSRF-TOKEN",
+  parameterName: "_csrf",
+};
+
+const importedImagePayload = {
+  id: 9,
+  url: "https://media.example.test/products/100018/imported.png",
+  altText: "Protetor Wi-Fi Lukma",
+  position: 0,
+  primary: true,
+  contentType: "image/png",
+};
 
 const responsePayload = {
   product: {
@@ -138,4 +156,95 @@ test("bloqueia limit inválido e URL externa insegura antes de renderizar", asyn
       }),
     (error: unknown) => error instanceof AdminImageCandidateApiError,
   );
+});
+
+test("POST importa token opaco com credentials include, CSRF e body mínimo", async () => {
+  let requestedUrl = "";
+  let requestedInit: RequestInit | undefined;
+  const result = await importAdminImageCandidate(
+    " 00ERP/A ",
+    " opaque/token+value ",
+    { altText: " Protetor Wi-Fi Lukma ", primary: true },
+    CSRF,
+    async (input, init) => {
+      requestedUrl = String(input);
+      requestedInit = init;
+      return Response.json(importedImagePayload, { status: 201 });
+    },
+  );
+
+  assert.equal(
+    buildAdminImageCandidateImportUrl("00ERP/A", "opaque/token+value"),
+    "/api/admin/products/00ERP%2FA/image-candidates/opaque%2Ftoken%2Bvalue/import",
+  );
+  assert.equal(requestedUrl, buildAdminImageCandidateImportUrl("00ERP/A", "opaque/token+value"));
+  assert.equal(requestedInit?.method, "POST");
+  assert.equal(requestedInit?.credentials, "include");
+  const headers = new Headers(requestedInit?.headers);
+  assert.equal(headers.get("X-CSRF-TOKEN"), "csrf-real");
+  assert.equal(headers.get("Content-Type"), "application/json");
+  const body = JSON.parse(String(requestedInit?.body)) as Record<string, unknown>;
+  assert.deepEqual(body, { altText: "Protetor Wi-Fi Lukma", primary: true });
+  assert.equal("imageUrl" in body, false);
+  assert.equal("sourcePageUrl" in body, false);
+  assert.equal("provider" in body, false);
+  assert.deepEqual(result, importedImagePayload);
+});
+
+test("importação omite alt text vazio e preserva primary false", async () => {
+  let body: unknown;
+  await importAdminImageCandidate(
+    "100018",
+    "opaque",
+    { altText: "   ", primary: false },
+    CSRF,
+    async (_input, init) => {
+      body = JSON.parse(String(init?.body)) as unknown;
+      return Response.json({ ...importedImagePayload, altText: null, primary: false });
+    },
+  );
+  assert.deepEqual(body, { primary: false });
+});
+
+test("token vazio e primary inválido são rejeitados antes do fetch", async () => {
+  let calls = 0;
+  const fetchMock = async () => {
+    calls += 1;
+    return Response.json(importedImagePayload);
+  };
+  await assert.rejects(
+    () => importAdminImageCandidate("100018", " ", { primary: true }, CSRF, fetchMock),
+    (error: unknown) =>
+      error instanceof AdminImageCandidateApiError && error.code === "INVALID_CANDIDATE_TOKEN",
+  );
+  await assert.rejects(
+    () =>
+      importAdminImageCandidate(
+        "100018",
+        "opaque",
+        { primary: null as unknown as boolean },
+        CSRF,
+        fetchMock,
+      ),
+    (error: unknown) =>
+      error instanceof AdminImageCandidateApiError && error.code === "INVALID_PRIMARY",
+  );
+  assert.equal(calls, 0);
+});
+
+test("erros reais da importação permanecem tipados e sem corpo técnico", async () => {
+  for (const status of [400, 401, 403, 404, 409, 410, 413, 422, 500, 503]) {
+    await assert.rejects(
+      () =>
+        importAdminImageCandidate("100018", "opaque", { primary: true }, CSRF, async () =>
+          Response.json({ code: `ERROR_${status}`, message: "stack trace interno" }, { status }),
+        ),
+      (error: unknown) => {
+        assert.ok(error instanceof AdminImageCandidateApiError);
+        assert.equal(error.status, status);
+        assert.equal(error.message.includes("stack trace"), false);
+        return true;
+      },
+    );
+  }
 });

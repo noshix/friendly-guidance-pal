@@ -7,14 +7,18 @@ import { QueryClient } from "@tanstack/react-query";
 import {
   adminImageCandidateConfidenceLabel,
   adminImageCandidateErrorMessage,
+  adminImageCandidateImportErrorMessage,
   adminImageCandidateMatchLabel,
   adminImageCandidatePreviewSources,
+  defaultPrimaryForCandidateImport,
 } from "./admin-image-candidates-flow.ts";
 import {
   adminImageCandidatesQueryKey,
   adminImageCandidatesQueryOptions,
+  completeAdminImageCandidateImport,
   expireAdminImageCandidatesSession,
 } from "./admin-image-candidates-query.ts";
+import { adminProductImagesQueryKey } from "./admin-product-media-query.ts";
 import {
   AdminImageCandidateApiError,
   type AdminImageCandidate,
@@ -95,7 +99,58 @@ test("mensagens tratam produto ausente, rate limit e fonte externa indisponível
   );
 });
 
-test("UI busca somente por clique, seleciona em memória e não persiste candidato", async () => {
+test("mensagens de importação cobrem token, duplicidade, tamanho, conteúdo e falha temporária", () => {
+  assert.match(
+    adminImageCandidateImportErrorMessage(new AdminImageCandidateApiError(404, "NOT_FOUND")),
+    /não está mais disponível/,
+  );
+  assert.match(
+    adminImageCandidateImportErrorMessage(new AdminImageCandidateApiError(410, "EXPIRED")),
+    /Busque as imagens novamente/,
+  );
+  assert.match(
+    adminImageCandidateImportErrorMessage(new AdminImageCandidateApiError(409, "DUPLICATE")),
+    /já foi adicionada/,
+  );
+  assert.match(
+    adminImageCandidateImportErrorMessage(new AdminImageCandidateApiError(413, "TOO_LARGE")),
+    /grande demais/,
+  );
+  assert.match(
+    adminImageCandidateImportErrorMessage(new AdminImageCandidateApiError(422, "INVALID")),
+    /não pôde ser validada/,
+  );
+  assert.match(
+    adminImageCandidateImportErrorMessage(new AdminImageCandidateApiError(500, "FAILED")),
+    /temporariamente indisponível/,
+  );
+});
+
+test("imagem principal inicia marcada somente quando não existe principal", () => {
+  assert.equal(defaultPrimaryForCandidateImport(false), true);
+  assert.equal(defaultPrimaryForCandidateImport(true), false);
+});
+
+test("sucesso descarta token pesquisado e invalida galeria, admin e catálogo público", async () => {
+  const queryClient = new QueryClient();
+  const candidateKey = adminImageCandidatesQueryKey("100018", 6);
+  const imageKey = adminProductImagesQueryKey("100018");
+  queryClient.setQueryData(candidateKey, { candidates: [candidate] });
+  queryClient.setQueryData(imageKey, []);
+  queryClient.setQueryData(["admin-product", "100018"], { erpId: "100018" });
+  queryClient.setQueryData(["public-product", "100018"], { erpId: "100018" });
+  queryClient.setQueryData(["public-products"], { content: [] });
+
+  await completeAdminImageCandidateImport(queryClient, "100018", 6);
+
+  assert.equal(queryClient.getQueryData(candidateKey), undefined);
+  assert.equal(queryClient.getQueryState(imageKey)?.isInvalidated, true);
+  assert.equal(queryClient.getQueryState(["admin-product", "100018"])?.isInvalidated, true);
+  assert.equal(queryClient.getQueryState(["public-product", "100018"])?.isInvalidated, true);
+  assert.equal(queryClient.getQueryState(["public-products"])?.isInvalidated, true);
+});
+
+test("UI busca por clique, confirma importação e mantém token somente em memória", async () => {
   const [sectionSource, dialogSource, apiSource] = await Promise.all([
     readFile(new URL("../components/admin/AdminProductMediaSection.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/admin/AdminImageCandidateReview.tsx", import.meta.url), "utf8"),
@@ -115,8 +170,21 @@ test("UI busca somente por clique, seleciona em memória e não persiste candida
   assert.match(dialogSource, /onCloseAutoFocus/);
   assert.match(dialogSource, /requestAnimationFrame/);
   assert.match(dialogSource, /searchButtonRef\.current\?\.focus\(\)/);
+  assert.match(dialogSource, /Usar esta imagem/);
+  assert.match(dialogSource, /Usar esta imagem no catálogo\?/);
+  assert.match(dialogSource, /A imagem será validada pelo servidor/);
+  assert.match(dialogSource, /Alt text · opcional/);
+  assert.match(dialogSource, /Definir como imagem principal/);
+  assert.match(dialogSource, /disabled={!selectedCandidate \|\| importMutation\.isPending}/);
+  assert.match(dialogSource, /if \(!importMutation\.isPending && confirmationCandidate\)/);
+  assert.match(dialogSource, /completeAdminImageCandidateImport/);
+  assert.match(dialogSource, /setSelectedCandidateId\(null\)/);
+  assert.match(apiSource, /credentials: "include"/);
+  assert.match(apiSource, /\[csrf\.headerName\]: csrf\.token/);
+  assert.match(apiSource, /method: "POST"/);
   assert.doesNotMatch(source, /localStorage|sessionStorage|readAsDataURL|base64/i);
   assert.doesNotMatch(dialogSource, /\bfetch\s*\(/);
-  assert.doesNotMatch(apiSource, /method:\s*"(?:POST|PATCH|DELETE)"/);
-  assert.doesNotMatch(candidateSource, /ProductImage|R2|uploadProductImage/);
+  assert.doesNotMatch(dialogSource, /alert\s*\(/);
+  assert.doesNotMatch(candidateSource, /uploadProductImage|FormData|FileReader/);
+  assert.doesNotMatch(apiSource, /window\.fetch|https?:\/\//);
 });

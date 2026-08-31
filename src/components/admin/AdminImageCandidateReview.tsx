@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import {
   AlertCircle,
@@ -15,20 +15,28 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
   adminImageCandidateConfidenceLabel,
   adminImageCandidateErrorMessage,
+  adminImageCandidateImportErrorMessage,
   adminImageCandidateMatchLabel,
   adminImageCandidatePreviewSources,
+  defaultPrimaryForCandidateImport,
 } from "@/lib/admin-image-candidates-flow";
 import {
+  adminImageCandidatesQueryKey,
   adminImageCandidatesQueryOptions,
+  completeAdminImageCandidateImport,
   expireAdminImageCandidatesSession,
 } from "@/lib/admin-image-candidates-query";
+import { getAdminCsrf } from "@/lib/api/admin-auth";
 import {
+  AdminImageCandidateApiError,
+  importAdminImageCandidate,
   isAdminImageCandidatesUnauthorizedError,
   type AdminImageCandidate,
   type AdminImageCandidateConfidence,
@@ -40,18 +48,77 @@ const CANDIDATE_LIMIT = 6;
 interface AdminImageCandidateReviewProps {
   erpId: string;
   productName: string;
+  hasPrimaryImage: boolean;
+  onImported: () => void;
 }
 
-export function AdminImageCandidateReview({ erpId, productName }: AdminImageCandidateReviewProps) {
+export function AdminImageCandidateReview({
+  erpId,
+  productName,
+  hasPrimaryImage,
+  onImported,
+}: AdminImageCandidateReviewProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const searchButtonRef = useRef<HTMLButtonElement>(null);
+  const useImageButtonRef = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
   const [selectedCandidateId, setSelectedCandidateId] = useState<string | null>(null);
+  const [confirmationCandidate, setConfirmationCandidate] = useState<AdminImageCandidate | null>(
+    null,
+  );
+  const [confirmationOpen, setConfirmationOpen] = useState(false);
+  const [altText, setAltText] = useState("");
+  const [primary, setPrimary] = useState(false);
+  const [importError, setImportError] = useState<string | null>(null);
+  const [candidateFeedback, setCandidateFeedback] = useState<string | null>(null);
   const candidatesQuery = useQuery(adminImageCandidatesQueryOptions(erpId, CANDIDATE_LIMIT));
-  const expiredError = isAdminImageCandidatesUnauthorizedError(candidatesQuery.error)
-    ? candidatesQuery.error
-    : null;
+  const selectedCandidate =
+    candidatesQuery.data?.candidates.find((candidate) => candidate.id === selectedCandidateId) ??
+    null;
+
+  const importMutation = useMutation({
+    mutationFn: async () => {
+      if (!confirmationCandidate) {
+        throw new AdminImageCandidateApiError(400, "INVALID_CANDIDATE_TOKEN");
+      }
+      return importAdminImageCandidate(
+        erpId,
+        confirmationCandidate.id,
+        { altText, primary },
+        await getAdminCsrf(),
+      );
+    },
+    onSuccess: async () => {
+      await completeAdminImageCandidateImport(queryClient, erpId, CANDIDATE_LIMIT);
+      setConfirmationOpen(false);
+      setConfirmationCandidate(null);
+      setSelectedCandidateId(null);
+      setOpen(false);
+      setImportError(null);
+      onImported();
+    },
+    onError: (error) => {
+      if (isAdminImageCandidatesUnauthorizedError(error)) return;
+      const message = adminImageCandidateImportErrorMessage(error);
+      if (error instanceof AdminImageCandidateApiError && [404, 410].includes(error.status)) {
+        queryClient.removeQueries({
+          queryKey: adminImageCandidatesQueryKey(erpId, CANDIDATE_LIMIT),
+          exact: true,
+        });
+        setConfirmationOpen(false);
+        setConfirmationCandidate(null);
+        setSelectedCandidateId(null);
+        setCandidateFeedback(message);
+        return;
+      }
+      setImportError(message);
+    },
+  });
+
+  const expiredError = [candidatesQuery.error, importMutation.error].find(
+    isAdminImageCandidatesUnauthorizedError,
+  );
 
   useEffect(() => {
     if (expiredError) {
@@ -64,6 +131,8 @@ export function AdminImageCandidateReview({ erpId, productName }: AdminImageCand
   const search = () => {
     if (candidatesQuery.isFetching) return;
     setSelectedCandidateId(null);
+    setCandidateFeedback(null);
+    importMutation.reset();
     setOpen(true);
     void candidatesQuery.refetch();
   };
@@ -72,7 +141,26 @@ export function AdminImageCandidateReview({ erpId, productName }: AdminImageCand
     setOpen(nextOpen);
     if (!nextOpen) {
       setSelectedCandidateId(null);
+      setCandidateFeedback(null);
       window.requestAnimationFrame(() => searchButtonRef.current?.focus());
+    }
+  };
+
+  const openImportConfirmation = () => {
+    if (!selectedCandidate || importMutation.isPending) return;
+    setConfirmationCandidate(selectedCandidate);
+    setAltText(productName);
+    setPrimary(defaultPrimaryForCandidateImport(hasPrimaryImage));
+    setImportError(null);
+    setConfirmationOpen(true);
+  };
+
+  const handleConfirmationOpenChange = (nextOpen: boolean) => {
+    if (importMutation.isPending) return;
+    setConfirmationOpen(nextOpen);
+    if (!nextOpen) {
+      setConfirmationCandidate(null);
+      setImportError(null);
     }
   };
 
@@ -105,8 +193,8 @@ export function AdminImageCandidateReview({ erpId, productName }: AdminImageCand
           <DialogHeader className="pr-8">
             <DialogTitle className="text-left text-[#252A2E]">Candidatos de imagem</DialogTitle>
             <DialogDescription className="text-left">
-              Resultados externos para conferência manual. Nenhuma imagem será salva ou publicada
-              nesta etapa.
+              Resultados externos para conferência manual. A imagem só será importada após uma
+              confirmação explícita.
             </DialogDescription>
           </DialogHeader>
 
@@ -120,7 +208,7 @@ export function AdminImageCandidateReview({ erpId, productName }: AdminImageCand
                 <ShieldCheck className="mt-0.5 shrink-0 text-[#174F8C]" size={18} />
                 <p className="text-[11px] font-medium leading-relaxed text-[#252A2E]/65">
                   Confirme visualmente o produto antes de usar a imagem. A seleção abaixo fica
-                  somente nesta janela e não altera o catálogo.
+                  somente nesta janela e não altera o catálogo até a confirmação.
                 </p>
               </div>
               <button
@@ -163,18 +251,196 @@ export function AdminImageCandidateReview({ erpId, productName }: AdminImageCand
               </div>
             ) : null}
 
-            {selectedCandidateId && (
-              <div role="status" className="border border-[#2E8B57]/30 bg-[#2E8B57]/10 p-4">
-                <p className="flex items-center gap-2 text-[11px] font-bold text-[#2E8B57]">
-                  <Check size={16} /> Selecionado — a importação para o catálogo será habilitada na
-                  próxima etapa.
+            {Boolean(candidatesQuery.data?.candidates.length) && (
+              <div className="flex flex-col gap-3 border border-[#2E8B57]/30 bg-[#2E8B57]/10 p-4 sm:flex-row sm:items-center sm:justify-between">
+                <p
+                  role="status"
+                  className="flex items-center gap-2 text-[11px] font-bold text-[#2E8B57]"
+                >
+                  <Check size={16} />
+                  {selectedCandidate
+                    ? "Candidato selecionado para conferência final."
+                    : "Selecione um candidato para continuar."}
                 </p>
+                <button
+                  ref={useImageButtonRef}
+                  type="button"
+                  onClick={openImportConfirmation}
+                  disabled={!selectedCandidate || importMutation.isPending}
+                  className="inline-flex items-center justify-center gap-2 bg-[#2E8B57] px-5 py-3 text-[10px] font-black uppercase tracking-widest text-white disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Usar esta imagem
+                </button>
               </div>
+            )}
+
+            {candidateFeedback && (
+              <p
+                role="alert"
+                className="border border-[#D9272E]/30 bg-[#D9272E]/10 p-4 text-[11px] font-bold text-[#D9272E]"
+              >
+                {candidateFeedback}
+              </p>
             )}
           </div>
         </DialogContent>
       </Dialog>
+
+      <Dialog open={confirmationOpen} onOpenChange={handleConfirmationOpenChange}>
+        <DialogContent
+          onCloseAutoFocus={(event) => {
+            event.preventDefault();
+            window.requestAnimationFrame(() => useImageButtonRef.current?.focus());
+          }}
+          className="max-h-[92vh] w-[calc(100%-2rem)] overflow-y-auto border-[#E5E7EB] bg-white sm:max-w-xl"
+        >
+          <DialogHeader>
+            <DialogTitle className="text-left text-[#252A2E]">
+              Usar esta imagem no catálogo?
+            </DialogTitle>
+            <DialogDescription className="text-left">
+              A imagem será validada pelo servidor e armazenada no catálogo.
+            </DialogDescription>
+          </DialogHeader>
+
+          {confirmationCandidate && (
+            <div className="space-y-5 py-1">
+              <CandidateConfirmationPreview
+                candidate={confirmationCandidate}
+                productName={productName}
+              />
+
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <ConfirmationField
+                  label="Fonte"
+                  value={confirmationCandidate.sourceDomain || "Não informada"}
+                />
+                <ConfirmationField
+                  label="Confiança"
+                  value={adminImageCandidateConfidenceLabel(confirmationCandidate.confidence)}
+                />
+                <ConfirmationField
+                  label="Correspondência"
+                  value={adminImageCandidateMatchLabel(confirmationCandidate.matchedBy)}
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="candidate-image-alt-text"
+                  className="mb-2 block text-[10px] font-black uppercase tracking-widest text-[#252A2E]/55"
+                >
+                  Alt text · opcional
+                </label>
+                <input
+                  id="candidate-image-alt-text"
+                  type="text"
+                  maxLength={500}
+                  value={altText}
+                  disabled={importMutation.isPending}
+                  onChange={(event) => setAltText(event.target.value)}
+                  className="w-full rounded-[2px] border border-[#E5E7EB] bg-[#F9FAFB] p-3 text-[13px] outline-none focus:border-[#174F8C]"
+                />
+                <p className="mt-1 text-[10px] font-medium text-[#252A2E]/45">
+                  Sugestão baseada no nome do produto. Você pode editar ou apagar.
+                </p>
+              </div>
+
+              <label className="flex cursor-pointer items-center gap-3 rounded-[2px] border border-[#E5E7EB] bg-[#F9FAFB] p-4">
+                <input
+                  type="checkbox"
+                  checked={primary}
+                  disabled={importMutation.isPending}
+                  onChange={(event) => setPrimary(event.target.checked)}
+                  className="h-4 w-4 accent-[#174F8C]"
+                />
+                <span className="text-[11px] font-bold text-[#252A2E]">
+                  Definir como imagem principal
+                </span>
+              </label>
+
+              {importError && (
+                <p
+                  role="alert"
+                  className="border border-[#D9272E]/30 bg-[#D9272E]/10 p-3 text-[11px] font-bold text-[#D9272E]"
+                >
+                  {importError}
+                </p>
+              )}
+            </div>
+          )}
+
+          <DialogFooter className="gap-2 sm:gap-0">
+            <button
+              type="button"
+              onClick={() => handleConfirmationOpenChange(false)}
+              disabled={importMutation.isPending}
+              className="border border-[#E5E7EB] px-4 py-3 text-[10px] font-black uppercase tracking-widest text-[#252A2E]/60 disabled:opacity-50"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              aria-busy={importMutation.isPending}
+              onClick={() => {
+                if (!importMutation.isPending && confirmationCandidate) importMutation.mutate();
+              }}
+              disabled={!confirmationCandidate || importMutation.isPending}
+              className="inline-flex items-center justify-center gap-2 bg-[#2E8B57] px-5 py-3 text-[10px] font-black uppercase tracking-widest text-white disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {importMutation.isPending && <Loader2 className="animate-spin" size={15} />}
+              {importMutation.isPending ? "Importando imagem..." : "Usar imagem"}
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
+  );
+}
+
+function CandidateConfirmationPreview({
+  candidate,
+  productName,
+}: {
+  candidate: AdminImageCandidate;
+  productName: string;
+}) {
+  const [unavailable, setUnavailable] = useState(false);
+  const preview = candidate.thumbnailUrl || candidate.imageUrl;
+  return (
+    <div className="aspect-video overflow-hidden rounded-[2px] border border-[#E5E7EB] bg-[#F4F5F6]">
+      {!unavailable ? (
+        <img
+          src={preview}
+          alt={`Prévia da imagem candidata para ${productName}`}
+          width={640}
+          height={360}
+          referrerPolicy="no-referrer"
+          onError={() => setUnavailable(true)}
+          className="h-full w-full object-contain p-3"
+        />
+      ) : (
+        <div className="flex h-full flex-col items-center justify-center gap-2 text-[#252A2E]/35">
+          <ImageOff size={28} />
+          <span className="text-[9px] font-black uppercase tracking-widest">
+            Prévia externa indisponível
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ConfirmationField({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="min-w-0 border border-[#E5E7EB] bg-[#F9FAFB] p-3">
+      <span className="text-[8px] font-black uppercase tracking-widest text-[#252A2E]/40">
+        {label}
+      </span>
+      <span className="mt-1 block break-words text-[10px] font-bold text-[#252A2E]/70">
+        {value}
+      </span>
+    </div>
   );
 }
 

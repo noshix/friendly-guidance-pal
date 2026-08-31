@@ -218,7 +218,14 @@ export function AdminProductMediaSection({ erpId, productName }: AdminProductMed
           </div>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row">
-          <AdminImageCandidateReview erpId={erpId} productName={productName} />
+          <AdminImageCandidateReview
+            erpId={erpId}
+            productName={productName}
+            hasPrimaryImage={imagesQuery.data?.some((image) => image.primary) ?? true}
+            onImported={() =>
+              setFeedback({ kind: "success", message: "Imagem adicionada com sucesso." })
+            }
+          />
           <button
             type="button"
             onClick={() => setUploadOpen(true)}

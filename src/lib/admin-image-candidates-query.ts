@@ -1,6 +1,7 @@
 import type { QueryClient } from "@tanstack/react-query";
 
 import { clearAdminSessionCache } from "./admin-auth-query.ts";
+import { invalidateAdminProductMedia } from "./admin-product-media-query.ts";
 import {
   getAdminImageCandidates,
   isAdminImageCandidatesUnauthorizedError,
@@ -25,6 +26,15 @@ export function adminImageCandidatesQueryOptions(erpId: string, limit: number) {
         [400, 401, 404, 429].includes(error.status)
       ) && failureCount < 1,
   };
+}
+
+export async function completeAdminImageCandidateImport(
+  queryClient: QueryClient,
+  erpId: string,
+  limit: number,
+): Promise<void> {
+  queryClient.removeQueries({ queryKey: adminImageCandidatesQueryKey(erpId, limit), exact: true });
+  await invalidateAdminProductMedia(queryClient, erpId);
 }
 
 export async function expireAdminImageCandidatesSession(
