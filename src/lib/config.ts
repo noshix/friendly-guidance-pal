@@ -1,5 +1,5 @@
 export const PIZZATTO_WHATSAPP = {
-  NUMBER: "556530524200", // (65) 3052-4200
+  NUMBER: "5565992535039", // (65) 99253-5039
   MESSAGE_TEMPLATE: "Olá! Gostaria de mais informações sobre materiais elétricos.",
   getLink: (message?: string) => {
     const text = message || PIZZATTO_WHATSAPP.MESSAGE_TEMPLATE;
