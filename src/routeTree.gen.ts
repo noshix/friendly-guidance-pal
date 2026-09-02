@@ -27,6 +27,8 @@ import { Route as MarcasIndexRouteImport } from './routes/marcas/index'
 import { Route as MarcasSlugRouteImport } from './routes/marcas/$slug'
 import { Route as ProdutosIndexRouteImport } from './routes/produtos/index'
 import { Route as ProdutosIdRouteImport } from './routes/produtos/$id'
+import { Route as AdminImageEnrichmentIndexRouteImport } from './routes/admin/image-enrichment/index'
+import { Route as AdminImageEnrichmentJobIdRouteImport } from './routes/admin/image-enrichment/$jobId'
 import { Route as AdminImportacoesIndexRouteImport } from './routes/admin/importacoes/index'
 import { Route as AdminImportacoesIdRouteImport } from './routes/admin/importacoes/$id'
 import { Route as AdminImportacoesNovaRouteImport } from './routes/admin/importacoes/nova'
@@ -124,6 +126,18 @@ const ProdutosIdRoute = ProdutosIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => ProdutosRouteRoute,
 } as any)
+const AdminImageEnrichmentIndexRoute =
+  AdminImageEnrichmentIndexRouteImport.update({
+    id: '/image-enrichment/',
+    path: '/image-enrichment/',
+    getParentRoute: () => AdminRouteRoute,
+  } as any)
+const AdminImageEnrichmentJobIdRoute =
+  AdminImageEnrichmentJobIdRouteImport.update({
+    id: '/image-enrichment/$jobId',
+    path: '/image-enrichment/$jobId',
+    getParentRoute: () => AdminRouteRoute,
+  } as any)
 const AdminImportacoesIndexRoute = AdminImportacoesIndexRouteImport.update({
   id: '/importacoes/',
   path: '/importacoes/',
@@ -174,10 +188,12 @@ export interface FileRoutesByFullPath {
   '/categorias/': typeof CategoriasIndexRoute
   '/marcas/': typeof MarcasIndexRoute
   '/produtos/': typeof ProdutosIndexRoute
+  '/admin/image-enrichment/$jobId': typeof AdminImageEnrichmentJobIdRoute
   '/admin/importacoes/$id': typeof AdminImportacoesIdRoute
   '/admin/importacoes/nova': typeof AdminImportacoesNovaRoute
   '/admin/importacoes/preview': typeof AdminImportacoesPreviewRoute
   '/admin/produtos/$id': typeof AdminProdutosIdRoute
+  '/admin/image-enrichment/': typeof AdminImageEnrichmentIndexRoute
   '/admin/importacoes/': typeof AdminImportacoesIndexRoute
   '/admin/produtos/': typeof AdminProdutosIndexRoute
 }
@@ -196,10 +212,12 @@ export interface FileRoutesByTo {
   '/categorias': typeof CategoriasIndexRoute
   '/marcas': typeof MarcasIndexRoute
   '/produtos': typeof ProdutosIndexRoute
+  '/admin/image-enrichment/$jobId': typeof AdminImageEnrichmentJobIdRoute
   '/admin/importacoes/$id': typeof AdminImportacoesIdRoute
   '/admin/importacoes/nova': typeof AdminImportacoesNovaRoute
   '/admin/importacoes/preview': typeof AdminImportacoesPreviewRoute
   '/admin/produtos/$id': typeof AdminProdutosIdRoute
+  '/admin/image-enrichment': typeof AdminImageEnrichmentIndexRoute
   '/admin/importacoes': typeof AdminImportacoesIndexRoute
   '/admin/produtos': typeof AdminProdutosIndexRoute
 }
@@ -223,10 +241,12 @@ export interface FileRoutesById {
   '/categorias/': typeof CategoriasIndexRoute
   '/marcas/': typeof MarcasIndexRoute
   '/produtos/': typeof ProdutosIndexRoute
+  '/admin/image-enrichment/$jobId': typeof AdminImageEnrichmentJobIdRoute
   '/admin/importacoes/$id': typeof AdminImportacoesIdRoute
   '/admin/importacoes/nova': typeof AdminImportacoesNovaRoute
   '/admin/importacoes/preview': typeof AdminImportacoesPreviewRoute
   '/admin/produtos/$id': typeof AdminProdutosIdRoute
+  '/admin/image-enrichment/': typeof AdminImageEnrichmentIndexRoute
   '/admin/importacoes/': typeof AdminImportacoesIndexRoute
   '/admin/produtos/': typeof AdminProdutosIndexRoute
 }
@@ -251,10 +271,12 @@ export interface FileRouteTypes {
     | '/categorias/'
     | '/marcas/'
     | '/produtos/'
+    | '/admin/image-enrichment/$jobId'
     | '/admin/importacoes/$id'
     | '/admin/importacoes/nova'
     | '/admin/importacoes/preview'
     | '/admin/produtos/$id'
+    | '/admin/image-enrichment/'
     | '/admin/importacoes/'
     | '/admin/produtos/'
   fileRoutesByTo: FileRoutesByTo
@@ -273,10 +295,12 @@ export interface FileRouteTypes {
     | '/categorias'
     | '/marcas'
     | '/produtos'
+    | '/admin/image-enrichment/$jobId'
     | '/admin/importacoes/$id'
     | '/admin/importacoes/nova'
     | '/admin/importacoes/preview'
     | '/admin/produtos/$id'
+    | '/admin/image-enrichment'
     | '/admin/importacoes'
     | '/admin/produtos'
   id:
@@ -299,10 +323,12 @@ export interface FileRouteTypes {
     | '/categorias/'
     | '/marcas/'
     | '/produtos/'
+    | '/admin/image-enrichment/$jobId'
     | '/admin/importacoes/$id'
     | '/admin/importacoes/nova'
     | '/admin/importacoes/preview'
     | '/admin/produtos/$id'
+    | '/admin/image-enrichment/'
     | '/admin/importacoes/'
     | '/admin/produtos/'
   fileRoutesById: FileRoutesById
@@ -448,6 +474,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProdutosIdRouteImport
       parentRoute: typeof ProdutosRouteRoute
     }
+    '/admin/image-enrichment/': {
+      id: '/admin/image-enrichment/'
+      path: '/image-enrichment'
+      fullPath: '/admin/image-enrichment/'
+      preLoaderRoute: typeof AdminImageEnrichmentIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/image-enrichment/$jobId': {
+      id: '/admin/image-enrichment/$jobId'
+      path: '/image-enrichment/$jobId'
+      fullPath: '/admin/image-enrichment/$jobId'
+      preLoaderRoute: typeof AdminImageEnrichmentJobIdRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/admin/importacoes/': {
       id: '/admin/importacoes/'
       path: '/importacoes'
@@ -496,10 +536,12 @@ declare module '@tanstack/react-router' {
 interface AdminRouteRouteChildren {
   AdminLoginRoute: typeof AdminLoginRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminImageEnrichmentJobIdRoute: typeof AdminImageEnrichmentJobIdRoute
   AdminImportacoesIdRoute: typeof AdminImportacoesIdRoute
   AdminImportacoesNovaRoute: typeof AdminImportacoesNovaRoute
   AdminImportacoesPreviewRoute: typeof AdminImportacoesPreviewRoute
   AdminProdutosIdRoute: typeof AdminProdutosIdRoute
+  AdminImageEnrichmentIndexRoute: typeof AdminImageEnrichmentIndexRoute
   AdminImportacoesIndexRoute: typeof AdminImportacoesIndexRoute
   AdminProdutosIndexRoute: typeof AdminProdutosIndexRoute
 }
@@ -507,10 +549,12 @@ interface AdminRouteRouteChildren {
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminLoginRoute: AdminLoginRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminImageEnrichmentJobIdRoute: AdminImageEnrichmentJobIdRoute,
   AdminImportacoesIdRoute: AdminImportacoesIdRoute,
   AdminImportacoesNovaRoute: AdminImportacoesNovaRoute,
   AdminImportacoesPreviewRoute: AdminImportacoesPreviewRoute,
   AdminProdutosIdRoute: AdminProdutosIdRoute,
+  AdminImageEnrichmentIndexRoute: AdminImageEnrichmentIndexRoute,
   AdminImportacoesIndexRoute: AdminImportacoesIndexRoute,
   AdminProdutosIndexRoute: AdminProdutosIndexRoute,
 }

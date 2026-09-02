@@ -11,6 +11,7 @@ import {
   Menu,
   User,
   Plus,
+  Images,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { resolveAdminGuardState } from "@/lib/admin-auth-flow";
@@ -93,6 +94,7 @@ function AdminLayout() {
     if (path === "/admin/importacoes/nova") return "NOVA IMPORTAÇÃO ERP";
     if (path === "/admin/importacoes/preview") return "PRÉVIA DA IMPORTAÇÃO";
     if (path.startsWith("/admin/importacoes")) return "HISTÓRICO DE IMPORTAÇÕES";
+    if (path.startsWith("/admin/image-enrichment")) return "ENRIQUECIMENTO DE IMAGENS";
 
     return "PAINEL ADMINISTRATIVO";
   };
@@ -158,6 +160,13 @@ function AdminLayout() {
             to="/admin/produtos"
             isOpen={isSidebarOpen}
             isActive={location.pathname.startsWith("/admin/produtos")}
+          />
+          <SidebarItem
+            icon={<Images size={20} />}
+            label="Enriquecimento de imagens"
+            to="/admin/image-enrichment"
+            isOpen={isSidebarOpen}
+            isActive={location.pathname.startsWith("/admin/image-enrichment")}
           />
 
           <div className="mt-8 px-6 mb-2">
@@ -276,7 +285,12 @@ function AdminLayout() {
 }
 
 type AdminNavigationPath =
-  "/" | "/admin" | "/admin/produtos" | "/admin/importacoes" | "/admin/importacoes/nova";
+  | "/"
+  | "/admin"
+  | "/admin/produtos"
+  | "/admin/image-enrichment"
+  | "/admin/importacoes"
+  | "/admin/importacoes/nova";
 
 function SidebarItem({
   icon,
