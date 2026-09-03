@@ -30,6 +30,17 @@ import {
   type PublicProductSummary,
 } from "@/lib/api/public-catalog";
 
+const HOME_CATEGORY_IMAGE_BY_ERP_NAME: Record<string, string> = {
+  CONDUTOR: "/assets/categories/condutor.jpg",
+  PROTECAO: "/assets/categories/protecao.png",
+  FERRAMENT: "/assets/categories/ferramenta.jpg",
+  "EQUIPAM.": "/assets/categories/equipamentos.jpg",
+  COMANDOS: "/assets/categories/comando.jpg",
+  ATERRAMEN: "/assets/categories/aterramento.jpg",
+  DIVERSOS: "/assets/categories/diversos.jpg",
+  ISOLADORES: "/assets/categories/isoladores.jpg",
+};
+
 export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
@@ -209,7 +220,11 @@ function Index() {
             >
               <div className="aspect-[4/3] overflow-hidden bg-[#F4F5F6] relative">
                 <ImageWithFallback
-                  src=""
+                  src={
+                    HOME_CATEGORY_IMAGE_BY_ERP_NAME[
+                      category.erpName.trim().toLocaleUpperCase("pt-BR")
+                    ] ?? ""
+                  }
                   alt={category.name}
                   className="w-full h-full object-cover group-hover:scale-110 transition duration-700 brightness-95"
                   type="category"
