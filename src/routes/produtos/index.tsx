@@ -2,27 +2,20 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Search, ChevronRight, Filter, ChevronDown, Check, X, ShoppingBag } from "lucide-react";
-import { ImageWithFallback } from "@/components/ImageWithFallback";
+import { Search, ChevronRight, Filter, Check, X } from "lucide-react";
+import { PublicProductCard } from "@/components/PublicProductCard";
 import { useEffect, useMemo, useState } from "react";
-import { useCartStore } from "@/lib/cart";
 import {
   PUBLIC_CATALOG_PAGE_SIZE,
   PUBLIC_TAXONOMY_STALE_TIME,
   apiPageToUiPage,
   fetchPublicProducts,
-  formatAvailability,
-  formatPublicPrice,
   getCategories,
   getManufacturers,
-  isProductInStock,
   toCategoryFilterOption,
-  toCartItem,
   toManufacturerFilterOption,
   uiPageToApiPage,
-  type PublicProductSummary,
 } from "@/lib/api/public-catalog";
-import { toast } from "sonner";
 
 interface ProductsRouteSearch {
   search?: string | undefined;
@@ -92,7 +85,6 @@ function Products() {
   const [searchInput, setSearchInput] = useState(routeSearch.search ?? "");
   const [draftCategory, setDraftCategory] = useState(routeSearch.category);
   const [draftManufacturer, setDraftManufacturer] = useState(routeSearch.manufacturer);
-  const addItem = useCartStore((state) => state.addItem);
 
   const apiParams = useMemo(
     () => ({
@@ -208,19 +200,12 @@ function Products() {
     });
   };
 
-  const handleAddToCart = (e: React.MouseEvent, product: PublicProductSummary) => {
-    e.preventDefault();
-    e.stopPropagation();
-    addItem(toCartItem(product));
-    toast.success("Produto adicionado ao orçamento");
-  };
-
   const productPage = productsQuery.data;
   const products = productPage?.items ?? [];
   const currentPage = productPage ? apiPageToUiPage(productPage.page) : (routeSearch.page ?? 1);
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] text-[#252A2E]">
+    <div className="catalog-page min-h-screen bg-[#F9FAFB] text-[#252A2E]">
       <Header activePage="Produtos" />
 
       {/* Breadcrumb & Title */}
@@ -370,21 +355,10 @@ function Products() {
                 <h3 className="text-[12px] font-black uppercase tracking-[0.2em] text-[#252A2E] mb-4 border-b border-[#F4F5F6] pb-2">
                   Disponibilidade
                 </h3>
-                <div className="space-y-3">
-                  {["Em estoque", "Consulte disponibilidade"].map((status) => (
-                    <label key={status} className="flex items-center gap-2 group cursor-pointer">
-                      <div className="w-4 h-4 border border-[#E5E7EB] group-hover:border-[#174F8C] rounded-[2px] flex items-center justify-center transition">
-                        <Check
-                          size={10}
-                          className="text-[#174F8C] opacity-0 group-hover:opacity-20"
-                        />
-                      </div>
-                      <span className="text-[13px] text-[#252A2E]/70 group-hover:text-[#252A2E] transition">
-                        {status}
-                      </span>
-                    </label>
-                  ))}
-                </div>
+                <p className="text-[12px] leading-relaxed text-[#64748b]">
+                  Consulte a disponibilidade informada em cada produto. Nossa equipe pode ajudar no
+                  seu orçamento.
+                </p>
               </div>
 
               <div className="pt-4 space-y-3">
@@ -420,26 +394,14 @@ function Products() {
                   {productPage?.totalElements ?? 0} Produtos encontrados
                 </span>
               </div>
-              <div className="flex items-center gap-6 w-full sm:w-auto">
-                <div className="flex items-center gap-2 w-full sm:w-auto">
-                  <span className="hidden sm:inline text-[11px] font-bold text-[#252A2E]/40 uppercase tracking-widest">
-                    Ordenar por:
-                  </span>
-                  <div className="relative group w-full sm:w-auto">
-                    <button className="w-full sm:min-w-[160px] flex items-center gap-2 bg-[#F4F5F6] px-4 py-2 rounded-[2px] text-[12px] font-bold uppercase tracking-wider justify-between">
-                      Mais relevantes <ChevronDown size={14} />
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <span className="text-[12px] text-[#64748b] whitespace-nowrap">
+                Até {PUBLIC_CATALOG_PAGE_SIZE} produtos por página
+              </span>
             </div>
 
             {/* Grid */}
             {productsQuery.isPending ? (
-              <div
-                className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
-                aria-label="Carregando produtos"
-              >
+              <div className="store-catalog-grid" aria-label="Carregando produtos">
                 {Array.from({ length: 8 }, (_, index) => (
                   <div
                     key={index}
@@ -481,89 +443,10 @@ function Products() {
                 </button>
               </div>
             ) : (
-              <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-                {products.map((prod) => {
-                  const inStock = isProductInStock(prod.availability);
-                  return (
-                    <div
-                      key={prod.erpId}
-                      className="bg-white border border-[#E5E7EB] rounded-[2px] p-5 hover:border-[#174F8C] hover:shadow-lg transition duration-300 group flex flex-col h-full relative"
-                    >
-                      <Link
-                        to="/produtos/$id"
-                        params={{ id: prod.erpId }}
-                        className="flex flex-col h-full"
-                      >
-                        <div className="relative w-full aspect-square mb-6 rounded-[2px] overflow-hidden bg-[#F4F5F6]/50">
-                          <ImageWithFallback
-                            src={prod.primaryImageUrl ?? ""}
-                            alt={prod.name}
-                            loading="lazy"
-                            width={480}
-                            height={480}
-                            className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition duration-500"
-                          />
-                        </div>
-
-                        <div className="flex-1 flex flex-col">
-                          <div className="text-[9px] font-black text-[#174F8C]/40 tracking-[0.2em] mb-2 uppercase">
-                            {prod.manufacturer}
-                          </div>
-                          <h3 className="font-bold text-[14px] mb-1 leading-tight text-[#252A2E] group-hover:text-[#174F8C] transition uppercase h-[54px] line-clamp-3">
-                            {prod.name}
-                          </h3>
-                          <div className="text-[10px] text-[#252A2E]/40 mb-4 font-medium italic">
-                            Ref: {prod.reference ?? "N/A"}
-                          </div>
-
-                          <div className="mt-auto pt-4 border-t border-[#F4F5F6]">
-                            <div
-                              className={`flex items-center gap-1.5 text-[10px] font-bold mb-4 uppercase tracking-tighter ${inStock ? "text-[#2E8B57]" : "text-[#252A2E]/40"}`}
-                            >
-                              <div
-                                className={`w-1.5 h-1.5 rounded-full ${inStock ? "bg-[#2E8B57] animate-pulse" : "bg-[#E5E7EB]"}`}
-                              ></div>
-                              {formatAvailability(prod.availability)}
-                            </div>
-
-                            <div className="flex flex-col gap-4">
-                              <div className="min-h-[32px] flex flex-col justify-end">
-                                {prod.price !== null ? (
-                                  <div className="text-lg font-black text-[#252A2E]">
-                                    {formatPublicPrice(prod.price)}
-                                  </div>
-                                ) : (
-                                  <div className="text-[14px] font-black text-[#174F8C] uppercase tracking-[0.1em]">
-                                    Consulte
-                                  </div>
-                                )}
-                              </div>
-
-                              <div className="grid grid-cols-5 gap-2">
-                                <span className="col-span-4 bg-[#174F8C] text-white py-2.5 rounded-[2px] hover:bg-[#123E70] transition flex items-center justify-center gap-2 group/btn shadow-sm">
-                                  <span className="text-[11px] font-bold uppercase tracking-wider">
-                                    Ver produto
-                                  </span>
-                                  <ChevronRight
-                                    size={14}
-                                    className="group-hover/btn:translate-x-1 transition"
-                                  />
-                                </span>
-                                <button
-                                  onClick={(e) => handleAddToCart(e, prod)}
-                                  className="bg-[#F4F5F6] text-[#252A2E]/60 hover:text-[#174F8C] hover:bg-[#E5E7EB] transition flex items-center justify-center rounded-[2px] shadow-sm"
-                                  title="Adicionar ao orçamento"
-                                >
-                                  <ShoppingBag size={16} />
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </Link>
-                    </div>
-                  );
-                })}
+              <div className="store-catalog-grid">
+                {products.map((product) => (
+                  <PublicProductCard key={product.erpId} product={product} />
+                ))}
               </div>
             )}
 

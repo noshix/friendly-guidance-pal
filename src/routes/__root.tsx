@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useLocation,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -80,7 +81,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "Pizzatto Materiais Elétricos" },
       { name: "description", content: "Distribuidora de Materiais Elétricos em Cuiabá - MT" },
       { property: "og:title", content: "Pizzatto Materiais Elétricos" },
-      { property: "og:description", content: "Distribuidora de Materiais Elétricos em Cuiabá - MT" },
+      {
+        property: "og:description",
+        content: "Distribuidora de Materiais Elétricos em Cuiabá - MT",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -114,10 +118,17 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const isAdmin = useLocation().pathname.startsWith("/admin");
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      {isAdmin ? (
+        <Outlet />
+      ) : (
+        <div className="storefront">
+          <Outlet />
+        </div>
+      )}
     </QueryClientProvider>
   );
 }

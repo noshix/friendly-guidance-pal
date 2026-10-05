@@ -20,6 +20,7 @@ import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as ProdutosRouteRouteImport } from './routes/produtos/route'
 import { Route as TermosDeUsoRouteImport } from './routes/termos-de-uso'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminCategoriasRouteImport } from './routes/admin/categorias'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as CategoriasIndexRouteImport } from './routes/categorias/index'
 import { Route as CategoriasSlugRouteImport } from './routes/categorias/$slug'
@@ -89,6 +90,11 @@ const TermosDeUsoRoute = TermosDeUsoRouteImport.update({
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminCategoriasRoute = AdminCategoriasRouteImport.update({
+  id: '/categorias',
+  path: '/categorias',
   getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
@@ -180,6 +186,7 @@ export interface FileRoutesByFullPath {
   '/orcamento': typeof OrcamentoRoute
   '/privacidade': typeof PrivacidadeRoute
   '/termos-de-uso': typeof TermosDeUsoRoute
+  '/admin/categorias': typeof AdminCategoriasRoute
   '/admin/login': typeof AdminLoginRoute
   '/categorias/$slug': typeof CategoriasSlugRoute
   '/marcas/$slug': typeof MarcasSlugRoute
@@ -204,6 +211,7 @@ export interface FileRoutesByTo {
   '/orcamento': typeof OrcamentoRoute
   '/privacidade': typeof PrivacidadeRoute
   '/termos-de-uso': typeof TermosDeUsoRoute
+  '/admin/categorias': typeof AdminCategoriasRoute
   '/admin/login': typeof AdminLoginRoute
   '/categorias/$slug': typeof CategoriasSlugRoute
   '/marcas/$slug': typeof MarcasSlugRoute
@@ -233,6 +241,7 @@ export interface FileRoutesById {
   '/orcamento': typeof OrcamentoRoute
   '/privacidade': typeof PrivacidadeRoute
   '/termos-de-uso': typeof TermosDeUsoRoute
+  '/admin/categorias': typeof AdminCategoriasRoute
   '/admin/login': typeof AdminLoginRoute
   '/categorias/$slug': typeof CategoriasSlugRoute
   '/marcas/$slug': typeof MarcasSlugRoute
@@ -263,6 +272,7 @@ export interface FileRouteTypes {
     | '/orcamento'
     | '/privacidade'
     | '/termos-de-uso'
+    | '/admin/categorias'
     | '/admin/login'
     | '/categorias/$slug'
     | '/marcas/$slug'
@@ -287,6 +297,7 @@ export interface FileRouteTypes {
     | '/orcamento'
     | '/privacidade'
     | '/termos-de-uso'
+    | '/admin/categorias'
     | '/admin/login'
     | '/categorias/$slug'
     | '/marcas/$slug'
@@ -315,6 +326,7 @@ export interface FileRouteTypes {
     | '/orcamento'
     | '/privacidade'
     | '/termos-de-uso'
+    | '/admin/categorias'
     | '/admin/login'
     | '/categorias/$slug'
     | '/marcas/$slug'
@@ -423,6 +435,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/categorias': {
+      id: '/admin/categorias'
+      path: '/categorias'
+      fullPath: '/admin/categorias'
+      preLoaderRoute: typeof AdminCategoriasRouteImport
       parentRoute: typeof AdminRouteRoute
     }
     '/admin/login': {
@@ -534,6 +553,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteRouteChildren {
+  AdminCategoriasRoute: typeof AdminCategoriasRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminImageEnrichmentJobIdRoute: typeof AdminImageEnrichmentJobIdRoute
@@ -547,6 +567,7 @@ interface AdminRouteRouteChildren {
 }
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
+  AdminCategoriasRoute: AdminCategoriasRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminImageEnrichmentJobIdRoute: AdminImageEnrichmentJobIdRoute,

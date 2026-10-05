@@ -1,10 +1,10 @@
-// Logo asset replaced by static public path /assets/logo-pizzatto.png
-import { Menu, MessageSquare, ShoppingBag, X } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { ArrowUpRight, MapPin, Menu, MessageCircle, ShoppingBag, X, Zap } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useCartStore } from "@/lib/cart";
 import { useHydrated } from "@/hooks/use-hydrated";
 import { PIZZATTO_WHATSAPP } from "@/lib/config";
+import { StorefrontSearch } from "@/components/StorefrontSearch";
 
 const navigationItems = [
   { label: "Produtos", to: "/produtos" },
@@ -16,64 +16,70 @@ const navigationItems = [
 
 export function Header({ activePage }: { activePage?: string }) {
   const items = useCartStore((state) => state.items);
-  const isHydrated = useHydrated();
+  const hydrated = useHydrated();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  useEffect(() => {
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setIsMenuOpen(false);
+    }
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, []);
   return (
-    <header className="sticky top-0 z-50 bg-[#174F8C] backdrop-blur-sm border-b border-white/10 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.2)]">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center gap-3">
-        <div className="flex items-center py-1 shrink-0">
-          <Link to="/" onClick={() => setIsMenuOpen(false)}>
-            <img
-              src="/assets/logo-pizzatto.png"
-              alt="Pizzatto Materiais Elétricos"
-              className="h-11 sm:h-14 xl:h-16 w-auto object-contain py-1"
-            />
+    <header className="store-header">
+      <div className="store-topbar">
+        <div className="store-container">
+          <span>
+            <Zap size={13} aria-hidden="true" /> Mais de 40 anos conectando projetos
+          </span>
+          <Link to="/contato">
+            <MapPin size={13} aria-hidden="true" /> Cuiabá, MT{" "}
+            <span className="store-topbar__visit">· Conheça nossa loja</span>
           </Link>
         </div>
-
-        <nav className="hidden xl:flex gap-8 text-[14px] font-semibold text-white">
-          {navigationItems.map((item) => (
-            <Link
-              to={item.to}
-              key={item.label}
-              className={`hover:text-[#F5C400] transition uppercase tracking-wider text-[12px] ${activePage === item.label ? "text-[#F5C400] border-b-2 border-[#F5C400]" : ""}`}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-        <div className="flex items-center gap-2 sm:gap-3 xl:gap-6 shrink-0">
-          <Link
-            to="/orcamento"
-            className="text-white hover:text-[#F5C400] transition flex items-center gap-2 relative"
-            onClick={() => setIsMenuOpen(false)}
-            aria-label="Abrir orçamento"
-          >
-            <span className="uppercase font-bold text-[11px] tracking-widest hidden lg:inline">
-              Orçamento
-            </span>
-            <div className="relative p-2 xl:p-1">
-              <ShoppingBag size={20} />
-              {isHydrated && items.length > 0 && (
-                <span className="absolute top-0 right-0 xl:-top-1 xl:-right-1 bg-[#F5C400] text-[#252A2E] text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
-                  {items.length}
-                </span>
-              )}
-            </div>
-          </Link>
+      </div>
+      <div className="store-container store-header__main">
+        <Link to="/" className="store-logo" onClick={() => setIsMenuOpen(false)}>
+          <img
+            src="/assets/logo-pizzatto.png"
+            alt="Pizzatto Materiais Elétricos"
+            width={280}
+            height={78}
+          />
+        </Link>
+        <div className="store-header__search">
+          <StorefrontSearch compact />
+        </div>
+        <div className="store-header__actions">
           <a
             href={PIZZATTO_WHATSAPP.getLink()}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-[#2E8B57] text-white p-2.5 md:px-4 xl:px-5 rounded-[2px] font-bold text-[13px] hover:bg-[#257548] flex items-center gap-2 shadow-sm"
+            className="store-header__help"
             aria-label="Falar com a Pizzatto no WhatsApp"
           >
-            <MessageSquare size={16} />
-            <span className="hidden md:inline">WhatsApp</span>
+            <MessageCircle size={22} aria-hidden="true" />
+            <span>
+              Precisa de ajuda?<strong>Fale com a gente</strong>
+            </span>
           </a>
+          <Link
+            to="/orcamento"
+            className="store-header__bag"
+            aria-label="Abrir orçamento"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            <span className="store-header__bag-icon">
+              <ShoppingBag size={24} aria-hidden="true" />
+              {hydrated && items.length > 0 && <b>{items.length}</b>}
+            </span>
+            <span>
+              Meu<strong>orçamento</strong>
+            </span>
+          </Link>
           <button
             type="button"
-            className="xl:hidden text-white hover:text-[#F5C400] transition p-2 rounded-[2px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F5C400]"
+            className="store-menu-toggle"
             aria-label={isMenuOpen ? "Fechar menu de navegação" : "Abrir menu de navegação"}
             aria-expanded={isMenuOpen}
             aria-controls="public-navigation-mobile"
@@ -83,25 +89,48 @@ export function Header({ activePage }: { activePage?: string }) {
           </button>
         </div>
       </div>
-
-      {isMenuOpen && (
-        <nav
-          id="public-navigation-mobile"
-          className="xl:hidden border-t border-white/10 bg-[#174F8C] px-4 py-3"
-          aria-label="Navegação principal"
-        >
-          <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-1">
+      <div className="store-header__nav">
+        <div className="store-container">
+          <Link to="/categorias" className="store-departments">
+            <Menu size={18} aria-hidden="true" /> Todos os departamentos
+          </Link>
+          <nav aria-label="Navegação principal">
             {navigationItems.map((item) => (
               <Link
                 to={item.to}
                 key={item.label}
-                onClick={() => setIsMenuOpen(false)}
-                className={`px-3 py-3 hover:bg-white/10 hover:text-[#F5C400] focus-visible:bg-white/10 focus-visible:text-[#F5C400] focus-visible:outline-none transition uppercase tracking-wider text-[12px] font-semibold text-white ${activePage === item.label ? "text-[#F5C400] border-l-2 border-[#F5C400]" : ""}`}
+                aria-current={activePage === item.label ? "page" : undefined}
               >
                 {item.label}
               </Link>
             ))}
-          </div>
+          </nav>
+          <Link to="/produtos" className="store-header__explore">
+            Encontre seu próximo projeto <ArrowUpRight size={16} aria-hidden="true" />
+          </Link>
+        </div>
+      </div>
+      {isMenuOpen && (
+        <nav
+          id="public-navigation-mobile"
+          className="store-mobile-nav"
+          aria-label="Navegação mobile"
+        >
+          {navigationItems.map((item) => (
+            <Link
+              to={item.to}
+              key={item.label}
+              onClick={() => setIsMenuOpen(false)}
+              aria-current={activePage === item.label ? "page" : undefined}
+            >
+              {item.label}
+              <ArrowUpRight size={17} aria-hidden="true" />
+            </Link>
+          ))}
+          <a href={PIZZATTO_WHATSAPP.getLink()} target="_blank" rel="noopener noreferrer">
+            Atendimento pelo WhatsApp
+            <MessageCircle size={18} aria-hidden="true" />
+          </a>
         </nav>
       )}
     </header>

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { categoryPresentation } from "../category-presentation.ts";
 
 import {
   PublicCatalogApiError,
@@ -342,7 +343,12 @@ test("Home usa API, slugs e ERP IDs reais sem manter mocks comerciais", async ()
   assert.match(homeSource, /fetchPublicProducts/);
   assert.match(homeSource, /params=\{\{ slug: category\.slug \}\}/);
   assert.match(homeSource, /params=\{\{ slug: manufacturer\.slug \}\}/);
-  assert.match(homeSource, /params=\{\{ id: product\.erpId \}\}/);
+  assert.match(homeSource, /<PublicProductCard key=\{product\.erpId\} product=\{product\}/);
+  const cardSource = await readFile(
+    new URL("../../components/PublicProductCard.tsx", import.meta.url),
+    "utf8",
+  );
+  assert.match(cardSource, /params=\{\{ id: product\.erpId \}\}/);
   assert.match(homeSource, /categoriesQuery\.isPending/);
   assert.match(homeSource, /categoriesQuery\.isError/);
   assert.match(homeSource, /productsQuery\.isPending/);
@@ -379,10 +385,56 @@ test("views públicas de produto usam primaryImageUrl e preservam fallback sem i
   ];
   const sources = await Promise.all(routeUrls.map((url) => readFile(url, "utf8")));
 
-  for (const source of sources) {
-    assert.match(source, /primaryImageUrl \?\? ""/);
-    assert.match(source, /ImageWithFallback/);
-  }
+  const cardSource = await readFile(
+    new URL("../../components/PublicProductCard.tsx", import.meta.url),
+    "utf8",
+  );
+  for (const source of sources) assert.match(source, /PublicProductCard/);
+  assert.match(cardSource, /primaryImageUrl \?\? ""/);
+  assert.match(cardSource, /ImageWithFallback/);
+  assert.match(cardSource, /formatPublicPrice\(product\.price\)/);
+  assert.match(sources[2] ?? "", /primaryImageUrl \?\? ""/);
+  assert.match(sources[2] ?? "", /ImageWithFallback/);
   assert.match(sources[2] ?? "", /loading="eager"/);
-  assert.match(sources.join("\n"), /loading="lazy"/);
+  assert.match(cardSource, /loading="lazy"/);
+});
+
+test("apresentação usa as oito imagens locais e mantém fallback para categorias novas", () => {
+  const expected = {
+    CONDUTOR: "condutor.jpg",
+    PROTECAO: "protecao.png",
+    FERRAMENT: "ferramenta.jpg",
+    "EQUIPAM.": "equipamentos.jpg",
+    COMANDOS: "comando.jpg",
+    ATERRAMEN: "aterramento.jpg",
+    DIVERSOS: "diversos.jpg",
+    ISOLADORES: "isoladores.jpg",
+  };
+  for (const [erpName, file] of Object.entries(expected)) {
+    assert.equal(categoryPresentation(erpName, erpName).image, `/assets/categories/${file}`);
+  }
+  assert.deepEqual(categoryPresentation("CATEGORIA NOVA", "Nova categoria"), {
+    name: "Nova categoria",
+    image: "",
+  });
+  assert.equal(categoryPresentation(" condutor ", "Condutor").name, "Fios e cabos");
+});
+
+test("vitrine mantém busca real, CTA de orçamento independente e redução de movimento", async () => {
+  const search = await readFile(
+    new URL("../../components/StorefrontSearch.tsx", import.meta.url),
+    "utf8",
+  );
+  const card = await readFile(
+    new URL("../../components/PublicProductCard.tsx", import.meta.url),
+    "utf8",
+  );
+  const styles = await readFile(new URL("../../styles.css", import.meta.url), "utf8");
+  assert.match(search, /to: "\/produtos"/);
+  assert.match(search, /search: query\.trim\(\)/);
+  assert.match(card, /<article/);
+  assert.match(card, /onClick=\{addToQuote\}/);
+  assert.doesNotMatch(card, /fetch\(|localStorage|sessionStorage/);
+  assert.match(styles, /prefers-reduced-motion: reduce/);
+  assert.match(styles, /-webkit-line-clamp: 3/);
 });
