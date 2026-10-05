@@ -4,6 +4,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Link } from "@tanstack/react-router";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
+import { PublicProductCard } from "@/components/PublicProductCard";
 import { ChevronRight, MessageCircle, Plus, Minus, ShoppingBag } from "lucide-react";
 import { useState } from "react";
 import { useCartStore } from "@/lib/cart";
@@ -138,7 +139,7 @@ function ProductDetail() {
   const inStock = isProductInStock(PRODUCT.availability);
 
   return (
-    <div className="min-h-screen bg-white text-[#252A2E]">
+    <div className="store-product-detail min-h-screen bg-white text-[#252A2E]">
       <Header activePage="Produtos" />
 
       <main>
@@ -163,7 +164,7 @@ function ProductDetail() {
         <div className="max-w-7xl mx-auto px-4 pb-16">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
             {/* Left Column: Image */}
-            <div className="bg-[#F4F5F6] rounded-[2px] aspect-square flex items-center justify-center p-8 lg:p-16">
+            <div className="store-detail-image aspect-square flex items-center justify-center p-8 lg:p-16">
               <ImageWithFallback
                 src={PRODUCT.primaryImageUrl ?? ""}
                 alt={PRODUCT.name}
@@ -175,7 +176,7 @@ function ProductDetail() {
             </div>
 
             {/* Right Column: Info */}
-            <div className="flex flex-col h-full">
+            <div className="store-detail-info flex flex-col h-full">
               <div className="mb-8">
                 <div className="text-[12px] font-black text-[#174F8C] tracking-[0.2em] mb-3 uppercase">
                   {PRODUCT.manufacturer}
@@ -223,6 +224,7 @@ function ProductDetail() {
                     <div className="flex items-center border border-[#E5E7EB] rounded-[2px] bg-white">
                       <button
                         onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
+                        aria-label="Diminuir quantidade"
                         className="p-3 hover:bg-[#F4F5F6] transition text-[#252A2E]/60"
                       >
                         <Minus size={18} />
@@ -230,6 +232,7 @@ function ProductDetail() {
                       <span className="w-12 text-center font-bold text-[16px]">{quantity}</span>
                       <button
                         onClick={() => setQuantity((prev) => prev + 1)}
+                        aria-label="Aumentar quantidade"
                         className="p-3 hover:bg-[#F4F5F6] transition text-[#252A2E]/60"
                       >
                         <Plus size={18} />
@@ -239,14 +242,14 @@ function ProductDetail() {
 
                   <button
                     onClick={handleAddToCart}
-                    className="w-full bg-[#174F8C] text-white py-5 rounded-[2px] font-black uppercase tracking-[0.1em] text-[14px] hover:bg-[#123E70] transition shadow-lg flex items-center justify-center gap-3 group"
+                    className="store-button store-button--blue w-full"
                   >
                     <ShoppingBag size={20} />
                     Adicionar ao Orçamento
                   </button>
                   <button
                     onClick={handleWhatsAppDirect}
-                    className="w-full bg-[#2E8B57] text-white py-5 rounded-[2px] font-black uppercase tracking-[0.1em] text-[14px] hover:bg-[#256F46] transition shadow-lg flex items-center justify-center gap-3"
+                    className="store-button store-button--whatsapp w-full"
                   >
                     <MessageCircle size={20} />
                     Falar sobre este produto no WhatsApp
@@ -347,72 +350,10 @@ function ProductDetail() {
             Produtos Relacionados
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {RELATED_PRODUCTS.map((prod) => {
-              const relatedInStock = isProductInStock(prod.availability);
-              return (
-                <Link
-                  key={prod.erpId}
-                  to="/produtos/$id"
-                  params={{ id: prod.erpId }}
-                  className="bg-white border border-[#E5E7EB] rounded-[2px] p-5 hover:border-[#174F8C] hover:shadow-lg transition duration-300 group flex flex-col h-full relative"
-                >
-                  <div className="relative w-full aspect-square mb-6 rounded-[2px] overflow-hidden bg-[#F4F5F6]/50">
-                    <ImageWithFallback
-                      src={prod.primaryImageUrl ?? ""}
-                      alt={prod.name}
-                      loading="lazy"
-                      width={480}
-                      height={480}
-                      className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition duration-500"
-                    />
-                  </div>
-                  <div className="flex-1 flex flex-col">
-                    <div className="text-[9px] font-black text-[#174F8C]/40 tracking-[0.2em] mb-2 uppercase">
-                      {prod.manufacturer}
-                    </div>
-                    <h3 className="font-bold text-[14px] mb-1 leading-tight text-[#252A2E] group-hover:text-[#174F8C] transition uppercase min-h-[40px] line-clamp-2">
-                      {prod.name}
-                    </h3>
-                    <div className="text-[10px] text-[#252A2E]/40 mb-4 font-medium italic">
-                      Ref: {prod.reference ?? "N/A"}
-                    </div>
-                    <div className="mt-auto pt-4 border-t border-[#F4F5F6]">
-                      <div
-                        className={`flex items-center gap-1.5 text-[10px] font-bold mb-4 uppercase tracking-tighter ${relatedInStock ? "text-[#2E8B57]" : "text-[#252A2E]/40"}`}
-                      >
-                        <div
-                          className={`w-1.5 h-1.5 rounded-full ${relatedInStock ? "bg-[#2E8B57] animate-pulse" : "bg-[#E5E7EB]"}`}
-                        ></div>
-                        {formatAvailability(prod.availability)}
-                      </div>
-                      <div className="flex flex-col gap-4">
-                        <div className="min-h-[32px] flex flex-col justify-end">
-                          {prod.price !== null ? (
-                            <div className="text-lg font-black text-[#252A2E]">
-                              {formatPublicPrice(prod.price)}
-                            </div>
-                          ) : (
-                            <div className="text-[14px] font-black text-[#252A2E]/30 uppercase tracking-[0.1em]">
-                              Consulte
-                            </div>
-                          )}
-                        </div>
-                        <span className="w-full bg-[#174F8C] text-white py-2.5 rounded-[2px] hover:bg-[#123E70] transition flex items-center justify-center gap-2 group/btn shadow-sm">
-                          <span className="text-[11px] font-bold uppercase tracking-wider">
-                            Ver produto
-                          </span>
-                          <ChevronRight
-                            size={14}
-                            className="group-hover/btn:translate-x-1 transition"
-                          />
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+          <div className="store-catalog-grid">
+            {RELATED_PRODUCTS.map((product) => (
+              <PublicProductCard key={product.erpId} product={product} />
+            ))}
           </div>
         </div>
 

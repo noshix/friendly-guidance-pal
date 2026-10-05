@@ -5,6 +5,7 @@ import { ChevronRight } from "lucide-react";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
+import { categoryPresentation } from "@/lib/category-presentation";
 import { getCategories, PUBLIC_TAXONOMY_STALE_TIME } from "@/lib/api/public-catalog";
 
 export const Route = createFileRoute("/categorias/")({
@@ -53,10 +54,7 @@ function CategoriesPage() {
 
         <div className="max-w-7xl mx-auto px-4 py-16">
           {categoriesQuery.isPending ? (
-            <div
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8"
-              aria-label="Carregando categorias"
-            >
+            <div className="store-category-grid" aria-label="Carregando categorias">
               {Array.from({ length: 8 }, (_, index) => (
                 <div
                   key={index}
@@ -88,25 +86,28 @@ function CategoriesPage() {
               <p className="text-[#252A2E]/60 font-medium">Nenhuma categoria disponível.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+            <div className="store-category-grid">
               {categories.map((category) => (
                 <Link
                   key={category.slug}
                   to="/categorias/$slug"
                   params={{ slug: category.slug }}
-                  className="bg-white border border-[#E5E7EB] rounded-[2px] overflow-hidden hover:border-[#174F8C] hover:shadow-xl transition-all duration-300 group flex flex-col h-full"
+                  className="store-category-card group"
                 >
-                  <div className="aspect-[4/3] overflow-hidden bg-[#F4F5F6]">
+                  <div className="store-category-card__image">
                     <ImageWithFallback
-                      src=""
-                      alt={category.name}
+                      src={
+                        categoryPresentation(category.erpName, category.name, category.imageUrl)
+                          .image
+                      }
+                      alt={categoryPresentation(category.erpName, category.name).name}
                       type="category"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
                     />
                   </div>
                   <div className="p-6 flex-1 flex flex-col">
                     <h3 className="text-lg font-black text-[#252A2E] uppercase tracking-tight mb-2 group-hover:text-[#174F8C] transition">
-                      {category.name}
+                      {categoryPresentation(category.erpName, category.name).name}
                     </h3>
                     <p className="text-[13px] text-[#252A2E]/60 font-medium mb-6 line-clamp-2">
                       {category.productCount.toLocaleString("pt-BR")} produtos públicos

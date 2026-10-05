@@ -95,6 +95,7 @@ function AdminLayout() {
     if (path === "/admin/importacoes/preview") return "PRÉVIA DA IMPORTAÇÃO";
     if (path.startsWith("/admin/importacoes")) return "HISTÓRICO DE IMPORTAÇÕES";
     if (path.startsWith("/admin/image-enrichment")) return "ENRIQUECIMENTO DE IMAGENS";
+    if (path.startsWith("/admin/categorias")) return "IMAGENS DAS CATEGORIAS";
 
     return "PAINEL ADMINISTRATIVO";
   };
@@ -167,6 +168,13 @@ function AdminLayout() {
             to="/admin/image-enrichment"
             isOpen={isSidebarOpen}
             isActive={location.pathname.startsWith("/admin/image-enrichment")}
+          />
+          <SidebarItem
+            icon={<Images size={20} />}
+            label="Imagens das categorias"
+            to="/admin/categorias"
+            isOpen={isSidebarOpen}
+            isActive={location.pathname.startsWith("/admin/categorias")}
           />
 
           <div className="mt-8 px-6 mb-2">
@@ -288,6 +296,7 @@ type AdminNavigationPath =
   | "/"
   | "/admin"
   | "/admin/produtos"
+  | "/admin/categorias"
   | "/admin/image-enrichment"
   | "/admin/importacoes"
   | "/admin/importacoes/nova";

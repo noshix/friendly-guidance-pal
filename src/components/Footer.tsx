@@ -1,104 +1,91 @@
-// Logo asset replaced by static public path /assets/logo-pizzatto.png
-import { Phone, MapPin, ChevronRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { ArrowUpRight, MapPin, MessageCircle, Phone, Zap } from "lucide-react";
 import { PIZZATTO_WHATSAPP } from "@/lib/config";
 
 export function Footer() {
   return (
-    <footer className="bg-[#252A2E] text-white pt-24 pb-12">
-      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12">
-        <div className="space-y-6">
-          <img
-            src="/assets/logo-pizzatto.png"
-            alt="Pizzatto"
-            className="h-12 w-auto brightness-0 invert"
-          />
-          <p className="text-[14px] text-white/60 leading-relaxed">
-            Loja especializada em materiais elétricos em Cuiabá. Mais de 40 anos de tradição,
-            qualidade e confiança para sua casa, obra ou empresa.
+    <footer className="store-footer">
+      <div className="store-container store-footer__intro">
+        <div>
+          <span className="store-eyebrow">A energia do seu próximo projeto</span>
+          <h2>Conte com quem entende.</h2>
+        </div>
+        <a
+          href={PIZZATTO_WHATSAPP.getLink()}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="store-button store-button--yellow"
+        >
+          <MessageCircle size={19} aria-hidden="true" /> Conversar com a Pizzatto{" "}
+          <ArrowUpRight size={18} aria-hidden="true" />
+        </a>
+      </div>
+      <div className="store-container store-footer__grid">
+        <div className="store-footer__brand">
+          <Link to="/" className="store-footer__logo">
+            <img
+              src="/assets/logo-pizzatto.png"
+              alt="Pizzatto Materiais Elétricos"
+              width={260}
+              height={74}
+              loading="lazy"
+            />
+          </Link>
+          <p>
+            Materiais elétricos, conhecimento e parceria. Há mais de 40 anos fazendo parte de quem
+            constrói em Cuiabá.
           </p>
+          <span>
+            <Zap size={14} aria-hidden="true" /> Tradição que conecta.
+          </span>
         </div>
         <div>
-          <h4 className="text-[12px] font-black tracking-[0.2em] text-[#F5C400] mb-8 uppercase">
-            Catálogo
-          </h4>
-          <ul className="space-y-4 text-[14px] text-white/70">
-            {(
-              [
-                { label: "Produtos", to: "/produtos" },
-                { label: "Categorias", to: "/categorias" },
-                { label: "Marcas", to: "/marcas" },
-              ] as const
-            ).map((item) => (
-              <li key={item.label} className="hover:text-white transition flex items-center gap-2">
-                <ChevronRight size={12} className="text-[#F5C400]" />
-                <Link to={item.to} className="hover:text-white transition">
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <h3>Explore o catálogo</h3>
+          <Link to="/produtos">Todos os produtos</Link>
+          <Link to="/categorias">Departamentos</Link>
+          <Link to="/marcas">Nossas marcas</Link>
+          <Link to="/orcamento">Meu orçamento</Link>
         </div>
         <div>
-          <h4 className="text-[12px] font-black tracking-[0.2em] text-[#F5C400] mb-8 uppercase">
-            A Pizzatto
-          </h4>
-          <ul className="space-y-4 text-[14px] text-white/70">
-            <li>
-              <Link to="/empresa" className="hover:text-white cursor-pointer transition">
-                Empresa
-              </Link>
-            </li>
-            <li>
-              <Link to="/contato" className="hover:text-white cursor-pointer transition">
-                Localização / Contato
-              </Link>
-            </li>
-          </ul>
+          <h3>Conheça a Pizzatto</h3>
+          <Link to="/empresa">Nossa história</Link>
+          <Link to="/contato">Visite nossa loja</Link>
+          <Link to="/privacidade">Privacidade</Link>
+          <Link to="/termos-de-uso">Termos de uso</Link>
         </div>
         <div>
-          <h4 className="text-[12px] font-black tracking-[0.2em] text-[#F5C400] mb-8 uppercase">
-            Atendimento
-          </h4>
-          <div className="space-y-6">
-            <div className="flex items-start gap-4">
-              <Phone size={20} className="text-[#F5C400] mt-1" />
-              <div>
-                <div className="text-[16px] font-black">(65) 3052-4200</div>
-                <div className="text-[12px] text-white/40 uppercase font-bold">Atendimento</div>
-              </div>
-            </div>
-            <div className="flex items-start gap-4">
-              <MapPin size={20} className="text-[#F5C400] mt-1" />
-              <div className="text-[14px] text-white/70 leading-relaxed">
-                Av. Manoel José de Arruda, 664
-                <br />
-                Jardim Shangri-lá
-                <br />
-                Cuiabá - MT | CEP 78070-305
-              </div>
-            </div>
-          </div>
+          <h3>Vamos conversar</h3>
+          <a href="tel:+556530524200" className="store-footer__contact">
+            <Phone size={18} aria-hidden="true" />
+            <span>
+              (65) 3052-4200<small>Telefone da loja</small>
+            </span>
+          </a>
+          <a
+            href={PIZZATTO_WHATSAPP.getLink()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="store-footer__contact"
+          >
+            <MessageCircle size={18} aria-hidden="true" />
+            <span>
+              Atendimento WhatsApp<small>Solicite seu orçamento</small>
+            </span>
+          </a>
+          <Link to="/contato" className="store-footer__contact">
+            <MapPin size={19} aria-hidden="true" />
+            <span>
+              Av. Manoel José de Arruda, 664<small>Jardim Shangri-lá · Cuiabá, MT</small>
+            </span>
+          </Link>
         </div>
       </div>
-      <div className="max-w-7xl mx-auto px-4 mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[12px] text-white/40">
-        <div>
-          © {new Date().getFullYear()} Pizzatto Materiais Elétricos. Mais de 40 anos de experiência.
-        </div>
-        <div className="flex gap-8 items-center">
-          <Link to="/privacidade" className="hover:text-white cursor-pointer transition">
-            Privacidade
-          </Link>
-          <Link to="/termos-de-uso" className="hover:text-white cursor-pointer transition">
-            Termos de Uso
-          </Link>
-          <Link
-            to="/admin"
-            className="px-3 py-1 bg-white/5 hover:bg-white/10 text-white/40 hover:text-white rounded transition text-[10px] uppercase font-bold tracking-wider"
-          >
-            Área Restrita
-          </Link>
-        </div>
+      <div className="store-container store-footer__bottom">
+        <span>© {new Date().getFullYear()} Pizzatto Materiais Elétricos.</span>
+        <span>Feito para conectar você ao que precisa.</span>
+        <Link to="/admin">
+          Área restrita <ArrowUpRight size={13} aria-hidden="true" />
+        </Link>
       </div>
     </footer>
   );

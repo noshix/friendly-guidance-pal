@@ -49,6 +49,7 @@ export interface PublicCategory {
   erpName: string;
   slug: string;
   productCount: number;
+  imageUrl?: string | null;
 }
 
 export interface PublicManufacturer {
@@ -223,6 +224,9 @@ export function mapPublicCategory(value: unknown): PublicCategory {
     erpName: requiredString(value["erpName"], "erpName"),
     slug: requiredString(value["slug"], "slug"),
     productCount: nonNegativeInteger(value["productCount"], "productCount"),
+    ...(value["imageUrl"] !== undefined
+      ? { imageUrl: nullableString(value["imageUrl"], "imageUrl") }
+      : {}),
   };
 }
 

@@ -121,7 +121,7 @@ function BrandsIndex() {
                   key={manufacturer.slug}
                   to="/marcas/$slug"
                   params={{ slug: manufacturer.slug }}
-                  className="bg-white border border-[#E5E7EB] p-6 rounded-[2px] flex flex-col items-center justify-center text-center group hover:border-[#174F8C] hover:shadow-md transition-all duration-300 min-h-[140px]"
+                  className="store-brand-card group"
                 >
                   <div className="text-lg lg:text-xl font-black text-[#252A2E] group-hover:text-[#174F8C] transition uppercase tracking-tighter mb-2">
                     {manufacturer.name}
