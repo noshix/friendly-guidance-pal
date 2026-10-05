@@ -1,0 +1,1181 @@
+.electric-day {
+  --electric-ink: #102d4a;
+  --electric-yellow: #f5c400;
+  color: var(--electric-ink);
+  background: #fcfbf7;
+}
+.electric-day main {
+  overflow: clip;
+}
+.electric-day h1,
+.electric-day h2,
+.electric-day h3,
+.electric-day p {
+  margin: 0;
+}
+.electric-day em {
+  font-style: normal;
+}
+.electric-day a,
+.electric-day button,
+.electric-coffee__viewport {
+  -webkit-tap-highlight-color: transparent;
+}
+.electric-day a:focus-visible,
+.electric-day button:focus-visible,
+.electric-coffee__viewport:focus-visible {
+  outline: 3px solid #f5c400;
+  outline-offset: 5px;
+}
+.electric-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #f5c400;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  line-height: 1.7;
+}
+.electric-kicker--blue {
+  color: #19558c;
+}
+.electric-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 50px;
+  padding: 14px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s;
+  text-decoration: none;
+}
+.electric-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px #102d4a15;
+}
+.electric-button--yellow {
+  background: #f5c400;
+  color: #102d4a;
+}
+.electric-button--yellow:hover {
+  background: #ffdb32;
+}
+.electric-button--blue {
+  background: #174f8c;
+  color: white;
+}
+.electric-button--blue:hover {
+  background: #103c6c;
+}
+.electric-button--outline {
+  border-color: #102d4a30;
+  color: #102d4a;
+  background: transparent;
+}
+.electric-button--outline:hover {
+  background: #102d4a08;
+}
+.electric-hero {
+  position: relative;
+  background: #09253f;
+  color: white;
+  isolation: isolate;
+}
+.electric-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 85% 40%, #184f7d80, transparent 54%),
+    radial-gradient(ellipse at 20% 0, #16477070, transparent 55%);
+  z-index: -1;
+}
+.electric-hero__grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.1;
+  background-image:
+    linear-gradient(#9bc2df 1px, transparent 1px),
+    linear-gradient(90deg, #9bc2df 1px, transparent 1px);
+  background-size: 85px 85px;
+  mask-image: linear-gradient(90deg, transparent 5%, #000 100%);
+  z-index: -1;
+}
+.electric-hero__inner {
+  display: grid;
+  grid-template-columns: 1.12fr 1fr;
+  align-items: center;
+  gap: 35px;
+  padding-block: 76px 100px;
+}
+.electric-hero__occasion {
+  font-size: 15px;
+  color: #c3d1de;
+  margin-top: 25px !important;
+}
+.electric-hero h1 {
+  font-size: clamp(50px, 5.6vw, 78px);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.055em;
+  margin-top: 16px;
+}
+.electric-hero h1 em {
+  color: #f5c400;
+  position: relative;
+}
+.electric-hero h1 em::after {
+  content: "";
+  position: absolute;
+  left: 1%;
+  bottom: 1px;
+  height: 4px;
+  width: 98%;
+  background: #f5c400;
+  border-radius: 50%;
+  transform: rotate(-3deg);
+  opacity: 0.7;
+}
+.electric-hero__lead {
+  max-width: 455px;
+  font-size: 17px;
+  color: #becedc;
+  line-height: 1.75;
+  margin-block: 26px 29px !important;
+}
+.electric-hero__signature {
+  display: block;
+  color: #93aac1;
+  font-size: 12px;
+  margin-top: 18px;
+}
+.electric-hero__baseline {
+  border-top: 1px solid #ffffff14;
+  padding: 18px 25px;
+  display: flex;
+  gap: 45px;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  letter-spacing: 0.19em;
+  color: #91a8bc;
+}
+.electric-hero__baseline svg {
+  color: #f5c400;
+}
+.electric-coffee {
+  position: relative;
+  min-width: 0;
+  height: 510px;
+  isolation: isolate;
+}
+.electric-coffee__halo {
+  position: absolute;
+  width: 370px;
+  height: 370px;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, #f5c40018, #4186b617 65%, transparent 70%);
+  box-shadow: inset 0 0 65px #5299cb12;
+  z-index: -1;
+}
+.electric-coffee__orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 425px;
+  height: 425px;
+  border: 1px solid #ffffff12;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) rotate(-20deg);
+  pointer-events: none;
+}
+.electric-coffee__orbit--one::after,
+.electric-coffee__orbit--two::after {
+  content: "";
+  position: absolute;
+  top: 63px;
+  left: 48px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #f5c400;
+  box-shadow: 0 0 18px #f5c40090;
+}
+.electric-coffee__orbit--two {
+  width: 495px;
+  height: 300px;
+  transform: translate(-50%, -50%) rotate(-38deg);
+  border-color: #f5c40026;
+}
+.electric-coffee__orbit--two::after {
+  top: 20px;
+  left: 120px;
+  width: 5px;
+  height: 5px;
+}
+.electric-coffee__stamp {
+  position: absolute;
+  right: 3%;
+  top: 11%;
+  font-size: 10px;
+  line-height: 1.5;
+  letter-spacing: 0.14em;
+  color: #95acc1;
+  transform: rotate(8deg);
+  z-index: 2;
+}
+.electric-coffee__stamp strong {
+  font-size: 33px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: #f5c400;
+}
+.electric-coffee__viewport {
+  position: absolute;
+  inset: 20px -10px 45px;
+  perspective: 1000px;
+  touch-action: pan-y;
+  border-radius: 35px;
+}
+.electric-coffee__scene {
+  position: absolute;
+  width: 230px;
+  height: 230px;
+  top: 51%;
+  left: 48%;
+  transform: translate(-50%, -50%) rotateX(var(--coffee-x)) rotateY(var(--coffee-y));
+  transform-style: preserve-3d;
+  transition: transform 0.16s ease-out;
+}
+.electric-coffee__shadow {
+  position: absolute;
+  width: 310px;
+  height: 55px;
+  left: 48%;
+  top: 80%;
+  transform: translateX(-50%);
+  background: #0008;
+  border-radius: 50%;
+  filter: blur(16px);
+}
+.electric-coffee__cup {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, #c7d0d8, #fff 30%, #f9fafb 60%, #e6ebef 85%, #b8c5ce);
+  border-radius: 13% 13% 39% 39% / 8% 8% 40% 40%;
+  box-shadow:
+    inset -15px 0 30px #0b355520,
+    inset 8px 0 12px #ffffff60,
+    0 20px 40px #0003;
+  transform: translateZ(15px);
+}
+.electric-coffee__rim {
+  position: absolute;
+  top: -28px;
+  left: 0;
+  width: 100%;
+  height: 65px;
+  padding: 8px;
+  background: linear-gradient(#fafcfe, #cbd7df);
+  border-radius: 50%;
+  box-shadow: 0 4px 4px #051b3818;
+}
+.electric-coffee__rim span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 40% 35%, #c28c49 0, #8b4a24 14%, #542f1c 45%, #321c13 80%);
+  box-shadow: inset 0 5px 6px #0008;
+}
+.electric-coffee__rim span::after {
+  content: "";
+  display: block;
+  width: 45%;
+  height: 10px;
+  border-top: 1px solid #e0ac6470;
+  border-radius: 50%;
+  position: absolute;
+  top: 25px;
+  left: 30px;
+}
+.electric-coffee__handle {
+  position: absolute;
+  width: 95px;
+  height: 125px;
+  right: -64px;
+  top: 33px;
+  border: 19px solid #e4ebee;
+  border-left-width: 16px;
+  border-radius: 35% 47% 50% 38%;
+  box-shadow:
+    inset 0 3px 8px #00152a60,
+    4px 3px 0 #aabbc8;
+  transform: translateZ(-2px);
+}
+.electric-coffee__saucer {
+  position: absolute;
+  left: -66px;
+  bottom: -45px;
+  width: 365px;
+  height: 100px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, #899bab 0, #d3dce2 27%, #fff 47%, #d8e2e9 67%, #b3c6d4 70%);
+  box-shadow:
+    0 12px 0 #91a6b7,
+    0 26px 35px #00101c70;
+  transform: translateZ(-20px);
+}
+.electric-coffee__emblem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  color: #154e84;
+  padding-top: 63px;
+}
+.electric-coffee__emblem svg {
+  color: #e8b900;
+  fill: #f5c400;
+}
+.electric-coffee__emblem span {
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: -0.07em;
+}
+.electric-coffee__emblem small {
+  font-size: 6px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+}
+.electric-coffee__steam {
+  position: absolute;
+  top: -125px;
+  left: 50px;
+  height: 100px;
+  width: 160px;
+  transform: translateZ(30px);
+}
+.electric-coffee__steam i {
+  position: absolute;
+  bottom: 0;
+  height: 70px;
+  width: 24px;
+  border-right: 3px solid #fff6;
+  border-radius: 50%;
+  filter: blur(3px);
+  animation: electric-steam 4s ease-in-out infinite;
+}
+.electric-coffee__steam i:nth-child(2) {
+  left: 50px;
+  height: 90px;
+  animation-delay: -1.3s;
+}
+.electric-coffee__steam i:nth-child(3) {
+  left: 95px;
+  animation-delay: -2.6s;
+}
+@keyframes electric-steam {
+  0%,
+  100% {
+    opacity: 0.15;
+    transform: translateY(5px) scaleX(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translateY(-18px) scaleX(-1);
+  }
+}
+.electric-coffee.is-paused i {
+  animation-play-state: paused;
+}
+.electric-coffee__caption {
+  position: absolute;
+  bottom: 0;
+  left: 15%;
+  right: 10%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: #9ab1c5;
+}
+.electric-coffee__caption span {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+}
+.electric-coffee__caption button {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #ffffff30;
+  border-radius: 50%;
+  color: #cbd6e0;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.electric-coffee__caption button:hover {
+  background: #ffffff15;
+}
+.electric-meeting {
+  position: relative;
+  padding-top: 50px;
+}
+.electric-invitation {
+  display: flex;
+  align-items: center;
+  gap: 45px;
+  padding: 30px 36px;
+  background: white;
+  border: 1px solid #dedfd9;
+  border-radius: 16px;
+  box-shadow: 0 14px 40px #122f4710;
+}
+.electric-invitation__date {
+  border-right: 1px dashed #122f4730;
+  padding-right: 36px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  flex: 0 0 180px;
+}
+.electric-invitation__date > span {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+.electric-invitation__date > strong {
+  font-size: 94px;
+  font-weight: 500;
+  line-height: 1.07;
+  letter-spacing: -0.08em;
+}
+.electric-invitation__date > small {
+  font-size: 11px;
+  color: #174f8c;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+}
+.electric-invitation__body {
+  flex: 1;
+}
+.electric-invitation h2 {
+  font-size: 32px;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+  margin-top: 7px;
+}
+.electric-invitation__details {
+  display: flex;
+  gap: 42px;
+  margin-top: 20px;
+}
+.electric-invitation__details > div {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.electric-invitation__details svg {
+  color: #19558c;
+}
+.electric-invitation__details span {
+  font-size: 12px;
+  color: #6b7883;
+}
+.electric-invitation__details strong {
+  display: block;
+  color: #102d4a;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.electric-date-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  max-width: 880px;
+  margin: 24px auto 0 !important;
+  color: #667380;
+  font-size: 13px;
+  line-height: 1.8;
+  text-align: center;
+}
+.electric-date-note svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: #174f8c;
+}
+.electric-date-note strong {
+  font-weight: 500;
+  color: #102d4a;
+}
+.electric-tribute {
+  padding-block: 95px;
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 100px;
+}
+.electric-tribute h2 {
+  font-size: clamp(35px, 3.6vw, 48px);
+  font-weight: 600;
+  line-height: 1.17;
+  letter-spacing: -0.045em;
+  margin-top: 23px;
+}
+.electric-tribute h2 em {
+  color: #19558c;
+}
+.electric-tribute__text {
+  padding-top: 7px;
+}
+.electric-tribute__text > p {
+  font-size: 16px;
+  line-height: 1.85;
+  color: #637280;
+}
+.electric-tribute__text > p + p {
+  margin-top: 17px;
+}
+.electric-tribute__text > div {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-top: 1px solid #102d4a15;
+  padding-top: 22px;
+  margin-top: 24px;
+  font-size: 14px;
+  line-height: 1.75;
+}
+.electric-tribute__symbol {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.electric-tribute__text strong {
+  font-weight: 500;
+}
+.electric-perks {
+  background: #f1f2ed;
+  border-block: 1px solid #102d4a09;
+  padding-block: 74px 80px;
+}
+.electric-section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 36px;
+}
+.electric-section-heading h2 {
+  font-size: 37px;
+  line-height: 1.25;
+  letter-spacing: -0.035em;
+  margin-top: 12px;
+  font-weight: 600;
+}
+.electric-section-heading > svg {
+  color: #19558c;
+}
+.electric-perks__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.electric-gift {
+  background: #fff;
+  border: 1px solid #dae0e5;
+  border-radius: 18px;
+  overflow: hidden;
+}
+.electric-gift__visual {
+  height: 275px;
+  background: #f9e998;
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.electric-gift__ring {
+  width: 380px;
+  height: 380px;
+  border: 1px solid #ba901630;
+  border-radius: 50%;
+  position: absolute;
+  top: 30px;
+  left: -40px;
+}
+.electric-gift__ring::after {
+  content: "";
+  position: absolute;
+  inset: 25px;
+  border: 1px solid #ba901620;
+  border-radius: 50%;
+}
+.electric-gift__bag {
+  width: 165px;
+  height: 156px;
+  background: linear-gradient(105deg, #215d94, #0d355b 65%, #08274a);
+  border-radius: 7px 7px 24px 24px;
+  position: relative;
+  transform: rotate(-7deg) translate(-20px, 13px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #f5c400;
+  box-shadow:
+    10px 20px 0 #122f4712,
+    inset -10px 0 0 #001c3520;
+}
+.electric-gift__bag i {
+  position: absolute;
+  top: -53px;
+  width: 81px;
+  height: 70px;
+  border: 10px solid #173f67;
+  border-radius: 50% 50% 0 0;
+  z-index: 0;
+}
+.electric-gift__bag > strong {
+  font-size: 20px;
+  letter-spacing: -0.04em;
+  color: white;
+  margin-top: 8px;
+}
+.electric-gift__badge {
+  position: absolute;
+  right: 27px;
+  top: 30px;
+  width: 105px;
+  height: 105px;
+  border-radius: 50%;
+  background: #fffaf0;
+  color: #14385b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  transform: rotate(8deg);
+  box-shadow: 0 6px 20px #815b1815;
+}
+.electric-gift__badge strong {
+  font-size: 42px;
+  font-weight: 600;
+  letter-spacing: -0.07em;
+  line-height: 1.2;
+}
+.electric-gift__copy {
+  padding: 30px 34px;
+}
+.electric-gift h3 {
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+  margin-top: 14px;
+}
+.electric-gift__copy > p {
+  font-size: 16px;
+  color: #657582;
+  line-height: 1.7;
+  margin-top: 18px;
+}
+.electric-gift__copy > p strong {
+  color: #174f8c;
+  font-weight: 600;
+}
+.electric-perk-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #174f8c;
+  font-size: 12px;
+  margin-top: 18px;
+}
+.electric-gift__copy > small {
+  display: block;
+  font-size: 11px;
+  color: #76848e;
+  line-height: 1.7;
+  margin-top: 17px;
+}
+.electric-prize {
+  background: #0b2d4c;
+  color: white;
+  border-radius: 18px;
+  overflow: hidden;
+  position: relative;
+  padding: 35px 34px 26px;
+  isolation: isolate;
+}
+.electric-prize::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 100% 60%, #1a618f88, transparent 65%);
+  z-index: -1;
+}
+.electric-prize h3 {
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+  margin-top: 20px;
+}
+.electric-prize h3 em {
+  color: #f5c400;
+  font-size: 43px;
+}
+.electric-prize__copy > p {
+  font-size: 15px;
+  color: #b7c9d9;
+  line-height: 1.7;
+  max-width: 350px;
+  margin-top: 18px;
+}
+.electric-prize__copy strong {
+  color: #fff;
+  font-weight: 500;
+}
+.electric-prize__copy > a {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  color: #f5c400;
+  font-size: 12px;
+  margin-top: 16px;
+}
+.electric-tv {
+  position: relative;
+  width: 285px;
+  height: 186px;
+  margin: 28px auto 10px;
+  perspective: 800px;
+  transform: rotate(-4deg);
+}
+.electric-tv__screen {
+  height: 160px;
+  border: 7px solid #041725;
+  border-bottom-width: 11px;
+  border-radius: 8px;
+  background: linear-gradient(
+    125deg,
+    #13699b 10%,
+    #44becc 32%,
+    #113d72 35%,
+    #3752a5 50%,
+    #ad73ac 54%,
+    #09415f 78%
+  );
+  box-shadow:
+    12px 15px 25px #00112260,
+    2px 0 0 #627888;
+  overflow: hidden;
+  transform: rotateY(-12deg);
+}
+.electric-tv__screen span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #fff;
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  background: #08244825;
+}
+.electric-tv__screen strong {
+  font-size: 63px;
+  font-weight: 500;
+  letter-spacing: -0.06em;
+  line-height: 1.15;
+}
+.electric-tv__screen small {
+  font-size: 7px;
+  margin-top: 2px;
+}
+.electric-tv > i,
+.electric-tv > b {
+  position: absolute;
+  bottom: 4px;
+  height: 32px;
+  width: 5px;
+  background: #546773;
+  border-radius: 2px;
+}
+.electric-tv > i {
+  left: 33px;
+  transform: rotate(28deg);
+}
+.electric-tv > b {
+  right: 30px;
+  transform: rotate(-28deg);
+}
+.electric-prize__note {
+  position: relative;
+  font-size: 11px;
+  line-height: 1.7;
+  color: #9cb4c8;
+  border-top: 1px solid #ffffff15;
+  padding-top: 15px;
+}
+.electric-visit {
+  padding-block: 100px;
+  display: grid;
+  grid-template-columns: 0.95fr 1fr;
+  gap: 75px;
+  align-items: center;
+}
+.electric-visit__photo {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #0b2d4c;
+}
+.electric-visit__photo img {
+  width: 100%;
+  height: 345px;
+  object-fit: cover;
+  display: block;
+}
+.electric-visit__photo > span {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 20px 23px;
+  font-size: 13px;
+  color: #fff;
+}
+.electric-visit__photo svg {
+  color: #f5c400;
+}
+.electric-visit h2 {
+  font-size: 43px;
+  line-height: 1.15;
+  letter-spacing: -0.045em;
+  font-weight: 600;
+  margin-top: 17px;
+}
+.electric-visit h2 em {
+  color: #19558c;
+}
+.electric-visit__copy > p {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #637280;
+  margin-top: 20px;
+}
+.electric-visit__copy > p strong {
+  font-weight: 600;
+  color: #102d4a;
+}
+.electric-visit address {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-style: normal;
+  font-size: 14px;
+  line-height: 1.7;
+  margin-top: 25px;
+}
+.electric-visit address > svg {
+  color: #19558c;
+  flex-shrink: 0;
+}
+.electric-visit__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 27px;
+}
+.electric-visit__assurance {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  color: #778793;
+  margin-top: 18px;
+}
+.electric-signoff {
+  background: #f5c400;
+  padding-block: 38px;
+}
+.electric-signoff > div {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.electric-signoff p {
+  font-size: 20px;
+  line-height: 1.5;
+}
+.electric-signoff p strong {
+  font-weight: 600;
+}
+.electric-signoff a {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 500;
+}
+@media (max-width: 1100px) {
+  .electric-hero__inner {
+    gap: 5px;
+  }
+  .electric-coffee {
+    transform: scale(0.88);
+    transform-origin: center right;
+  }
+  .electric-invitation {
+    gap: 25px;
+    padding-inline: 25px;
+  }
+  .electric-invitation__date {
+    flex-basis: 145px;
+    padding-right: 25px;
+  }
+  .electric-invitation__details {
+    gap: 22px;
+  }
+  .electric-tribute {
+    gap: 55px;
+  }
+  .electric-visit {
+    gap: 40px;
+  }
+}
+@media (max-width: 767px) {
+  .electric-kicker {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+  }
+  .electric-hero__inner {
+    grid-template-columns: 1fr;
+    padding-block: 45px 25px;
+    gap: 0;
+  }
+  .electric-hero h1 {
+    font-size: clamp(44px, 10.4vw, 62px);
+    line-height: 1.08;
+    margin-top: 12px;
+  }
+  .electric-desktop-break {
+    display: none;
+  }
+  .electric-hero__occasion {
+    margin-top: 20px !important;
+    font-size: 13px;
+  }
+  .electric-hero__lead {
+    font-size: 15px;
+    line-height: 1.75;
+    margin-block: 21px 24px !important;
+  }
+  .electric-hero__signature {
+    font-size: 11px;
+  }
+  .electric-coffee {
+    height: 410px;
+    width: 100%;
+    transform: none;
+    margin-top: 15px;
+  }
+  .electric-coffee__scene {
+    transform: translate(-50%, -50%) scale(0.85) rotateX(var(--coffee-x)) rotateY(var(--coffee-y));
+    left: 45%;
+  }
+  .electric-coffee__halo {
+    width: 300px;
+    height: 300px;
+  }
+  .electric-coffee__orbit--one {
+    width: 330px;
+    height: 330px;
+  }
+  .electric-coffee__orbit--two {
+    width: 370px;
+    height: 230px;
+  }
+  .electric-coffee__stamp {
+    right: 0;
+    top: 8%;
+  }
+  .electric-coffee__stamp strong {
+    font-size: 26px;
+  }
+  .electric-coffee__shadow {
+    width: 240px;
+    top: 82%;
+  }
+  .electric-coffee__caption {
+    left: 8%;
+    right: 4%;
+  }
+  .electric-hero__baseline {
+    gap: 20px;
+    font-size: 8px;
+    padding-inline: 12px;
+    letter-spacing: 0.1em;
+  }
+  .electric-hero__baseline > span:last-child,
+  .electric-hero__baseline > svg:last-of-type {
+    display: none;
+  }
+  .electric-meeting {
+    padding-top: 28px;
+  }
+  .electric-invitation {
+    flex-wrap: wrap;
+    gap: 22px 17px;
+    border-radius: 12px;
+    padding: 24px 20px;
+  }
+  .electric-invitation__date {
+    flex: 0 0 98px;
+    padding-right: 17px;
+  }
+  .electric-invitation__date > span {
+    font-size: 8px;
+    letter-spacing: 0.03em;
+  }
+  .electric-invitation__date > strong {
+    font-size: 77px;
+  }
+  .electric-invitation__date > small {
+    font-size: 8px;
+    letter-spacing: 0.03em;
+  }
+  .electric-invitation__body {
+    min-width: 0;
+  }
+  .electric-invitation h2 {
+    font-size: 24px;
+  }
+  .electric-invitation__details {
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .electric-invitation__details strong {
+    font-size: 16px;
+  }
+  .electric-invitation__details span {
+    font-size: 10px;
+  }
+  .electric-invitation > button {
+    width: 100%;
+  }
+  .electric-date-note {
+    text-align: left;
+    font-size: 12px;
+    margin-top: 20px !important;
+  }
+  .electric-tribute {
+    padding-block: 58px;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .electric-tribute h2 {
+    font-size: 36px;
+    margin-top: 18px;
+  }
+  .electric-tribute__text > p {
+    font-size: 15px;
+  }
+  .electric-perks {
+    padding-block: 48px;
+  }
+  .electric-section-heading h2 {
+    font-size: 29px;
+  }
+  .electric-section-heading > svg {
+    display: none;
+  }
+  .electric-perks__grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .electric-gift__visual {
+    height: 250px;
+  }
+  .electric-gift__copy {
+    padding: 26px 24px;
+  }
+  .electric-gift h3 {
+    font-size: 28px;
+  }
+  .electric-gift__copy > p {
+    font-size: 15px;
+  }
+  .electric-prize {
+    padding: 30px 24px 24px;
+  }
+  .electric-prize h3 {
+    font-size: 32px;
+  }
+  .electric-prize h3 em {
+    font-size: 40px;
+  }
+  .electric-tv {
+    width: min(285px, 100%);
+  }
+  .electric-visit {
+    padding-block: 55px;
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+  .electric-visit__photo img {
+    height: 250px;
+  }
+  .electric-visit h2 {
+    font-size: 35px;
+  }
+  .electric-visit__copy > p {
+    font-size: 15px;
+  }
+  .electric-visit__actions {
+    flex-direction: column;
+  }
+  .electric-signoff {
+    padding-block: 30px;
+  }
+  .electric-signoff > div {
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+  .electric-signoff p {
+    font-size: 18px;
+  }
+  .electric-signoff a {
+    margin-left: 48px;
+    font-size: 11px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .electric-day *,
+  .electric-day *::before,
+  .electric-day *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

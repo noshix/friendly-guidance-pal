@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as CategoriasRouteRouteImport } from './routes/categorias/route'
 import { Route as ContatoRouteImport } from './routes/contato'
+import { Route as DiaDoEletricistaRouteImport } from './routes/dia-do-eletricista'
 import { Route as EmpresaRouteImport } from './routes/empresa'
 import { Route as MarcasRouteRouteImport } from './routes/marcas/route'
 import { Route as OrcamentoRouteImport } from './routes/orcamento'
@@ -55,6 +56,11 @@ const CategoriasRouteRoute = CategoriasRouteRouteImport.update({
 const ContatoRoute = ContatoRouteImport.update({
   id: '/contato',
   path: '/contato',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiaDoEletricistaRoute = DiaDoEletricistaRouteImport.update({
+  id: '/dia-do-eletricista',
+  path: '/dia-do-eletricista',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EmpresaRoute = EmpresaRouteImport.update({
@@ -182,6 +188,7 @@ export interface FileRoutesByFullPath {
   '/marcas': typeof MarcasRouteRouteWithChildren
   '/produtos': typeof ProdutosRouteRouteWithChildren
   '/contato': typeof ContatoRoute
+  '/dia-do-eletricista': typeof DiaDoEletricistaRoute
   '/empresa': typeof EmpresaRoute
   '/orcamento': typeof OrcamentoRoute
   '/privacidade': typeof PrivacidadeRoute
@@ -207,6 +214,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/contato': typeof ContatoRoute
+  '/dia-do-eletricista': typeof DiaDoEletricistaRoute
   '/empresa': typeof EmpresaRoute
   '/orcamento': typeof OrcamentoRoute
   '/privacidade': typeof PrivacidadeRoute
@@ -237,6 +245,7 @@ export interface FileRoutesById {
   '/marcas': typeof MarcasRouteRouteWithChildren
   '/produtos': typeof ProdutosRouteRouteWithChildren
   '/contato': typeof ContatoRoute
+  '/dia-do-eletricista': typeof DiaDoEletricistaRoute
   '/empresa': typeof EmpresaRoute
   '/orcamento': typeof OrcamentoRoute
   '/privacidade': typeof PrivacidadeRoute
@@ -268,6 +277,7 @@ export interface FileRouteTypes {
     | '/marcas'
     | '/produtos'
     | '/contato'
+    | '/dia-do-eletricista'
     | '/empresa'
     | '/orcamento'
     | '/privacidade'
@@ -293,6 +303,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/contato'
+    | '/dia-do-eletricista'
     | '/empresa'
     | '/orcamento'
     | '/privacidade'
@@ -322,6 +333,7 @@ export interface FileRouteTypes {
     | '/marcas'
     | '/produtos'
     | '/contato'
+    | '/dia-do-eletricista'
     | '/empresa'
     | '/orcamento'
     | '/privacidade'
@@ -352,6 +364,7 @@ export interface RootRouteChildren {
   MarcasRouteRoute: typeof MarcasRouteRouteWithChildren
   ProdutosRouteRoute: typeof ProdutosRouteRouteWithChildren
   ContatoRoute: typeof ContatoRoute
+  DiaDoEletricistaRoute: typeof DiaDoEletricistaRoute
   EmpresaRoute: typeof EmpresaRoute
   OrcamentoRoute: typeof OrcamentoRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
@@ -386,6 +399,13 @@ declare module '@tanstack/react-router' {
       path: '/contato'
       fullPath: '/contato'
       preLoaderRoute: typeof ContatoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dia-do-eletricista': {
+      id: '/dia-do-eletricista'
+      path: '/dia-do-eletricista'
+      fullPath: '/dia-do-eletricista'
+      preLoaderRoute: typeof DiaDoEletricistaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/empresa': {
@@ -633,6 +653,7 @@ const rootRouteChildren: RootRouteChildren = {
   MarcasRouteRoute: MarcasRouteRouteWithChildren,
   ProdutosRouteRoute: ProdutosRouteRouteWithChildren,
   ContatoRoute: ContatoRoute,
+  DiaDoEletricistaRoute: DiaDoEletricistaRoute,
   EmpresaRoute: EmpresaRoute,
   OrcamentoRoute: OrcamentoRoute,
   PrivacidadeRoute: PrivacidadeRoute,
