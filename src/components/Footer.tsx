@@ -83,6 +83,12 @@ export function Footer() {
       <div className="store-container store-footer__bottom">
         <span>© {new Date().getFullYear()} Pizzatto Materiais Elétricos.</span>
         <span>Feito para conectar você ao que precisa.</span>
+        <Link
+          to="/dia-do-eletricista"
+          className="rounded-full border border-white/20 px-3 py-2 text-[#f5c400] transition hover:border-[#f5c400] hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f5c400]"
+        >
+          <Zap size={13} aria-hidden="true" /> Dia do Eletricista
+        </Link>
         <Link to="/admin">
           Área restrita <ArrowUpRight size={13} aria-hidden="true" />
         </Link>
